@@ -81,7 +81,7 @@ export default function ListingCard({ listing }) {
                 </Stack>
             </Box>
             <Box px={4} pb={4} display="flex" justifyContent="space-between" alignItems="center">
-                <Button as={Link} href={`/listings/${listing.id}`} colorScheme="blue" size="sm">Voir l'annonce</Button>
+                <Button as={Link} href={`/listings/${listing.id}`} colorScheme="brand" size="sm">Voir l'annonce</Button>
                 <FavoriteButton listingId={listing.id} isFavorited={listing.is_favorited} />
             </Box>
         </Box>
