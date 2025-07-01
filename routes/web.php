@@ -79,6 +79,7 @@ Route::get('/upload-identity', [PageController::class, 'uploadIdentity'])->name(
 Route::middleware(['auth'])->group(function () {
     Route::get('/favorites', [PageController::class, 'favorites'])->name('favorites.index');
     Route::post('/listings/{listing}/favorite', [ListingController::class, 'toggle'])->name('favorites.toggle');
+    Route::get('/account/settings', [PageController::class, 'accountSettings'])->name('account.settings');
 });
 Route::middleware(['auth'])->group(function () {
     Route::get('/email/verify', [PageController::class, 'verifyEmailNotice'])->name('verification.notice');

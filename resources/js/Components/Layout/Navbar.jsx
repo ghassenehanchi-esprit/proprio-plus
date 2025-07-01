@@ -17,6 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { Link, usePage } from "@inertiajs/react";
+import { route } from "ziggy-js";
 
 export default function Navbar() {
     const { auth } = usePage().props;
@@ -74,7 +75,7 @@ export default function Navbar() {
                         <MenuItem as={Link} href="/favorites">Favoris</MenuItem>
                         <MenuItem as={Link} href="/messages">Messages</MenuItem>
                         <MenuItem as={Link} href="/profile">Profil</MenuItem>
-                        <MenuItem as={Link} href="/account/settings">Paramètres du compte</MenuItem>
+                        <MenuItem as={Link} href={route('account.settings')}>Paramètres du compte</MenuItem>
                         <MenuItem as={Link} href="/logout" method="post">Déconnexion</MenuItem>
                     </MenuList>
                 </Menu>

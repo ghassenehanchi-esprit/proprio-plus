@@ -85,5 +85,10 @@ class PageController extends Controller
             'favorites' => $favorites,
         ]);
     }
+
+    public function accountSettings()
+    {
+        return Inertia::render('Account/Settings');
+    }
 }
 
