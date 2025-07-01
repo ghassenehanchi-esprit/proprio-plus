@@ -8,7 +8,9 @@ import {
     Input,
     Text,
     VStack,
-    Divider
+    Divider,
+    FormControl,
+    FormErrorMessage
 } from "@chakra-ui/react";
 import { Link } from '@inertiajs/react';
 
@@ -16,6 +18,7 @@ export default function Login() {
     const { data, setData, post, processing, errors } = useForm({
         email: '',
         password: '',
+        remember: false,
     });
 
     const submit = (e) => {
@@ -33,22 +36,37 @@ export default function Login() {
                     <Heading size="lg" mb={6} textAlign="center">Bienvenue</Heading>
 
                     <form onSubmit={submit}>
-                        <VStack spacing={4}>
-                            <Input
-                                name="email"
-                                placeholder="Veuillez entrer votre adresse e-mail"
-                                bg="gray.100"
-                                value={data.email}
-                                onChange={(e) => setData('email', e.target.value)}
-                            />
-                            <Input
-                                name="password"
-                                type="password"
-                                placeholder="Veuillez entrer votre mot de passe"
-                                bg="gray.100"
-                                value={data.password}
-                                onChange={(e) => setData('password', e.target.value)}
-                            />
+                        <VStack spacing={4} align="stretch">
+                            <FormControl isInvalid={errors.email}>
+                                <Input
+                                    name="email"
+                                    placeholder="Veuillez entrer votre adresse e-mail"
+                                    bg="gray.100"
+                                    value={data.email}
+                                    onChange={(e) => setData('email', e.target.value)}
+                                />
+                                <FormErrorMessage>{errors.email}</FormErrorMessage>
+                            </FormControl>
+                            <FormControl isInvalid={errors.password}>
+                                <Input
+                                    name="password"
+                                    type="password"
+                                    placeholder="Veuillez entrer votre mot de passe"
+                                    bg="gray.100"
+                                    value={data.password}
+                                    onChange={(e) => setData('password', e.target.value)}
+                                />
+                                <FormErrorMessage>{errors.password}</FormErrorMessage>
+                            </FormControl>
+                            <Flex align="center" gap={2}>
+                                <input
+                                    id="remember"
+                                    type="checkbox"
+                                    checked={data.remember}
+                                    onChange={(e) => setData('remember', e.target.checked)}
+                                />
+                                <label htmlFor="remember">Se souvenir de moi</label>
+                            </Flex>
                             <Button
                                 colorScheme="orange"
                                 size="lg"
