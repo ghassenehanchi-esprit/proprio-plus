@@ -68,6 +68,7 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/listings/search', [PageController::class, 'search'])->name('listings.search'); // Vue Inertia
 Route::get('/api/listings', [ListingController::class, 'index'])->name('listings.index');   // API JSON
+Route::get('/listings/{listing}', [PageController::class, 'listingShow'])->name('listings.show');
 
 Route::get('/login', [PageController::class, 'login'])->name('login');
 Route::get('/register', [PageController::class, 'register'])->name('register');
@@ -76,6 +77,7 @@ Route::get('/reset-password/{token}', [PageController::class, 'resetPassword'])-
 Route::get('/verify-sms', [PageController::class, 'smsCode'])->name('verify.sms');
 Route::get('/upload-identity', [PageController::class, 'uploadIdentity'])->name('verify.identity');
 Route::middleware(['auth'])->group(function () {
+    Route::get('/favorites', [PageController::class, 'favorites'])->name('favorites.index');
     Route::post('/listings/{listing}/favorite', [ListingController::class, 'toggle'])->name('favorites.toggle');
 });
 Route::middleware(['auth'])->group(function () {
