@@ -1,38 +1,46 @@
-import { Head, useForm } from '@inertiajs/react';
-import { Box, Button, Input, Text, VStack } from '@chakra-ui/react';
+import { useForm, Link } from '@inertiajs/react';
+import { Box, Button, Flex, Heading, Input, VStack, Text } from '@chakra-ui/react';
 
-export default function ForgotPassword({ status }) {
-  const { data, setData, post, processing, errors } = useForm({
+export default function ForgotPassword() {
+  const { data, setData, post, processing } = useForm({
     email: ''
   });
 
-  const submit = e => {
+  const submit = (e) => {
+
     e.preventDefault();
     post(route('password.email'));
   };
 
   return (
-    <> 
-      <Head title="Mot de passe oublié" />
-      <Box maxW="md" mx="auto" mt={10} p={6} bg="white" borderRadius="md" boxShadow="md">
-        <form onSubmit={submit}>
-          <VStack spacing={4} align="stretch">
-            <Text fontSize="sm" color="gray.600">
-              Mot de passe oublié ? Indiquez votre email et nous vous enverrons un lien pour le réinitialiser.
-            </Text>
-            {status && <Text color="green.600">{status}</Text>}
-            <Input
-              type="email"
-              value={data.email}
-              onChange={e => setData('email', e.target.value)}
-              placeholder="Adresse email"
-              isInvalid={Boolean(errors.email)}
-            />
-            {errors.email && <Text color="red.500">{errors.email}</Text>}
-            <Button colorScheme="orange" type="submit" isLoading={processing}>Envoyer le lien</Button>
-          </VStack>
-        </form>
-      </Box>
-    </>
+    <Flex minH="100vh" bg="gray.50">
+      <Flex flex={1} justify="center" align="center" bg="white">
+        <Box w="full" maxW="md" p={8}>
+          <Heading size="lg" mb={6} textAlign="center">Mot de passe oublié</Heading>
+          <form onSubmit={submit}>
+            <VStack spacing={4}>
+              <Input
+                name="email"
+                placeholder="Adresse email"
+                bg="gray.100"
+                value={data.email}
+                onChange={(e) => setData('email', e.target.value)}
+              />
+              <Button colorScheme="orange" w="full" type="submit" isLoading={processing}>
+                Envoyer le lien de réinitialisation
+              </Button>
+            </VStack>
+          </form>
+          <Text mt={6} fontSize="sm">
+            <Link href="/login">
+              <Button variant="link" colorScheme="orange" size="sm">Retour connexion</Button>
+            </Link>
+          </Text>
+        </Box>
+      </Flex>
+      <Box flex={1} bgImage="url('/images/auth-back.png')" bgSize="cover" bgPos="center" display={{ base: 'none', md: 'block' }} />
+    </Flex>
+
+   
   );
 }

@@ -71,15 +71,15 @@ Route::get('/api/listings', [ListingController::class, 'index'])->name('listings
 
 Route::get('/login', [PageController::class, 'login'])->name('login');
 Route::get('/register', [PageController::class, 'register'])->name('register');
+Route::get('/forgot-password', [PageController::class, 'forgotPassword'])->name('password.request');
+Route::get('/reset-password/{token}', [PageController::class, 'resetPassword'])->name('password.reset');
 Route::get('/verify-sms', [PageController::class, 'smsCode'])->name('verify.sms');
 Route::get('/upload-identity', [PageController::class, 'uploadIdentity'])->name('verify.identity');
 Route::middleware(['auth'])->group(function () {
     Route::post('/listings/{listing}/favorite', [ListingController::class, 'toggle'])->name('favorites.toggle');
 });
 Route::middleware(['auth'])->group(function () {
-    Route::get('/email/verify', function () {
-        return inertia('Auth/VerifyEmail'); // ou retourne une vue si pas Inertia
-    })->name('verification.notice');
+    Route::get('/email/verify', [PageController::class, 'verifyEmailNotice'])->name('verification.notice');
 
     Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
         $request->fulfill();
