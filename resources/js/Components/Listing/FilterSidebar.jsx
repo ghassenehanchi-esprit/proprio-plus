@@ -123,7 +123,7 @@ export default function FilterSidebar({ searchParams, setSearchParams, onSearch 
         </Checkbox>
       </VStack>
 
-      <Button colorScheme="green" onClick={onSearch}>Rechercher</Button>
+      <Button colorScheme="brand" onClick={onSearch}>Rechercher</Button>
     </VStack>
   );
 }
