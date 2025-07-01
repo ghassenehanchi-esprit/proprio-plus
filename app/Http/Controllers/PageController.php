@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
+use Illuminate\Http\Request;
 
 class PageController extends Controller
 {
@@ -24,6 +25,24 @@ class PageController extends Controller
     public function register()
     {
         return Inertia::render('Auth/Register');
+    }
+
+    public function forgotPassword()
+    {
+        return Inertia::render('Auth/ForgotPassword');
+    }
+
+    public function resetPassword(Request $request, string $token)
+    {
+        return Inertia::render('Auth/ResetPassword', [
+            'token' => $token,
+            'email' => $request->email,
+        ]);
+    }
+
+    public function verifyEmailNotice()
+    {
+        return Inertia::render('Auth/VerifyEmail');
     }
 
     public function smsCode()
