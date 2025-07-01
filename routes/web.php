@@ -65,6 +65,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/notifications', [NotificationController::class, 'index']);
     Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead']);
+    Route::post('/notifications/{notification}/unread', [NotificationController::class, 'markAsUnread']);
 });
 Route::middleware(['auth'])->group(function () {
     Route::get('/reports', [ReportController::class, 'index']);
