@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use App\Models\Listing;
 
 class PageController extends Controller
 {
@@ -12,9 +13,22 @@ class PageController extends Controller
         return Inertia::render('Home/Index');
     }
 
-    public function search()
+    public function search(Request $request)
     {
-        return Inertia::render('Listing/Search');
+        $query = Listing::query()
+            ->with('category', 'user')
+            ->where('status', 'active')
+            ->filter($request->all());
+
+        $listings = $query->get()->map(function ($listing) {
+            $listing->is_favorited = auth()->check() && $listing->favoritedBy()->where('user_id', auth()->id())->exists();
+            return $listing;
+        });
+
+        return Inertia::render('Listing/Search', [
+            'listings' => $listings,
+            'filters' => $request->all(),
+        ]);
     }
 
     public function login()
@@ -54,4 +68,22 @@ class PageController extends Controller
     {
         return Inertia::render('Verification/UploadIdentity');
     }
+
+    public function listingShow(Listing $listing)
+    {
+        $listing->load('category', 'user', 'gallery');
+        return Inertia::render('Home/Show', [
+            'listing' => $listing,
+        ]);
+    }
+
+    public function favorites()
+    {
+        $favorites = auth()->user()->favorites()->with('category', 'user')->get();
+
+        return Inertia::render('Listing/Favorites', [
+            'favorites' => $favorites,
+        ]);
+    }
 }
+

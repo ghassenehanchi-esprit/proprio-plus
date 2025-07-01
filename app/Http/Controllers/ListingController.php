@@ -13,63 +13,10 @@ class ListingController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Listing::query()->with('category', 'user')->where('status', 'active');
-
-        if ($request->filled('city')) {
-            $query->where('city', $request->city);
-        }
-
-        if ($request->filled('postal_code')) {
-            $query->where('postal_code', $request->postal_code);
-        }
-
-        if ($request->filled('min_price')) {
-            $query->where('price', '>=', $request->min_price);
-        }
-
-        if ($request->filled('max_price')) {
-            $query->where('price', '<=', $request->max_price);
-        }
-
-        if ($request->filled('min_surface')) {
-            $query->where('surface', '>=', $request->min_surface);
-        }
-
-        if ($request->filled('max_surface')) {
-            $query->where('surface', '<=', $request->max_surface);
-        }
-
-        if ($request->filled('rooms')) {
-            $query->where('rooms', '>=', $request->rooms);
-        }
-
-        if ($request->filled('bedrooms')) {
-            $query->where('bedrooms', '>=', $request->bedrooms);
-        }
-
-        if ($request->filled('has_terrace')) {
-            $query->where('has_terrace', (bool) $request->has_terrace);
-        }
-
-        if ($request->filled('has_parking')) {
-            $query->where('has_parking', (bool) $request->has_parking);
-        }
-
-        if ($request->filled('category_id')) {
-            $query->where('category_id', $request->category_id);
-        }
-
-        if ($request->filled('lat') && $request->filled('lng')) {
-            $lat = $request->lat;
-            $lng = $request->lng;
-            $radius = $request->radius ?? 10;
-
-            $haversine = "(6371 * acos(cos(radians($lat)) * cos(radians(latitude)) * cos(radians(longitude) - radians($lng)) + sin(radians($lat)) * sin(radians(latitude))))";
-
-            $query->selectRaw("*, $haversine AS distance")
-                ->having("distance", "<=", $radius)
-                ->orderBy("distance");
-        }
+        $query = Listing::query()
+            ->with('category', 'user')
+            ->where('status', 'active')
+            ->filter($request->all());
 
 
         $listings = $query->paginate(10);
