@@ -10,6 +10,8 @@ export default function ResetPassword({ token, email }) {
   });
 
   const submit = (e) => {
+
+
     e.preventDefault();
     post(route('password.update'));
   };
@@ -54,5 +56,7 @@ export default function ResetPassword({ token, email }) {
       </Flex>
       <Box flex={1} bgImage="url('/images/auth-back.png')" bgSize="cover" bgPos="center" display={{ base: 'none', md: 'block' }} />
     </Flex>
+
+   
   );
 }

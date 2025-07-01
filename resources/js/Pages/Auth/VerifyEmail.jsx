@@ -5,6 +5,9 @@ export default function VerifyEmail({ status }) {
   const { post, processing } = useForm();
 
   const submit = (e) => {
+
+
+
     e.preventDefault();
     post(route('verification.send'));
   };
@@ -33,5 +36,6 @@ export default function VerifyEmail({ status }) {
         </form>
       </Box>
     </Flex>
+  
   );
 }

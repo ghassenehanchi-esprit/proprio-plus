@@ -7,6 +7,7 @@ export default function ForgotPassword() {
   });
 
   const submit = (e) => {
+
     e.preventDefault();
     post(route('password.email'));
   };
@@ -39,5 +40,7 @@ export default function ForgotPassword() {
       </Flex>
       <Box flex={1} bgImage="url('/images/auth-back.png')" bgSize="cover" bgPos="center" display={{ base: 'none', md: 'block' }} />
     </Flex>
+
+   
   );
 }
