@@ -13,7 +13,7 @@ class ConversationPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,7 +21,7 @@ class ConversationPolicy
      */
     public function view(User $user, Conversation $conversation): bool
     {
-        return false;
+        return in_array($user->id, [$conversation->buyer_id, $conversation->seller_id]);
     }
 
     /**
@@ -29,7 +29,7 @@ class ConversationPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -37,7 +37,7 @@ class ConversationPolicy
      */
     public function update(User $user, Conversation $conversation): bool
     {
-        return false;
+        return $user->id === $conversation->seller_id;
     }
 
     /**
