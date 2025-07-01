@@ -4,7 +4,6 @@ import {
     Box,
     Button,
     Flex,
-    Input,
     IconButton,
     useBreakpointValue
 } from '@chakra-ui/react';
@@ -36,6 +35,7 @@ export default function SearchBar() {
 
     const [mapOpen, setMapOpen] = useState(false);
     const [coordinates, setCoordinates] = useState([]);
+    const showFullButtons = useBreakpointValue({ base: false, md: true });
 
     const cleanedParams = Object.fromEntries(
         Object.entries(searchParams).filter(
@@ -83,13 +83,14 @@ export default function SearchBar() {
             bg="white"
             boxShadow="xl"
             borderRadius="full"
-            p={2}
+            p={4}
             w={{ base: '95%', md: '90%' }}
             mx="auto"
             align="center"
-            justify="space-between"
+            justify="center"
             wrap="wrap"
             gap={3}
+            direction={{ base: 'column', md: 'row' }}
         >
             <Box flex="1" minW="250px">
                 <AddressSearch onSelect={handleAddressChange} />
@@ -97,25 +98,44 @@ export default function SearchBar() {
 
             <FilterPopover searchParams={searchParams} setSearchParams={setSearchParams} />
 
-            <Button
-                leftIcon={<FaMapMarkedAlt />}
-                colorScheme="blue"
-                onClick={handleMapClick}
-                size="lg"
-                px={5}
-            >
-                Voir sur la carte
-            </Button>
+            {showFullButtons ? (
+                <>
+                    <Button
+                        leftIcon={<FaMapMarkedAlt />}
+                        colorScheme="blue"
+                        onClick={handleMapClick}
+                        size="lg"
+                        px={5}
+                    >
+                        Voir sur la carte
+                    </Button>
 
-            <Button
-                leftIcon={<FaSearch />}
-                colorScheme="green"
-                onClick={handleSearch}
-                size="lg"
-                px={6}
-            >
-                Rechercher
-            </Button>
+                    <Button
+                        leftIcon={<FaSearch />}
+                        colorScheme="green"
+                        onClick={handleSearch}
+                        size="lg"
+                        px={6}
+                    >
+                        Rechercher
+                    </Button>
+                </>
+            ) : (
+                <>
+                    <IconButton
+                        icon={<FaMapMarkedAlt />}
+                        colorScheme="blue"
+                        onClick={handleMapClick}
+                        aria-label="Voir sur la carte"
+                    />
+                    <IconButton
+                        icon={<FaSearch />}
+                        colorScheme="green"
+                        onClick={handleSearch}
+                        aria-label="Rechercher"
+                    />
+                </>
+            )}
 
             <PopupMap
                 opened={mapOpen}

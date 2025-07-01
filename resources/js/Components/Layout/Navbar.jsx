@@ -12,6 +12,7 @@ import {
     useDisclosure,
     IconButton,
     useColorModeValue,
+    useBreakpointValue,
     Image
 } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
@@ -20,6 +21,7 @@ import { Link, usePage } from "@inertiajs/react";
 export default function Navbar() {
     const { auth } = usePage().props;
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const isMobile = useBreakpointValue({ base: true, md: false });
 
     const [isScrolled, setIsScrolled] = useState(false);
 
@@ -77,10 +79,20 @@ export default function Navbar() {
                     </MenuList>
                 </Menu>
             ) : (
-                <Flex gap={2}>
-                    <Link href="/login"><Button variant="ghost">Se connecter</Button></Link>
-                    <Link href="/register"><Button colorScheme="orange">S’inscrire</Button></Link>
-                </Flex>
+                isMobile ? (
+                    <Menu>
+                        <MenuButton as={IconButton} icon={<HamburgerIcon />} variant="ghost" />
+                        <MenuList>
+                            <MenuItem as={Link} href="/login">Se connecter</MenuItem>
+                            <MenuItem as={Link} href="/register">S’inscrire</MenuItem>
+                        </MenuList>
+                    </Menu>
+                ) : (
+                    <Flex gap={2}>
+                        <Link href="/login"><Button variant="ghost">Se connecter</Button></Link>
+                        <Link href="/register"><Button colorScheme="orange">S’inscrire</Button></Link>
+                    </Flex>
+                )
             )}
         </Flex>
     );
