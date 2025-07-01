@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Models\Listing;
+use App\Models\User;
 
 class PageController extends Controller
 {
@@ -88,7 +89,11 @@ class PageController extends Controller
 
     public function accountSettings()
     {
-        return Inertia::render('Account/Settings');
+        $user = auth()->id() ? User::withBasicInfo()->find(auth()->id()) : null;
+
+        return Inertia::render('Account/Settings', [
+            'user' => $user,
+        ]);
     }
 }
 

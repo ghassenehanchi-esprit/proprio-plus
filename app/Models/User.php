@@ -24,6 +24,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'certification_date' => 'datetime',
     ];
+
+    public function scopeWithBasicInfo($query)
+    {
+        return $query->select('id', 'first_name', 'last_name', 'email', 'phone');
+    }
     public function favorites()
     {
         return $this->belongsToMany(Listing::class, 'favorites')->withTimestamps();
