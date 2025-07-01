@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import SearchBar from "@/Components/Listing/SearchBar.jsx";
 import FeatureSection from "@/Components/Listing/FeatureSection";
+import CreateListingCTA from "@/Components/Home/CreateListingCTA";
 
 export default function Home() {
   const heroHeight = useBreakpointValue({ base: "240px", md: "320px", lg: "400px" });
@@ -36,6 +37,7 @@ export default function Home() {
         </Box>
 
         <FeatureSection />
+        <CreateListingCTA />
     </Box>
   );
 }
