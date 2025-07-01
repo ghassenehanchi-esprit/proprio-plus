@@ -29,6 +29,8 @@ export default function FilterPopover({ searchParams, setSearchParams }) {
             setSearchParams((prev) => ({ ...prev, min_price: val[0], max_price: val[1] }));
         } else if (type === 'surface') {
             setSearchParams((prev) => ({ ...prev, min_surface: val[0], max_surface: val[1] }));
+        } else if (type === 'year_built') {
+            setSearchParams((prev) => ({ ...prev, min_year_built: val[0], max_year_built: val[1] }));
         }
     };
 
@@ -109,6 +111,28 @@ export default function FilterPopover({ searchParams, setSearchParams }) {
                         </Flex>
                     </Box>
 
+                    <Box>
+                        <Text mb={2}>Année de construction</Text>
+                        <RangeSlider
+                            aria-label={['min', 'max']}
+                            defaultValue={[1900, new Date().getFullYear()]}
+                            min={1900}
+                            max={new Date().getFullYear()}
+                            step={1}
+                            onChangeEnd={(val) => handleSliderChange('year_built', val)}
+                        >
+                            <RangeSliderTrack>
+                                <RangeSliderFilledTrack />
+                            </RangeSliderTrack>
+                            <RangeSliderThumb index={0} />
+                            <RangeSliderThumb index={1} />
+                        </RangeSlider>
+                        <Flex justify="space-between" mt={1}>
+                            <Text>{searchParams.min_year_built ?? 1900}</Text>
+                            <Text>{searchParams.max_year_built ?? new Date().getFullYear()}</Text>
+                        </Flex>
+                    </Box>
+
                     <Divider />
 
                     {/* ROOMS */}
@@ -148,6 +172,13 @@ export default function FilterPopover({ searchParams, setSearchParams }) {
                             onChange={handleCheckboxChange}
                         >
                             Parking
+                        </Checkbox>
+                        <Checkbox
+                            name="has_garden"
+                            isChecked={searchParams.has_garden}
+                            onChange={handleCheckboxChange}
+                        >
+                            Jardin
                         </Checkbox>
                     </VStack>
                 </PopoverBody>

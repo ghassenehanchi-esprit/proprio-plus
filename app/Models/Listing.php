@@ -100,6 +100,18 @@ class Listing extends Model
             $query->where('has_parking', (bool) $filters['has_parking']);
         }
 
+        if (array_key_exists('has_garden', $filters)) {
+            $query->where('has_garden', (bool) $filters['has_garden']);
+        }
+
+        if (!empty($filters['min_year_built'])) {
+            $query->where('year_built', '>=', $filters['min_year_built']);
+        }
+
+        if (!empty($filters['max_year_built'])) {
+            $query->where('year_built', '<=', $filters['max_year_built']);
+        }
+
         if (!empty($filters['category_id'])) {
             $query->where('category_id', $filters['category_id']);
         }
