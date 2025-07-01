@@ -4,6 +4,7 @@ use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\User\CertificationController;
@@ -57,9 +58,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/conversations', [ConversationController::class, 'store']);
     Route::get('/conversations/{conversation}', [ConversationController::class, 'show'])->middleware('participant');
     Route::post('/conversations/{conversation}/block', [ConversationController::class, 'block']);
+    Route::post('/conversations/{conversation}/close', [ConversationController::class, 'close']);
 
     Route::post('/conversations/{conversation}/messages', [MessageController::class, 'store'])->middleware('participant');
     Route::post('/messages/{message}/read', [MessageController::class, 'markAsRead']);
+
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead']);
 });
 Route::middleware(['auth'])->group(function () {
     Route::get('/reports', [ReportController::class, 'index']);
@@ -80,6 +85,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/favorites', [PageController::class, 'favorites'])->name('favorites.index');
     Route::post('/listings/{listing}/favorite', [ListingController::class, 'toggle'])->name('favorites.toggle');
     Route::get('/account/settings', [PageController::class, 'accountSettings'])->name('account.settings');
+    Route::get('/messages', [PageController::class, 'messages'])->name('messages.index');
 });
 Route::middleware(['auth'])->group(function () {
     Route::get('/email/verify', [PageController::class, 'verifyEmailNotice'])->name('verification.notice');

@@ -1,13 +1,8 @@
 <?php
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\DatabaseNotification;
 
-class Notification extends Model
+class Notification extends DatabaseNotification
 {
-    protected $fillable = ['user_id', 'content', 'type', 'is_read'];
-
-    public function user() {
-        return $this->belongsTo(User::class);
-    }
 }

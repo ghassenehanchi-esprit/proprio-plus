@@ -1,4 +1,6 @@
 import MainLayout from '@/Components/Layout/MainLayout';
+import axios from 'axios';
+import { router } from '@inertiajs/react';
 
 export default function Show({ listing }) {
   return (
@@ -13,7 +15,18 @@ export default function Show({ listing }) {
           <div>Prix : {listing.price} €</div>
         </div>
         <div className="mt-6">
-          <button className="bg-primary text-white px-4 py-2 rounded hover:bg-blue-700">Contacter le vendeur</button>
+          <button
+            onClick={async () => {
+              const res = await axios.post('/conversations', {
+                listing_id: listing.id,
+                seller_id: listing.user_id,
+              });
+              router.get('/messages', { conversation: res.data.id });
+            }}
+            className="bg-primary text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            Contacter le vendeur
+          </button>
         </div>
       </div>
     </MainLayout>

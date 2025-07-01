@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Conversation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Notifications\DatabaseNotification;
 
 class ConversationController extends Controller
 {
@@ -30,6 +31,10 @@ class ConversationController extends Controller
             'subject' => $request->subject
         ]);
 
+        if ($conversation->is_closed) {
+            return response()->json($conversation, 423);
+        }
+
         return response()->json($conversation);
     }
 
@@ -41,9 +46,26 @@ class ConversationController extends Controller
         return response()->json(['message' => 'Utilisateur bloqué.']);
     }
 
+    public function close(Conversation $conversation)
+    {
+        if ($conversation->seller_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $conversation->update(['is_closed' => true]);
+
+        return response()->json(['message' => 'Conversation fermee']);
+    }
+
     public function show(Conversation $conversation)
     {
         $this->authorize('view', $conversation);
+        DatabaseNotification::where('notifiable_id', Auth::id())
+            ->whereNull('read_at')
+            ->where('data->conversation_id', $conversation->id)
+            ->get()
+            ->each->markAsRead();
+
         return response()->json($conversation->load('messages'));
     }
 }

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('seller_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('buyer_id')->constrained('users')->onDelete('cascade');
             $table->boolean('is_blocked')->default(false);
+            $table->boolean('is_closed')->default(false);
             $table->string('subject')->nullable();
             $table->timestamps();
         });

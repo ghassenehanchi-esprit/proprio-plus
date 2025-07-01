@@ -16,6 +16,7 @@ import {
     Image
 } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
+import NotificationBell from "../UI/NotificationBell";
 import { Link, usePage } from "@inertiajs/react";
 import { route } from "ziggy-js";
 
@@ -67,6 +68,8 @@ export default function Navbar() {
             <Spacer />
 
             {auth?.user ? (
+                <>
+                <NotificationBell />
                 <Menu>
                     <MenuButton as={Button} variant="ghost" rightIcon={<HamburgerIcon />}>
                         <Avatar size="sm" name={auth.user.first_name} />
@@ -79,6 +82,7 @@ export default function Navbar() {
                         <MenuItem as={Link} href="/logout" method="post">Déconnexion</MenuItem>
                     </MenuList>
                 </Menu>
+                </>
             ) : (
                 isMobile ? (
                     <Menu>

@@ -8,7 +8,7 @@ use App\Policies\ConversationPolicy;
 #[UsePolicy(ConversationPolicy::class)]
 class Conversation extends Model
 {
-    protected $fillable = ['listing_id', 'seller_id', 'buyer_id', 'is_blocked', 'subject'];
+    protected $fillable = ['listing_id', 'seller_id', 'buyer_id', 'is_blocked', 'is_closed', 'subject'];
 
     public function listing() {
         return $this->belongsTo(Listing::class);

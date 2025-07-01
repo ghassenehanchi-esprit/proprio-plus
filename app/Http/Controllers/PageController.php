@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Models\Listing;
 use App\Models\User;
+use App\Models\Conversation;
 
 class PageController extends Controller
 {
@@ -93,6 +94,19 @@ class PageController extends Controller
 
         return Inertia::render('Account/Settings', [
             'user' => $user,
+        ]);
+    }
+
+    public function messages(Request $request)
+    {
+        $conversations = Conversation::where('buyer_id', auth()->id())
+            ->orWhere('seller_id', auth()->id())
+            ->with('listing', 'messages')
+            ->get();
+
+        return Inertia::render('Messages/Index', [
+            'conversations' => $conversations,
+            'current' => $request->conversation,
         ]);
     }
 }
