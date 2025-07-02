@@ -1,6 +1,8 @@
 <?php
 namespace App\Models;
 
+use App\Enums\ListingStatus;
+
 use Illuminate\Database\Eloquent\Model;
 
 class Listing extends Model
@@ -28,6 +30,10 @@ class Listing extends Model
         'status',
         'user_id',
         'category_id'
+    ];
+
+    protected $casts = [
+        'status' => ListingStatus::class,
     ];
 
     public function user() {
@@ -144,6 +150,27 @@ class Listing extends Model
         }
 
         return $query;
+    }
+
+    public function scopeStatus($query, ListingStatus|string $status)
+    {
+        $status = $status instanceof ListingStatus ? $status->value : $status;
+        return $query->where('status', $status);
+    }
+
+    public function scopeActive($query)
+    {
+        return $this->scopeStatus($query, ListingStatus::Active);
+    }
+
+    public function scopeSold($query)
+    {
+        return $this->scopeStatus($query, ListingStatus::Sold);
+    }
+
+    public function scopeArchived($query)
+    {
+        return $this->scopeStatus($query, ListingStatus::Archived);
     }
 
 
