@@ -32,15 +32,15 @@ class ListingController extends Controller
             'categories' => $categories,
         ]);
     }
-    public function all(): \Illuminate\Http\JsonResponse
+    public function all(Request $request): \Illuminate\Http\JsonResponse
     {
         $listings = Listing::where('status', 'active')
             ->whereNotNull('latitude')
             ->whereNotNull('longitude')
-            ->select('id', 'title', 'latitude', 'longitude', 'photos', 'address', 'price') // ou rent_per_week si tu veux
+            ->filter($request->all())
+            ->select('id', 'title', 'latitude', 'longitude', 'photos', 'address', 'price')
             ->get();
 
-        // Assure qu'on retourne bien un tableau vide si aucun résultat
         return response()->json([
             'data' => $listings ?? [],
         ]);

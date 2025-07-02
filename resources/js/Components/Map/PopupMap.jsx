@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
     Modal,
     ModalOverlay,
@@ -11,14 +11,16 @@ import {
     Icon,
     useBreakpointValue,
 } from "@chakra-ui/react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from "react-leaflet";
 import { MdLocationOn } from "react-icons/md";
 import L, { divIcon } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import Slider from "react-slick";
+import axios from "axios";
 
-const PopupMap = ({ opened, toggle, coordinates = [] }) => {
+const PopupMap = ({ opened, toggle, initialPosition }) => {
     const modalSize = useBreakpointValue({ base: "xl", md: "4xl", lg: "6xl" });
+    const [coords, setCoords] = useState([]);
 
     const sliderSettings = {
         dots: true,
@@ -27,6 +29,37 @@ const PopupMap = ({ opened, toggle, coordinates = [] }) => {
         slidesToShow: 1,
         slidesToScroll: 1,
         arrows: false,
+    };
+
+    const fetchListings = async (lat, lng) => {
+        try {
+            const response = await axios.get('/api/listings/map', {
+                params: { lat, lng, radius: 10 }
+            });
+            if (Array.isArray(response.data.data)) {
+                setCoords(response.data.data);
+            } else {
+                setCoords([]);
+            }
+        } catch (err) {
+            console.error('Erreur récupération carte :', err);
+            setCoords([]);
+        }
+    };
+
+    const MapEvents = () => {
+        const map = useMapEvents({
+            moveend: () => {
+                const center = map.getCenter();
+                fetchListings(center.lat, center.lng);
+            },
+        });
+
+        useEffect(() => {
+            const center = map.getCenter();
+            fetchListings(center.lat, center.lng);
+        }, [map]);
+        return null;
     };
 
     return (
@@ -43,7 +76,7 @@ const PopupMap = ({ opened, toggle, coordinates = [] }) => {
                 <ModalCloseButton />
                 <ModalBody p={0}>
                     <MapContainer
-                        center={[48.8566, 2.3522]}
+                        center={[initialPosition?.lat || 48.8566, initialPosition?.lng || 2.3522]}
                         zoom={12}
                         style={{ height: "500px", width: "100%" }}
                     >
@@ -51,8 +84,9 @@ const PopupMap = ({ opened, toggle, coordinates = [] }) => {
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                             attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
                         />
+                        <MapEvents />
 
-                        {coordinates.map((listing, index) => {
+                        {coords.map((listing, index) => {
                             const euroIcon = divIcon({
                                 className: "custom-icon",
                                 html: `

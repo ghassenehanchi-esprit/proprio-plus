@@ -1,10 +1,8 @@
-import MainLayout from '@/Components/Layout/MainLayout';
 import Input from '@/Components/UI/Input';
 import Button from '@/Components/UI/Button';
 
 export default function Form({ listing = {}, onSubmit }) {
   return (
-    <MainLayout>
       <form onSubmit={onSubmit} className="grid gap-4 max-w-xl mx-auto bg-white p-6 rounded shadow">
         <h2 className="text-xl font-bold">Ajouter / Modifier une annonce</h2>
         <Input name="title" placeholder="Titre" defaultValue={listing.title} />
@@ -14,6 +12,5 @@ export default function Form({ listing = {}, onSubmit }) {
         <textarea name="description" placeholder="Description" defaultValue={listing.description} className="border p-2 rounded" />
         <Button type="submit">Enregistrer</Button>
       </form>
-    </MainLayout>
   );
 }
