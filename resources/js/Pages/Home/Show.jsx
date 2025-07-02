@@ -1,5 +1,4 @@
 import { Box, Heading, Text, Flex, SimpleGrid, Image, Stack } from '@chakra-ui/react';
-import MainLayout from '@/Components/Layout/MainLayout';
 import ListingCard from '@/Components/Listing/ListingCard';
 import MapPreview from '@/Components/Map/MapPreview';
 import axios from 'axios';
@@ -17,7 +16,6 @@ export default function Show({ listing, similar = [] }) {
   };
 
   return (
-    <MainLayout>
       <Flex direction={{ base: 'column', md: 'row' }} gap={8} align="flex-start">
         <Box flex="1">
           <Image
@@ -84,6 +82,5 @@ export default function Show({ listing, similar = [] }) {
           </SimpleGrid>
         </Box>
       )}
-    </MainLayout>
   );
 }

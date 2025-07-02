@@ -11,7 +11,6 @@ import { FaSearch, FaSlidersH, FaMapMarkedAlt } from 'react-icons/fa';
 import AddressSearch from './AddressSearch';
 import FilterPopover from './FilterPopover.jsx';
 import PopupMap from '../Map/PopupMap';
-import axios from 'axios';
 import { router } from '@inertiajs/react';
 import { route } from 'ziggy-js';
 
@@ -37,7 +36,6 @@ export default function SearchBar() {
     });
 
     const [mapOpen, setMapOpen] = useState(false);
-    const [coordinates, setCoordinates] = useState([]);
     const showFullButtons = useBreakpointValue({ base: false, md: true });
 
     const cleanedParams = Object.fromEntries(
@@ -65,20 +63,8 @@ export default function SearchBar() {
         }));
     };
 
-    const handleMapClick = async () => {
-        try {
-            const response = await axios.get('/api/listings/map');
-            if (Array.isArray(response.data.data)) {
-                setCoordinates(response.data.data);
-            } else {
-                setCoordinates([]);
-            }
-            setMapOpen(true);
-        } catch (err) {
-            console.error("Erreur récupération carte :", err);
-            setCoordinates([]);
-            setMapOpen(true);
-        }
+    const handleMapClick = () => {
+        setMapOpen(true);
     };
 
     return (
@@ -143,7 +129,7 @@ export default function SearchBar() {
             <PopupMap
                 opened={mapOpen}
                 toggle={() => setMapOpen(false)}
-                coordinates={coordinates}
+                initialPosition={{ lat: searchParams.lat, lng: searchParams.lng }}
             />
         </Flex>
     );
