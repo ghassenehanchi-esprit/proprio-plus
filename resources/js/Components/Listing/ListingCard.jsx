@@ -55,45 +55,49 @@ export default function ListingCard({ listing }) {
 
     return (
         <Box
+            borderWidth="1px"
             borderRadius="lg"
             overflow="hidden"
             bg="white"
-            boxShadow="md"
+            boxShadow="sm"
             position="relative"
             transition="transform 0.2s"
-            _hover={{ transform: "scale(1.01)" }}
+            _hover={{ boxShadow: 'lg', transform: 'translateY(-2px)' }}
+            display="flex"
+            flexDirection="column"
         >
-            <Slider {...sliderSettings}>
-                {photos.map((photo, idx) => (
-                    <Image
-                        key={idx}
-                        src={photo || "/placeholder.jpg"}
-                        alt={`Photo ${idx + 1}`}
-                        objectFit="cover"
-                        height="180px"
-                        width="100%"
-                        borderRadius="md"
-                    />
-                ))}
-            </Slider>
-
-            <Box p={4} pb={6}>
-                <Stack spacing={1}>
-                    <Text fontSize="lg" fontWeight="bold">{listing.title}</Text>
-                    <Text fontSize="sm" color="gray.600">{listing.city}, {listing.postal_code}</Text>
-                    <Text fontSize="md" fontWeight="bold">{listing.price} €<Text as="span" fontWeight="normal" color="gray.500"> par nuit</Text></Text>
-                    <Text fontSize="sm" color="gray.600">Surface: {listing.surface} m²</Text>
-                    <Text fontSize="sm" color="gray.600">Pièces: {listing.rooms}, Chambres: {listing.bedrooms}, Sdb: {listing.bathrooms}</Text>
-                    <HStack spacing={2} mt={2}>
-                        {listing.has_terrace && <Text fontSize="xs" color="gray.600">Terrasse</Text>}
-                        {listing.has_parking && <Text fontSize="xs" color="gray.600">Parking</Text>}
-                    </HStack>
-                </Stack>
-            </Box>
-            <Box px={4} pb={4} display="flex" justifyContent="space-between" alignItems="center">
-                <Button as={Link} href={`/listings/${listing.id}`} colorScheme="brand" size="sm">Voir l'annonce</Button>
+            <Box position="relative">
+                <Slider {...sliderSettings}>
+                    {photos.map((photo, idx) => (
+                        <Image
+                            key={idx}
+                            src={photo || "/placeholder.jpg"}
+                            alt={`Photo ${idx + 1}`}
+                            objectFit="cover"
+                            height="220px"
+                            width="100%"
+                        />
+                    ))}
+                </Slider>
                 <FavoriteButton listingId={listing.id} isFavorited={listing.is_favorited} />
             </Box>
+
+            <Stack spacing={3} p={4} flex="1">
+                <Text fontSize="xl" fontWeight="bold">{listing.title}</Text>
+                <Text fontSize="md" color="gray.600">{listing.city}, {listing.postal_code}</Text>
+                <Text fontSize="lg" fontWeight="bold">{listing.price} €<Text as="span" fontWeight="normal" color="gray.500"> / nuit</Text></Text>
+                <Text fontSize="sm" color="gray.600">Surface : {listing.surface} m²</Text>
+                <Text fontSize="sm" color="gray.600">Pièces : {listing.rooms}, Chambres : {listing.bedrooms}, Sdb : {listing.bathrooms}</Text>
+                <HStack spacing={3} pt={2}>
+                    {listing.has_terrace && <Text fontSize="sm" color="gray.600">Terrasse</Text>}
+                    {listing.has_parking && <Text fontSize="sm" color="gray.600">Parking</Text>}
+                </HStack>
+            </Stack>
+            <Flex px={4} pb={4} justify="flex-end">
+                <Button as={Link} href={`/listings/${listing.id}`} colorScheme="brand" size="sm">
+                    Voir l'annonce
+                </Button>
+            </Flex>
         </Box>
     );
 }
