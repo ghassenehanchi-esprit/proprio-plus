@@ -51,6 +51,7 @@ Route::middleware(['auth', 'verified', EnsureIsAdmin::class])
     ->name('admin.')
     ->group(function () {
         Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+        Route::get('/users/data', [AdminUserController::class, 'data'])->name('users.data');
         Route::post('/users/{user}/certify', [AdminUserController::class, 'certify'])->name('users.certify');
         Route::post('/users/{user}/refuse', [AdminUserController::class, 'refuse'])->name('users.refuse');
     });

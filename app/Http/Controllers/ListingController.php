@@ -16,14 +16,27 @@ class ListingController extends Controller
 {
     public function index(Request $request)
     {
-        $listings = Listing::query()
+        $query = Listing::query()
             ->with('category', 'user')
             ->active()
             ->filter($request->all())
-            ->withFavoriteStatus(auth()->id())
-            ->paginate(10);
+            ->withFavoriteStatus(auth()->id());
 
-        return response()->json($listings);
+        if ($search = $request->input('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%")
+                    ->orWhere('city', 'like', "%{$search}%");
+            });
+        }
+
+        $sort = $request->input('sort', 'created_at');
+        $dir = $request->input('dir', 'desc');
+        $query->orderBy($sort, $dir);
+
+        $perPage = (int) $request->input('per_page', 10);
+
+        return $query->paginate($perPage);
     }
 
     public function create()
