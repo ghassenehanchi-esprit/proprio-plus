@@ -3,12 +3,13 @@ import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Fix default icon paths when using Leaflet with Vite
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: '/marker-icon-2x.png',
-  iconUrl: '/marker-icon.png',
-  shadowUrl: '/marker-shadow.png',
+// Use a simple div icon so we don't rely on external image assets
+const customIcon = L.divIcon({
+  className: '',
+  html:
+    '<div style="background:#d00;border:2px solid #fff;border-radius:50%;width:16px;height:16px;box-shadow:0 0 2px rgba(0,0,0,0.3);"></div>',
+  iconSize: [16, 16],
+  iconAnchor: [8, 8],
 });
 
 export default function MapPreview({ lat, lng }) {
@@ -26,7 +27,7 @@ export default function MapPreview({ lat, lng }) {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
       />
-      <Marker position={[lat, lng]} />
+      <Marker position={[lat, lng]} icon={customIcon} />
     </MapContainer>
   );
 }
