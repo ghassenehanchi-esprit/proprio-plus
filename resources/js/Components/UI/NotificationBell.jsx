@@ -14,21 +14,38 @@ import {
 import { BellIcon } from '@chakra-ui/icons';
 import { Link, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
+import { useToast } from '@chakra-ui/react';
 import axios from 'axios';
 
 export default function NotificationBell() {
   const { unreadNotifications = 0 } = usePage().props;
   const [notifications, setNotifications] = useState([]);
+  const toast = useToast();
 
   const loadNotifications = async () => {
     try {
       const res = await axios.get('/notifications');
-      setNotifications(res.data);
+      const data = res.data;
+      const currentIds = notifications.map(n => n.id);
+      data.forEach(n => {
+        if (!currentIds.includes(n.id)) {
+          toast({
+            title: 'Nouveau message',
+            description: n.data.content,
+            status: 'info',
+            duration: 5000,
+            isClosable: true,
+          });
+        }
+      });
+      setNotifications(data);
     } catch (e) {}
   };
 
   useEffect(() => {
     loadNotifications();
+    const interval = setInterval(loadNotifications, 10000);
+    return () => clearInterval(interval);
   }, []);
 
   const markAsRead = async (id) => {
