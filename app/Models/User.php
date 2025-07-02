@@ -6,6 +6,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -24,6 +26,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'certification_date' => 'datetime',
     ];
+
+    protected $appends = ['last_active_at'];
 
     public function scopeWithBasicInfo($query)
     {
@@ -76,5 +80,14 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function reportedBy() {
         return $this->hasMany(Report::class, 'reported_user_id');
+    }
+
+    public function getLastActiveAtAttribute()
+    {
+        $timestamp = DB::table('sessions')
+            ->where('user_id', $this->id)
+            ->max('last_activity');
+
+        return $timestamp ? Carbon::createFromTimestamp($timestamp) : null;
     }
 }
