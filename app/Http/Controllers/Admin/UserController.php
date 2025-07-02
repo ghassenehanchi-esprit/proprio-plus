@@ -10,8 +10,18 @@ class UserController extends Controller
 {
     public function certify(User $user)
     {
-        $user->update(['certification_status' => 'certifié']);
+        $user->update([
+            'certification_status' => 'certifié',
+            'certification_date' => now(),
+        ]);
 
         return response()->json(['message' => 'Utilisateur certifié avec succès']);
+    }
+
+    public function refuse(User $user)
+    {
+        $user->update(['certification_status' => 'refusé']);
+
+        return response()->json(['message' => "Certification refusée"]);
     }
 }
