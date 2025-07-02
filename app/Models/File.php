@@ -16,7 +16,7 @@ class File extends Model
 
     public function url(): Attribute
     {
-        return Attribute::get(fn () => Storage::url($this->path));
+        return Attribute::get(fn () => Storage::disk('public')->url($this->path));
     }
 
     public function fileable()
