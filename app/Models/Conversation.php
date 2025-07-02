@@ -14,6 +14,14 @@ class Conversation extends Model
         return $this->belongsTo(Listing::class);
     }
 
+    public function seller() {
+        return $this->belongsTo(User::class, 'seller_id');
+    }
+
+    public function buyer() {
+        return $this->belongsTo(User::class, 'buyer_id');
+    }
+
     public function messages() {
         return $this->hasMany(Message::class);
     }

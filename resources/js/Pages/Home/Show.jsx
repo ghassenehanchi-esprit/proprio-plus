@@ -181,12 +181,9 @@ export default function Show({ listing, similar = [] }) {
 
           {!isOwner && (
             <Box mt={6}>
-              <button
-                onClick={handleContact}
-                className="bg-primary text-white px-4 py-2 rounded hover:bg-blue-700"
-              >
-                Contacter le vendeur
-              </button>
+              <Button width="full" colorScheme="brand" onClick={handleContact}>
+                Contacter le propriétaire
+              </Button>
             </Box>
           )}
         </Box>
