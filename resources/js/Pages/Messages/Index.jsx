@@ -64,11 +64,12 @@ export default function Index({ conversations: initial = {}, current }) {
   };
 
   useEffect(() => {
-    if (conversations.length) {
-      const first = current ? conversations.find(c => c.id == current) : conversations[0];
-      if (first) loadConversation(first);
+    if (!conversations.length) return;
+    const target = current ? conversations.find(c => c.id == current) : conversations[0];
+    if (target && target.id !== active?.id) {
+      loadConversation(target);
     }
-  }, []);
+  }, [conversations, current]);
 
   useEffect(() => {
     if (!active) return;

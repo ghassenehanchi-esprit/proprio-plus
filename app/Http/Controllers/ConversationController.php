@@ -107,6 +107,6 @@ class ConversationController extends Controller
             ->where('is_read', false)
             ->update(['is_read' => true]);
 
-        return response()->json($conversation->load('messages', 'seller', 'buyer'));
+        return response()->json($conversation->load(['messages.sender', 'seller', 'buyer']));
     }
 }
