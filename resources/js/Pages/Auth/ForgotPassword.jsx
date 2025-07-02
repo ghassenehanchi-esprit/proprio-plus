@@ -1,10 +1,13 @@
 import { useForm, Link } from '@inertiajs/react';
+import useErrorAlert from '@/hooks/useErrorAlert';
 import { Box, Button, Flex, Heading, Input, VStack, Text } from '@chakra-ui/react';
 
 export default function ForgotPassword() {
-  const { data, setData, post, processing } = useForm({
+  const { data, setData, post, processing, errors } = useForm({
     email: ''
   });
+
+  useErrorAlert(errors);
 
   const submit = (e) => {
 

@@ -27,3 +27,25 @@ body {
 }
 
 @import 'admin';
+
+.sweetalert-toast {
+  position: fixed;
+  left: 50%;
+  bottom: -100px;
+  transform: translate(-50%, 100%);
+  background: #ff453f;
+  color: #fff;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.375rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+  z-index: 9999;
+}
+
+.sweetalert-toast.sweetalert-success {
+  background: #38a169;
+}
+
+.sweetalert-toast.sweetalert-error {
+  background: #e53e3e;
+}

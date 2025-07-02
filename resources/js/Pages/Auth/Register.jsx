@@ -1,5 +1,6 @@
 
 import { useForm } from '@inertiajs/react';
+import useErrorAlert from '@/hooks/useErrorAlert';
 import {
     Box,
     Heading,
@@ -23,6 +24,8 @@ export default function Register() {
         password: '',
         password_confirmation: '',
     });
+
+    useErrorAlert(errors);
 
     const submit = (e) => {
         e.preventDefault();

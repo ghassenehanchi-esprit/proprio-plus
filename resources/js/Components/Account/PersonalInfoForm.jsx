@@ -1,5 +1,6 @@
 import { useForm } from '@inertiajs/react';
 import { Box, FormControl, FormLabel, Input, FormErrorMessage, Button, VStack } from '@chakra-ui/react';
+import useErrorAlert from '@/hooks/useErrorAlert';
 import React from 'react';
 
 export default function PersonalInfoForm({ user }) {
@@ -9,6 +10,8 @@ export default function PersonalInfoForm({ user }) {
     phone: user?.phone || '',
     email: user?.email || '',
   });
+
+  useErrorAlert(errors);
 
   const submit = (e) => {
     e.preventDefault();

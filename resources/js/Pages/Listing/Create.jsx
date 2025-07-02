@@ -1,4 +1,5 @@
 import { useForm } from '@inertiajs/react';
+import useErrorAlert from '@/hooks/useErrorAlert';
 import { useState, useEffect, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import axios from 'axios';
@@ -73,6 +74,8 @@ export default function Create({ categories: initialCategories = [] }) {
     gallery: [],
     documents: null,
   });
+
+  useErrorAlert(errors);
 
   const next = () => setStep((s) => Math.min(s + 1, 4));
   const back = () => setStep((s) => Math.max(s - 1, 1));

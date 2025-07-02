@@ -1,5 +1,6 @@
 import { useForm } from '@inertiajs/react';
 import { Box, FormControl, FormLabel, Input, FormErrorMessage, Button, VStack } from '@chakra-ui/react';
+import useErrorAlert from '@/hooks/useErrorAlert';
 import React from 'react';
 
 export default function PasswordForm() {
@@ -8,6 +9,8 @@ export default function PasswordForm() {
     password: '',
     password_confirmation: '',
   });
+
+  useErrorAlert(errors);
 
   const submit = (e) => {
     e.preventDefault();
