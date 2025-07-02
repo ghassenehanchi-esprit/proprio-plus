@@ -36,8 +36,9 @@ export default function NotificationBell() {
 
       const currentIds = notifications.map(n => n.id);
       data.forEach(n => {
-        if (!currentIds.includes(n.id)) {
+        if (!currentIds.includes(n.id) && !toast.isActive(n.id)) {
           toast({
+            id: n.id,
             title: 'Nouveau message',
             description: n.data.content,
             status: 'info',
