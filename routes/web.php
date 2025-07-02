@@ -67,6 +67,9 @@ Route::middleware(['auth', 'verified', 'certified'])->group(function () {
     Route::post('/conversations/{conversation}/block', [ConversationController::class, 'block']);
     Route::post('/conversations/{conversation}/close', [ConversationController::class, 'close']);
 
+    Route::post('/conversations/{conversation}/read', [ConversationController::class, 'markAsRead']);
+    Route::post('/conversations/{conversation}/unread', [ConversationController::class, 'markAsUnread']);
+
     Route::post('/conversations/{conversation}/messages', [MessageController::class, 'store'])->middleware('participant');
     Route::post('/messages/{message}/read', [MessageController::class, 'markAsRead']);
 

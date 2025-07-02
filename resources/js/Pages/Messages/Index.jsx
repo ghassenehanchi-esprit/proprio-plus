@@ -1,15 +1,17 @@
-import { Box, Heading, HStack, VStack, Text, Input, Button, Avatar } from '@chakra-ui/react';
-import { FaCheckDouble } from 'react-icons/fa';
+import { Box, Heading, HStack, VStack, Text, Input, Button, Avatar, IconButton } from '@chakra-ui/react';
+import { FaCheckDouble, FaEnvelope, FaEnvelopeOpen } from 'react-icons/fa';
 import { usePage } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-export default function Index({ conversations = [], current }) {
+export default function Index({ conversations: initial = {}, current }) {
   const { auth } = usePage().props;
   const [active, setActive] = useState(null);
   const [messages, setMessages] = useState([]);
   const [partner, setPartner] = useState(null);
   const [content, setContent] = useState('');
+  const [conversations, setConversations] = useState(initial.data || []);
+  const [nextPage, setNextPage] = useState(initial.next_page_url);
 
   const loadConversation = async (conv) => {
     setActive(conv);
@@ -17,6 +19,23 @@ export default function Index({ conversations = [], current }) {
     setMessages(res.data.messages);
     const other = res.data.seller_id === auth.user.id ? res.data.buyer : res.data.seller;
     setPartner(other);
+  };
+
+  const loadMore = async () => {
+    if (!nextPage) return;
+    const res = await axios.get(nextPage);
+    setConversations(cs => [...cs, ...res.data.data]);
+    setNextPage(res.data.next_page_url);
+  };
+
+  const toggleRead = async (conv) => {
+    if (conv.unread_count > 0) {
+      await axios.post(`/conversations/${conv.id}/read`);
+      setConversations(cs => cs.map(c => c.id === conv.id ? { ...c, unread_count: 0 } : c));
+    } else {
+      await axios.post(`/conversations/${conv.id}/unread`);
+      setConversations(cs => cs.map(c => c.id === conv.id ? { ...c, unread_count: 1 } : c));
+    }
   };
 
   const refreshMessages = async () => {
@@ -51,10 +70,37 @@ export default function Index({ conversations = [], current }) {
     <HStack align="start" spacing={6}>
       <VStack align="stretch" w="250px" spacing={1}>
         {conversations.map(c => (
-          <Box key={c.id} p={3} bg={active?.id === c.id ? 'brand.100' : 'white'} borderRadius="md" cursor="pointer" onClick={() => loadConversation(c)}>
-            <Text fontWeight="bold">{c.listing.title}</Text>
+          <Box
+            key={c.id}
+            p={3}
+            bg={active?.id === c.id ? 'brand.100' : c.unread_count > 0 ? 'gray.100' : 'white'}
+            borderRadius="md"
+            borderWidth="1px"
+            borderColor={c.unread_count > 0 ? 'brand.200' : 'gray.200'}
+            cursor="pointer"
+            _hover={{ bg: c.unread_count > 0 ? 'gray.200' : 'gray.50' }}
+            onClick={() => loadConversation(c)}
+          >
+            <HStack justify="space-between">
+              <VStack align="start" spacing={0} flex="1">
+                <Text fontWeight="bold" noOfLines={1}>{c.listing.title}</Text>
+                {c.unread_count > 0 && (
+                  <Text fontSize="xs" color="brand.600">{c.unread_count} nouveau(x)</Text>
+                )}
+              </VStack>
+              <IconButton
+                icon={c.unread_count > 0 ? <FaEnvelopeOpen /> : <FaEnvelope />}
+                size="sm"
+                variant="ghost"
+                onClick={(e) => { e.stopPropagation(); toggleRead(c); }}
+                aria-label="toggle read"
+              />
+            </HStack>
           </Box>
         ))}
+        {nextPage && (
+          <Button variant="ghost" onClick={loadMore}>Charger plus</Button>
+        )}
       </VStack>
       <Box flex="1" bg="white" p={4} borderRadius="md">
         {active ? (

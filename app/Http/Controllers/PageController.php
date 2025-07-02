@@ -108,8 +108,13 @@ class PageController extends Controller
     {
         $conversations = Conversation::where('buyer_id', auth()->id())
             ->orWhere('seller_id', auth()->id())
-            ->with('listing', 'messages', 'seller', 'buyer')
-            ->get();
+            ->with('listing', 'seller', 'buyer')
+            ->withCount(['messages as unread_count' => function ($q) {
+                $q->where('sender_id', '!=', auth()->id())
+                    ->where('is_read', false);
+            }])
+            ->latest()
+            ->paginate(10);
 
         return Inertia::render('Messages/Index', [
             'conversations' => $conversations,

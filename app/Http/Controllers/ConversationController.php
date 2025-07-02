@@ -8,11 +8,19 @@ use Illuminate\Notifications\DatabaseNotification;
 
 class ConversationController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(Conversation::where('buyer_id', Auth::id())
+        $conversations = Conversation::where('buyer_id', Auth::id())
             ->orWhere('seller_id', Auth::id())
-            ->with('listing', 'messages', 'seller', 'buyer')->get());
+            ->with('listing', 'seller', 'buyer')
+            ->withCount(['messages as unread_count' => function ($q) {
+                $q->where('sender_id', '!=', Auth::id())
+                    ->where('is_read', false);
+            }])
+            ->latest()
+            ->paginate($request->query('limit', 10));
+
+        return response()->json($conversations);
     }
 
     public function store(Request $request)
@@ -59,6 +67,30 @@ class ConversationController extends Controller
         $conversation->update(['is_closed' => true]);
 
         return response()->json(['message' => 'Conversation fermee']);
+    }
+
+    public function markAsRead(Conversation $conversation)
+    {
+        $this->authorize('view', $conversation);
+        $conversation->messages()
+            ->where('sender_id', '!=', Auth::id())
+            ->update(['is_read' => true]);
+
+        return response()->json(['unread_count' => 0]);
+    }
+
+    public function markAsUnread(Conversation $conversation)
+    {
+        $this->authorize('view', $conversation);
+        $conversation->messages()
+            ->where('sender_id', '!=', Auth::id())
+            ->update(['is_read' => false]);
+
+        $count = $conversation->messages()
+            ->where('sender_id', '!=', Auth::id())
+            ->count();
+
+        return response()->json(['unread_count' => $count]);
     }
 
     public function show(Conversation $conversation)
