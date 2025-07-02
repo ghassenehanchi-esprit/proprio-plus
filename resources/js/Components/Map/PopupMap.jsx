@@ -48,17 +48,18 @@ const PopupMap = ({ opened, toggle, initialPosition }) => {
     };
 
     const MapEvents = () => {
-        const map = useMapEvents({
-            moveend: () => {
-                const center = map.getCenter();
-                fetchListings(center.lat, center.lng);
-            },
-        });
+        const map = useMapEvents({});
 
         useEffect(() => {
-            const center = map.getCenter();
-            fetchListings(center.lat, center.lng);
+            const handleMove = () => {
+                const center = map.getCenter();
+                fetchListings(center.lat, center.lng);
+            };
+            map.on('moveend', handleMove);
+            handleMove();
+            return () => map.off('moveend', handleMove);
         }, [map]);
+
         return null;
     };
 
@@ -95,9 +96,10 @@ const PopupMap = ({ opened, toggle, initialPosition }) => {
                     border-radius: 12px;
                     padding: 4px 10px;
                     font-size: 14px;
-                    font-weight: bold;
-                    color: #000;
-                    border: 1px solid #ccc;
+                    font-weight: 600;
+                    color: #333;
+                    border: 1px solid #bbb;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
                     cursor: pointer;">
                     ${listing.price} €
                   </button>
@@ -123,13 +125,13 @@ const PopupMap = ({ opened, toggle, initialPosition }) => {
                                                         key={i}
                                                         src={photo}
                                                         alt={`photo-${i}`}
-                                                        style={{ width: "100%", borderRadius: "8px" }}
+                                                        className="popup-image"
                                                     />
                                                 ))}
                                             </Slider>
                                             <div style={{ paddingTop: "8px" }}>
-                                                <strong>{listing.title}</strong>
-                                                <p style={{ fontSize: "13px" }}>
+                                                <p style={{ fontWeight: 600, marginBottom: '4px' }}>{listing.title}</p>
+                                                <p style={{ fontSize: '13px', color: '#555' }}>
                                                     <Icon as={MdLocationOn} /> {listing.city}
                                                 </p>
                                             </div>
