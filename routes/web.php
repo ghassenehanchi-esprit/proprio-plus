@@ -13,6 +13,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Middleware\EnsureIsAdmin;
 use Illuminate\Http\Request;
 
 use Inertia\Inertia;
@@ -45,10 +46,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/certification', [CertificationController::class, 'showForm'])->name('certification.form');
     Route::post('/certification', [CertificationController::class, 'submitDocument'])->name('certification.submit');
 });
-Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
-    Route::post('/users/{user}/certify', [AdminUserController::class, 'certify'])->name('users.certify');
-    Route::post('/users/{user}/refuse', [AdminUserController::class, 'refuse'])->name('users.refuse');
-});
+Route::middleware(['auth', 'verified', EnsureIsAdmin::class])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+        Route::post('/users/{user}/certify', [AdminUserController::class, 'certify'])->name('users.certify');
+        Route::post('/users/{user}/refuse', [AdminUserController::class, 'refuse'])->name('users.refuse');
+    });
 Route::middleware(['auth', 'verified', 'certified'])->group(function () {
     Route::resource('listings', ListingController::class)->except(['show']);
     Route::post('listings/{listing}/mark-as-sold', [ListingController::class, 'markAsSold'])->name('listings.sold');
