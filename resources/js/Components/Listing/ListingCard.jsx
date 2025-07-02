@@ -9,6 +9,7 @@ import {
     IconButton,
     Button,
 } from "@chakra-ui/react";
+import Slider from "react-slick";
 import { Link } from "@inertiajs/react";
 import {FaHeart, FaRegHeart, FaStar} from "react-icons/fa";
 import {useState} from "react";
@@ -43,6 +44,15 @@ export default function ListingCard({ listing }) {
         ? listing.photos
         : JSON.parse(listing.photos || '[]');
 
+    const sliderSettings = {
+        dots: false,
+        arrows: false,
+        infinite: true,
+        speed: 400,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+    };
+
     return (
         <Box
             borderRadius="lg"
@@ -53,7 +63,7 @@ export default function ListingCard({ listing }) {
             transition="transform 0.2s"
             _hover={{ transform: "scale(1.01)" }}
         >
-            <Flex overflowX="auto" gap={2}>
+            <Slider {...sliderSettings}>
                 {photos.map((photo, idx) => (
                     <Image
                         key={idx}
@@ -61,11 +71,11 @@ export default function ListingCard({ listing }) {
                         alt={`Photo ${idx + 1}`}
                         objectFit="cover"
                         height="180px"
-                        minW="300px"
+                        width="100%"
                         borderRadius="md"
                     />
                 ))}
-            </Flex>
+            </Slider>
 
             <Box p={4} pb={6}>
                 <Stack spacing={1}>
