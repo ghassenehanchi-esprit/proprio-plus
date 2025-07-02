@@ -16,7 +16,9 @@ class File extends Model
 
     public function url(): Attribute
     {
-        return Attribute::get(fn () => Storage::disk('public')->url($this->path));
+        // Return a relative URL so the frontend can reference files in the
+        // "public" directory without relying on the APP_URL configuration.
+        return Attribute::get(fn () => '/storage/'.ltrim($this->path, '/'));
     }
 
     public function fileable()

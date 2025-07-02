@@ -3,6 +3,8 @@ import '../scss/index.scss';
 
 import * as React from 'react';
 import 'leaflet/dist/leaflet.css';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 import { createRoot } from 'react-dom/client';
 import { createInertiaApp } from '@inertiajs/react';

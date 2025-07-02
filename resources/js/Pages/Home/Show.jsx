@@ -1,4 +1,5 @@
 import { Box, Heading, Text, Flex, SimpleGrid, Image, Stack, IconButton, Input, Textarea, Button, Popover, PopoverTrigger, PopoverContent, Avatar } from '@chakra-ui/react';
+import Slider from 'react-slick';
 import ListingCard from '@/Components/Listing/ListingCard';
 import MapPreview from '@/Components/Map/MapPreview';
 import axios from 'axios';
@@ -9,6 +10,14 @@ import { useState } from 'react';
 export default function Show({ listing, similar = [] }) {
   const { auth } = usePage().props;
   const photos = listing.gallery?.map(g => g.url) || [];
+  const sliderSettings = {
+    dots: true,
+    arrows: false,
+    infinite: true,
+    speed: 400,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
   const isOwner = auth?.user?.id === listing.user_id;
   const [editing, setEditing] = useState(false);
   const [data, setData] = useState({
@@ -58,29 +67,19 @@ export default function Show({ listing, similar = [] }) {
     <>
       <Flex direction={{ base: 'column', md: 'row' }} gap={8} align="flex-start">
         <Box flex="1">
-          <Image
-            src={photos[0] || '/placeholder.png'}
-            alt={listing.title}
-            w="full"
-            h="64"
-            objectFit="cover"
-            rounded="md"
-          />
-          {photos.length > 1 && (
-            <SimpleGrid columns={{ base: 2, md: 3 }} spacing={2} mt={2}>
-              {photos.slice(1).map((src, i) => (
-                <Image
-                  key={i}
-                  src={src}
-                  alt={`${listing.title}-${i}`}
-                  objectFit="cover"
-                  h="100px"
-                  w="100%"
-                  rounded="md"
-                />
-              ))}
-            </SimpleGrid>
-          )}
+          <Slider {...sliderSettings}>
+            {photos.map((src, i) => (
+              <Image
+                key={i}
+                src={src || '/placeholder.png'}
+                alt={`${listing.title}-${i}`}
+                objectFit="cover"
+                h="64"
+                w="full"
+                rounded="md"
+              />
+            ))}
+          </Slider>
           {isOwner && !editing && (
             <Flex justify="flex-end" mt={2} gap={2}>
               <IconButton size="sm" icon={<FaEdit />} onClick={() => setEditing(true)} aria-label="Edit" />
