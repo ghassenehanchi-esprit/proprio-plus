@@ -74,8 +74,21 @@ class PageController extends Controller
     public function listingShow(Listing $listing)
     {
         $listing->load('category', 'user', 'gallery');
+
+        $similar = Listing::where('category_id', $listing->category_id)
+            ->where('id', '!=', $listing->id)
+            ->where('city', $listing->city)
+            ->where('status', 'active')
+            ->limit(4)
+            ->get()
+            ->map(function ($l) {
+                $l->is_favorited = auth()->check() && $l->favoritedBy()->where('user_id', auth()->id())->exists();
+                return $l;
+            });
+
         return Inertia::render('Home/Show', [
             'listing' => $listing,
+            'similar' => $similar,
         ]);
     }
 
