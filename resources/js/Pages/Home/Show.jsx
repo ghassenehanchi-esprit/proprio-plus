@@ -1,5 +1,5 @@
-import { Box, Heading, Text, Flex, SimpleGrid, Image, Stack, IconButton, Input, Textarea, Button, Popover, PopoverTrigger, PopoverContent, Avatar } from '@chakra-ui/react';
-import Slider from 'react-slick';
+import { Box, Heading, Text, Flex, SimpleGrid, Stack, IconButton, Input, Textarea, Button, Popover, PopoverTrigger, PopoverContent, Avatar } from '@chakra-ui/react';
+import GalleryWithZoom from '@/Components/Listing/GalleryWithZoom';
 import ListingCard from '@/Components/Listing/ListingCard';
 import MapPreview from '@/Components/Map/MapPreview';
 import axios from 'axios';
@@ -10,14 +10,6 @@ import { useState } from 'react';
 export default function Show({ listing, similar = [] }) {
   const { auth } = usePage().props;
   const photos = listing.gallery?.map(g => g.url) || [];
-  const sliderSettings = {
-    dots: true,
-    arrows: false,
-    infinite: true,
-    speed: 400,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-  };
   const isOwner = auth?.user?.id === listing.user_id;
   const [editing, setEditing] = useState(false);
   const [data, setData] = useState({
@@ -43,6 +35,15 @@ export default function Show({ listing, similar = [] }) {
     category_id: listing.category_id,
   });
 
+  const Attribute = ({ label, value }) => (
+    <Flex fontFamily="body" color="gray.700">
+      <Text fontWeight="semibold" color="brand.700" mr={1}>
+        {label}:
+      </Text>
+      <Text>{value}</Text>
+    </Flex>
+  );
+
   const handleContact = async () => {
     const res = await axios.post('/conversations', {
       listing_id: listing.id,
@@ -67,19 +68,7 @@ export default function Show({ listing, similar = [] }) {
     <>
       <Flex direction={{ base: 'column', md: 'row' }} gap={8} align="flex-start">
         <Box flex="1">
-          <Slider {...sliderSettings}>
-            {photos.map((src, i) => (
-              <Image
-                key={i}
-                src={src || '/placeholder.png'}
-                alt={`${listing.title}-${i}`}
-                objectFit="cover"
-                h="64"
-                w="full"
-                rounded="md"
-              />
-            ))}
-          </Slider>
+          <GalleryWithZoom photos={photos} />
           {isOwner && !editing && (
             <Flex justify="flex-end" mt={2} gap={2}>
               <IconButton size="sm" icon={<FaEdit />} onClick={() => setEditing(true)} aria-label="Edit" />
@@ -144,21 +133,21 @@ export default function Show({ listing, similar = [] }) {
           )}
 
           <SimpleGrid columns={{ base: 1, sm: 2 }} spacing={2} mt={4} fontSize="sm">
-            <Text>Surface : {listing.surface} m²</Text>
-            <Text>Pièces : {listing.rooms}</Text>
-            {listing.bedrooms && <Text>Chambres : {listing.bedrooms}</Text>}
-            {listing.bathrooms && <Text>Sdb : {listing.bathrooms}</Text>}
+            <Attribute label="Surface" value={`${listing.surface} m²`} />
+            <Attribute label="Pièces" value={listing.rooms} />
+            {listing.bedrooms && <Attribute label="Chambres" value={listing.bedrooms} />}
+            {listing.bathrooms && <Attribute label="Sdb" value={listing.bathrooms} />}
             {listing.floor && (
-              <Text>
-                Étage : {listing.floor}
-                {listing.total_floors ? `/${listing.total_floors}` : ''}
-              </Text>
+              <Attribute
+                label="Étage"
+                value={`${listing.floor}${listing.total_floors ? `/${listing.total_floors}` : ''}`}
+              />
             )}
-            {listing.year_built && <Text>Année : {listing.year_built}</Text>}
-            {listing.heating && <Text>Chauffage : {listing.heating}</Text>}
-            {listing.has_terrace && <Text>Terrasse</Text>}
-            {listing.has_parking && <Text>Parking</Text>}
-            {listing.has_garden && <Text>Jardin</Text>}
+            {listing.year_built && <Attribute label="Année" value={listing.year_built} />}
+            {listing.heating && <Attribute label="Chauffage" value={listing.heating} />}
+            {listing.has_terrace && <Attribute label="Terrasse" value="Oui" />}
+            {listing.has_parking && <Attribute label="Parking" value="Oui" />}
+            {listing.has_garden && <Attribute label="Jardin" value="Oui" />}
           </SimpleGrid>
 
           {!isOwner && (
