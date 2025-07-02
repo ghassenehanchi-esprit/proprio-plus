@@ -23,6 +23,10 @@ class ConversationController extends Controller
             'subject' => 'nullable|string',
         ]);
 
+        if ($request->seller_id == Auth::id()) {
+            return response()->json(['message' => 'Action interdite'], 400);
+        }
+
         $conversation = Conversation::firstOrCreate([
             'listing_id' => $request->listing_id,
             'seller_id' => $request->seller_id,

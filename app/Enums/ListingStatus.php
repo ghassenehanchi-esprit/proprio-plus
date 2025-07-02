@@ -4,6 +4,7 @@ namespace App\Enums;
 enum ListingStatus: string
 {
     case Active = 'active';
+    case Pending = 'pending';
     case Sold = 'vendue';
     case Archived = 'archivée';
 
