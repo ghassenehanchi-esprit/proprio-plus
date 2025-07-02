@@ -1,5 +1,6 @@
 import { useForm } from '@inertiajs/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import {
   Box,
   Button,
@@ -20,9 +21,16 @@ import {
 } from '@chakra-ui/react';
 import AddressSearch from '@/Components/Listing/AddressSearch';
 
-export default function Create({ categories = [] }) {
+export default function Create({ categories: initialCategories = [] }) {
   const [step, setStep] = useState(1);
   const [previews, setPreviews] = useState([]);
+  const [categories, setCategories] = useState(initialCategories);
+
+  useEffect(() => {
+    if (initialCategories.length === 0) {
+      axios.get('/api/categories').then((r) => setCategories(r.data));
+    }
+  }, []);
 
   const { data, setData, post, processing, errors } = useForm({
     title: '',

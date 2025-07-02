@@ -17,15 +17,12 @@ class PageController extends Controller
 
     public function search(Request $request)
     {
-        $query = Listing::query()
+        $listings = Listing::query()
             ->with('category', 'user')
             ->where('status', 'active')
-            ->filter($request->all());
-
-        $listings = $query->get()->map(function ($listing) {
-            $listing->is_favorited = auth()->check() && $listing->favoritedBy()->where('user_id', auth()->id())->exists();
-            return $listing;
-        });
+            ->filter($request->all())
+            ->withFavoriteStatus(auth()->id())
+            ->get();
 
         return Inertia::render('Listing/Search', [
             'listings' => $listings,
@@ -73,18 +70,17 @@ class PageController extends Controller
 
     public function listingShow(Listing $listing)
     {
-        $listing->load('category', 'user', 'gallery');
+        $listing = Listing::with('category', 'user', 'gallery')
+            ->withFavoriteStatus(auth()->id())
+            ->findOrFail($listing->id);
 
         $similar = Listing::where('category_id', $listing->category_id)
             ->where('id', '!=', $listing->id)
             ->where('city', $listing->city)
             ->where('status', 'active')
+            ->withFavoriteStatus(auth()->id())
             ->limit(4)
-            ->get()
-            ->map(function ($l) {
-                $l->is_favorited = auth()->check() && $l->favoritedBy()->where('user_id', auth()->id())->exists();
-                return $l;
-            });
+            ->get();
 
         return Inertia::render('Home/Show', [
             'listing' => $listing,
