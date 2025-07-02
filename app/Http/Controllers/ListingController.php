@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreListingRequest;
 use App\Models\Favorite;
 use App\Models\Listing;
+use App\Models\Category;
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -25,6 +27,14 @@ class ListingController extends Controller
             return $listing;
         });
         return response()->json($listings);
+    }
+
+    public function create()
+    {
+        $categories = Category::select('id', 'name')->get();
+        return Inertia::render('Listing/Create', [
+            'categories' => $categories,
+        ]);
     }
     public function all(): \Illuminate\Http\JsonResponse
     {
@@ -73,7 +83,11 @@ class ListingController extends Controller
             }
         }
 
-        return response()->json(['message' => 'Annonce créée avec succès', 'listing' => $listing]);
+        if ($request->wantsJson()) {
+            return response()->json(['message' => 'Annonce créée avec succès', 'listing' => $listing]);
+        }
+
+        return redirect()->route('listings.show', $listing->id);
     }
 
     public function update(StoreListingRequest $request, Listing $listing)
