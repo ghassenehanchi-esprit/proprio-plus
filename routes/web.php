@@ -47,13 +47,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
     Route::post('/users/{user}/certify', [AdminUserController::class, 'certify'])->name('users.certify');
+    Route::post('/users/{user}/refuse', [AdminUserController::class, 'refuse'])->name('users.refuse');
 });
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'certified'])->group(function () {
     Route::resource('listings', ListingController::class)->except(['show']);
     Route::post('listings/{listing}/mark-as-sold', [ListingController::class, 'markAsSold'])->name('listings.sold');
     Route::post('listings/{listing}/archive', [ListingController::class, 'archive'])->name('listings.archive');
 });
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'certified'])->group(function () {
     Route::get('/conversations', [ConversationController::class, 'index']);
     Route::post('/conversations', [ConversationController::class, 'store']);
     Route::get('/conversations/{conversation}', [ConversationController::class, 'show'])->middleware('participant');
