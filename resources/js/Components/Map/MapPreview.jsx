@@ -2,6 +2,7 @@ import React from 'react';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { useBreakpointValue } from '@chakra-ui/react';
 
 // Use a simple div icon so we don't rely on external image assets
 const customIcon = L.divIcon({
@@ -17,11 +18,13 @@ export default function MapPreview({ lat, lng }) {
     return null;
   }
 
+  const mapHeight = useBreakpointValue({ base: '200px', md: '300px' });
+
   return (
     <MapContainer
       center={[lat, lng]}
       zoom={13}
-      style={{ height: '300px', width: '100%' }}
+      style={{ height: mapHeight, width: '100%' }}
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

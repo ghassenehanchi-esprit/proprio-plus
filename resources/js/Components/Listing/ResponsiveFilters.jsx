@@ -45,7 +45,7 @@ export default function ResponsiveFilters({ searchParams, setSearchParams, onSea
   }
 
   return (
-    <Box w="300px">
+    <Box w={{ base: 'full', md: '300px' }}>
       <FilterSidebar
         searchParams={searchParams}
         setSearchParams={setSearchParams}
