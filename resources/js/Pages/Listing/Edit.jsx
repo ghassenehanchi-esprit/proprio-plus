@@ -1,4 +1,5 @@
 import { useForm } from '@inertiajs/react';
+import useErrorAlert from '@/hooks/useErrorAlert';
 import { useEffect, useRef } from 'react';
 import axios from 'axios';
 import {
@@ -53,6 +54,8 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
     gallery: null,
     documents: null,
   });
+
+  useErrorAlert(errors);
 
   const [categories, setCategories] = React.useState(initialCategories);
 

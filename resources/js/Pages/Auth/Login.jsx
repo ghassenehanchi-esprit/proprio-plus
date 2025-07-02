@@ -1,4 +1,5 @@
 import { useForm } from '@inertiajs/react';
+import useErrorAlert from '@/hooks/useErrorAlert';
 import {
     Box,
     Button,
@@ -20,6 +21,8 @@ export default function Login() {
         password: '',
         remember: false,
     });
+
+    useErrorAlert(errors);
 
     const submit = (e) => {
         e.preventDefault();

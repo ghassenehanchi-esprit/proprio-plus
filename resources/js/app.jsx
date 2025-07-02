@@ -13,6 +13,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { RecoilRoot } from 'recoil';
 import theme from './theme';
 import LayoutWrapper from './Components/Layout/LayoutWrapper';
+import FlashMessages from './Components/UI/FlashMessages';
 
 createInertiaApp({
   title: title => `${title} - ProprioPlus`,
@@ -26,6 +27,7 @@ createInertiaApp({
     createRoot(el).render(
       <RecoilRoot>
         <ChakraProvider theme={theme}>
+          <FlashMessages />
           <App {...props} />
         </ChakraProvider>
       </RecoilRoot>
