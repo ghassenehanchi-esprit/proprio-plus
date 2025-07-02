@@ -50,6 +50,8 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
     address: listing.address || '',
     latitude: listing.latitude || '',
     longitude: listing.longitude || '',
+    gallery: null,
+    documents: null,
   });
 
   const [categories, setCategories] = React.useState(initialCategories);
@@ -64,9 +66,17 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
     setData(data => ({ ...data, city, postal_code, latitude: lat, longitude: lng }));
   };
 
+  const handleGalleryChange = e => {
+    setData('gallery', e.target.files);
+  };
+
+  const handleDocumentsChange = e => {
+    setData('documents', e.target.files);
+  };
+
   const submit = e => {
     e.preventDefault();
-    put(`/listings/${listing.id}`);
+    put(`/listings/${listing.id}`, { forceFormData: true });
   };
 
   const remove = () => {
@@ -167,6 +177,16 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
             <FormErrorMessage>{errors.postal_code}</FormErrorMessage>
           </FormControl>
         </SimpleGrid>
+        <FormControl isInvalid={errors.gallery} mt={4}>
+          <FormLabel>Photos</FormLabel>
+          <Input type="file" multiple onChange={handleGalleryChange} />
+          <FormErrorMessage>{errors.gallery}</FormErrorMessage>
+        </FormControl>
+        <FormControl isInvalid={errors.documents}>
+          <FormLabel>Documents</FormLabel>
+          <Input type="file" multiple onChange={handleDocumentsChange} />
+          <FormErrorMessage>{errors.documents}</FormErrorMessage>
+        </FormControl>
       </VStack>
 
       <Flex justify="space-between" mt={6}>

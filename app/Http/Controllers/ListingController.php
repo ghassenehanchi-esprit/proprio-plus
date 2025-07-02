@@ -128,6 +128,20 @@ class ListingController extends Controller
 
         $listing->update($data);
 
+        if ($request->hasFile('documents')) {
+            foreach ($request->file('documents') as $file) {
+                $path = $file->store('listing_documents', 'public');
+                $listing->documents()->create(['path' => $path, 'type' => 'document']);
+            }
+        }
+
+        if ($request->hasFile('gallery')) {
+            foreach ($request->file('gallery') as $file) {
+                $path = $file->store('listing_images', 'public');
+                $listing->gallery()->create(['path' => $path, 'type' => 'image']);
+            }
+        }
+
         $message = ($data['status'] ?? $listing->status?->value) === ListingStatus::Pending->value
             ? 'Annonce mise à jour et en attente de validation'
             : 'Annonce mise à jour';
