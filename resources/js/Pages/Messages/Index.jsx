@@ -3,6 +3,7 @@ import { FaCheckDouble, FaEnvelope, FaEnvelopeOpen } from 'react-icons/fa';
 import { usePage } from '@inertiajs/react';
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import sweetAlert from '@/libs/sweetalert';
 
 export default function Index({ conversations: initial = {}, current }) {
   const { auth } = usePage().props;
@@ -14,15 +15,25 @@ export default function Index({ conversations: initial = {}, current }) {
   const [nextPage, setNextPage] = useState(initial.next_page_url);
   const messagesEndRef = useRef(null);
 
+  const errorShown = useRef(false);
+
   const loadConversation = async (conv) => {
-    setActive(conv);
-    const res = await axios.get(`/conversations/${conv.id}`);
-    setMessages(res.data.messages);
-    const other = res.data.seller_id === auth.user.id ? res.data.buyer : res.data.seller;
-    setPartner(other);
-    setTimeout(() => {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, 0);
+    try {
+      setActive(conv);
+      const res = await axios.get(`/conversations/${conv.id}`);
+      setMessages(res.data.messages);
+      const other = res.data.seller_id === auth.user.id ? res.data.buyer : res.data.seller;
+      setPartner(other);
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 0);
+      errorShown.current = false;
+    } catch (e) {
+      if (!errorShown.current) {
+        sweetAlert('Erreur lors du chargement de la conversation');
+        errorShown.current = true;
+      }
+    }
   };
 
   const loadMore = async () => {
@@ -44,23 +55,39 @@ export default function Index({ conversations: initial = {}, current }) {
 
   const refreshMessages = async () => {
     if (!active) return;
-    const res = await axios.get(`/conversations/${active.id}`);
-    setMessages(res.data.messages);
-    const other = res.data.seller_id === auth.user.id ? res.data.buyer : res.data.seller;
-    setPartner(other);
-    setTimeout(() => {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, 0);
+    try {
+      const res = await axios.get(`/conversations/${active.id}`);
+      setMessages(res.data.messages);
+      const other = res.data.seller_id === auth.user.id ? res.data.buyer : res.data.seller;
+      setPartner(other);
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 0);
+      errorShown.current = false;
+    } catch (e) {
+      if (!errorShown.current) {
+        sweetAlert('Erreur lors du rafraîchissement des messages');
+        errorShown.current = true;
+      }
+    }
   };
 
   const send = async () => {
     if (!content) return;
-    const res = await axios.post(`/conversations/${active.id}/messages`, { content });
-    setContent('');
-    setMessages((ms) => [...ms, res.data]);
-    setTimeout(() => {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, 0);
+    try {
+      const res = await axios.post(`/conversations/${active.id}/messages`, { content });
+      setContent('');
+      setMessages((ms) => [...ms, res.data]);
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 0);
+      errorShown.current = false;
+    } catch (e) {
+      if (!errorShown.current) {
+        sweetAlert('Erreur lors de l\'envoi du message');
+        errorShown.current = true;
+      }
+    }
   };
 
   useEffect(() => {
