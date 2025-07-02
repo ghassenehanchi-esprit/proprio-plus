@@ -15,17 +15,13 @@ class ListingController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Listing::query()
+        $listings = Listing::query()
             ->with('category', 'user')
             ->where('status', 'active')
-            ->filter($request->all());
+            ->filter($request->all())
+            ->withFavoriteStatus(auth()->id())
+            ->paginate(10);
 
-
-        $listings = $query->paginate(10);
-        $listings->getCollection()->transform(function ($listing) {
-            $listing->is_favorited = auth()->check() && $listing->favoritedBy()->where('user_id', auth()->id())->exists();
-            return $listing;
-        });
         return response()->json($listings);
     }
 
@@ -51,10 +47,15 @@ class ListingController extends Controller
     }
     public function show(Listing $listing)
     {
-        $listing->load('category', 'user', 'gallery', 'documents');
+        $listing = Listing::with('category', 'user', 'gallery', 'documents')
+            ->withFavoriteStatus(auth()->id())
+            ->findOrFail($listing->id);
+
         $similar = Listing::where('category_id', $listing->category_id)
             ->where('id', '!=', $listing->id)
             ->where('city', $listing->city)
+            ->where('status', 'active')
+            ->withFavoriteStatus(auth()->id())
             ->limit(4)->get();
 
         return response()->json([

@@ -130,9 +130,20 @@ class Listing extends Model
 
         return $query;
     }
-    public function favoredBy()
+    public function favoritedBy()
     {
         return $this->belongsToMany(User::class, 'favorites')->withTimestamps();
+    }
+
+    public function scopeWithFavoriteStatus($query, ?int $userId)
+    {
+        if ($userId) {
+            $query->withExists(['favoritedBy as is_favorited' => function ($q) use ($userId) {
+                $q->where('user_id', $userId);
+            }]);
+        }
+
+        return $query;
     }
 
 

@@ -32,6 +32,15 @@ const theme = extendTheme({
       baseStyle: {
         borderRadius: 'xl',
       },
+      variants: {
+        fancy: {
+          bgGradient: 'linear(to-r, brand.500, brand.300)',
+          color: 'white',
+          _hover: {
+            bgGradient: 'linear(to-r, brand.600, brand.400)',
+          },
+        },
+      },
       defaultProps: {
         colorScheme: 'brand',
       },
