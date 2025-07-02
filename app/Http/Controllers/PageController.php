@@ -70,7 +70,13 @@ class PageController extends Controller
 
     public function listingShow(Listing $listing)
     {
-        $listing = Listing::with('category', 'user', 'gallery')
+        $listing = Listing::with('category', 'gallery')
+            ->with(['user' => function ($q) {
+                $q->select('id', 'first_name', 'last_name', 'created_at')
+                    ->withCount(['listings as sold_count' => function ($q) {
+                        $q->sold();
+                    }]);
+            }])
             ->withFavoriteStatus(auth()->id())
             ->findOrFail($listing->id);
 
@@ -110,7 +116,7 @@ class PageController extends Controller
     {
         $conversations = Conversation::where('buyer_id', auth()->id())
             ->orWhere('seller_id', auth()->id())
-            ->with('listing', 'messages')
+            ->with('listing', 'messages', 'seller', 'buyer')
             ->get();
 
         return Inertia::render('Messages/Index', [

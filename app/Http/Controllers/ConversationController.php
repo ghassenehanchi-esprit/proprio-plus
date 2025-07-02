@@ -12,7 +12,7 @@ class ConversationController extends Controller
     {
         return response()->json(Conversation::where('buyer_id', Auth::id())
             ->orWhere('seller_id', Auth::id())
-            ->with('listing', 'messages')->get());
+            ->with('listing', 'messages', 'seller', 'buyer')->get());
     }
 
     public function store(Request $request)
@@ -70,6 +70,11 @@ class ConversationController extends Controller
             ->get()
             ->each->markAsRead();
 
-        return response()->json($conversation->load('messages'));
+        $conversation->messages()
+            ->where('sender_id', '!=', Auth::id())
+            ->where('is_read', false)
+            ->update(['is_read' => true]);
+
+        return response()->json($conversation->load('messages', 'seller', 'buyer'));
     }
 }

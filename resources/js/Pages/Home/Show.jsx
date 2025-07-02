@@ -1,4 +1,4 @@
-import { Box, Heading, Text, Flex, SimpleGrid, Image, Stack, IconButton, Input, Textarea, Button, Popover, PopoverTrigger, PopoverContent } from '@chakra-ui/react';
+import { Box, Heading, Text, Flex, SimpleGrid, Image, Stack, IconButton, Input, Textarea, Button, Popover, PopoverTrigger, PopoverContent, Avatar } from '@chakra-ui/react';
 import ListingCard from '@/Components/Listing/ListingCard';
 import MapPreview from '@/Components/Map/MapPreview';
 import axios from 'axios';
@@ -118,6 +118,14 @@ export default function Show({ listing, similar = [] }) {
                 {listing.postal_code} {listing.city}
               </Text>
               <Text mt={4}>{listing.description}</Text>
+              <Flex align="center" mt={4} gap={3}>
+                <Avatar size="md" name={`${listing.user.first_name} ${listing.user.last_name}`} />
+                <Stack spacing={0}>
+                  <Text fontWeight="bold">{listing.user.first_name} {listing.user.last_name}</Text>
+                  <Text fontSize="sm" color="gray.600">Membre depuis {new Date(listing.user.created_at).toLocaleDateString()}</Text>
+                  <Text fontSize="sm" color="gray.600">Annonces vendues : {listing.user.sold_count}</Text>
+                </Stack>
+              </Flex>
             </>
           )}
 
