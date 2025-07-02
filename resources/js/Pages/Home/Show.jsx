@@ -66,6 +66,21 @@ export default function Show({ listing, similar = [] }) {
             objectFit="cover"
             rounded="md"
           />
+          {photos.length > 1 && (
+            <SimpleGrid columns={{ base: 2, md: 3 }} spacing={2} mt={2}>
+              {photos.slice(1).map((src, i) => (
+                <Image
+                  key={i}
+                  src={src}
+                  alt={`${listing.title}-${i}`}
+                  objectFit="cover"
+                  h="100px"
+                  w="100%"
+                  rounded="md"
+                />
+              ))}
+            </SimpleGrid>
+          )}
           {isOwner && !editing && (
             <Flex justify="flex-end" mt={2} gap={2}>
               <IconButton size="sm" icon={<FaEdit />} onClick={() => setEditing(true)} aria-label="Edit" />

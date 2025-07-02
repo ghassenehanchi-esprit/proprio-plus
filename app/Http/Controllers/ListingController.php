@@ -17,7 +17,7 @@ class ListingController extends Controller
     public function index(Request $request)
     {
         $query = Listing::query()
-            ->with('category', 'user')
+            ->with('category', 'user', 'gallery')
             ->active()
             ->filter($request->all())
             ->withFavoriteStatus(auth()->id());
@@ -66,8 +66,8 @@ class ListingController extends Controller
             ->whereNotNull('latitude')
             ->whereNotNull('longitude')
             ->filter($request->all())
-            ->select('id', 'title', 'latitude', 'longitude', 'photos', 'address', 'price')
-            ->get();
+            ->with('gallery')
+            ->get(['id', 'title', 'latitude', 'longitude', 'address', 'price']);
 
         return response()->json([
             'data' => $listings ?? [],
