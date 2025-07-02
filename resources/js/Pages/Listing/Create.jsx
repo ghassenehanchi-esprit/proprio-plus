@@ -98,6 +98,7 @@ export default function Create({ categories: initialCategories = [] }) {
     multiple: true,
   });
 
+
   const removePhoto = (index) => {
     const newFiles = photos.filter((_, i) => i !== index);
     setPhotos(newFiles);
@@ -272,6 +273,7 @@ export default function Create({ categories: initialCategories = [] }) {
               <Text>Glissez-déposez des images ou cliquez pour sélectionner</Text>
               <Text fontSize="sm" color="gray.500">{`${photos.length}/6 ajoutées`}</Text>
             </Box>
+
             <FormErrorMessage>{errors.gallery}</FormErrorMessage>
           </FormControl>
           {previews.length > 0 && (
