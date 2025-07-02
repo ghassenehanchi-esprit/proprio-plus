@@ -33,6 +33,20 @@ class ListingController extends Controller
             'categories' => $categories,
         ]);
     }
+
+    public function edit(Listing $listing)
+    {
+        if ($listing->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $categories = Category::select('id', 'name')->orderBy('name')->get();
+
+        return Inertia::render('Listing/Edit', [
+            'listing' => $listing->load('gallery', 'documents'),
+            'categories' => $categories,
+        ]);
+    }
     public function all(Request $request): \Illuminate\Http\JsonResponse
     {
         $listings = Listing::active()
