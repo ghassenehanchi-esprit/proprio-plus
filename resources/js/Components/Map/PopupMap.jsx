@@ -20,6 +20,7 @@ import axios from "axios";
 
 const PopupMap = ({ opened, toggle, initialPosition }) => {
     const modalSize = useBreakpointValue({ base: "xl", md: "4xl", lg: "6xl" });
+    const mapHeight = useBreakpointValue({ base: "300px", md: "500px" });
     const [coords, setCoords] = useState([]);
 
     const sliderSettings = {
@@ -79,7 +80,7 @@ const PopupMap = ({ opened, toggle, initialPosition }) => {
                     <MapContainer
                         center={[initialPosition?.lat || 48.8566, initialPosition?.lng || 2.3522]}
                         zoom={12}
-                        style={{ height: "500px", width: "100%" }}
+                        style={{ height: mapHeight, width: "100%" }}
                     >
                         <TileLayer
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

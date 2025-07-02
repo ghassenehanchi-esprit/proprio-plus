@@ -150,7 +150,7 @@ export default function Index({ conversations: initial = {}, current }) {
       </VStack>
       <Box flex="1" bg="white" p={4} borderRadius="md">
         {active ? (
-          <VStack align="stretch" spacing={4} h="500px">
+          <VStack align="stretch" spacing={4} h={{ base: '400px', md: '500px' }}>
             <HStack justify="space-between">
               <Heading size="md">{active.subject || active.listing.title}</Heading>
               {partner && (

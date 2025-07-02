@@ -43,7 +43,7 @@ export default function AdminNotificationBell() {
           </Badge>
         )}
       </MenuButton>
-      <MenuList maxW="300px">
+      <MenuList w={{ base: '100%', sm: '300px' }}>
         {notifications.length === 0 ? (
           <MenuItem>Aucune notification</MenuItem>
         ) : (
