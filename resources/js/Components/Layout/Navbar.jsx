@@ -69,6 +69,9 @@ export default function Navbar() {
 
             {auth?.user ? (
                 <>
+                {auth.isAdmin && (
+                    <Button as={Link} href="/admin/users" mr={4}>Admin</Button>
+                )}
                 <NotificationBell />
                 <Menu>
                     <MenuButton as={Button} variant="ghost" rightIcon={<HamburgerIcon />}>

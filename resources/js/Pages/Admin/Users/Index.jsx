@@ -1,8 +1,9 @@
-import { Box, Table, Thead, Tbody, Tr, Th, Td, Input, Button, Flex, Text } from '@chakra-ui/react';
+import { Box, Table, Thead, Tbody, Tr, Th, Td, Input, Button, Flex, Text, Link as CLink } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { router } from '@inertiajs/react';
 import { route } from 'ziggy-js';
+import AdminLayout from '@/Components/Admin/AdminLayout';
 
 export default function Index() {
   const [query, setQuery] = useState('');
@@ -41,6 +42,10 @@ export default function Index() {
     router.post(route('admin.users.refuse', id), {}, { onSuccess: fetchUsers });
   };
 
+  const viewDocument = (id) => {
+    window.open(route('admin.users.document', id), '_blank');
+  };
+
   return (
     <Box>
       <Input
@@ -58,6 +63,7 @@ export default function Index() {
             <Th cursor="pointer" onClick={() => handleSort('last_name')}>Nom {sort === 'last_name' && (dir === 'asc' ? '▲' : '▼')}</Th>
             <Th cursor="pointer" onClick={() => handleSort('email')}>Email {sort === 'email' && (dir === 'asc' ? '▲' : '▼')}</Th>
             <Th cursor="pointer" onClick={() => handleSort('certification_status')}>Status {sort === 'certification_status' && (dir === 'asc' ? '▲' : '▼')}</Th>
+            <Th>Document</Th>
             <Th>Actions</Th>
           </Tr>
         </Thead>
@@ -67,6 +73,11 @@ export default function Index() {
               <Td>{u.first_name} {u.last_name}</Td>
               <Td>{u.email}</Td>
               <Td>{u.certification_status || '—'}</Td>
+              <Td>
+                {u.identity_document && (
+                  <CLink color="blue.500" onClick={() => viewDocument(u.id)}>Voir</CLink>
+                )}
+              </Td>
               <Td>
                 <Button size="sm" mr={2} onClick={() => certify(u.id)}>Certifier</Button>
                 <Button size="sm" variant="outline" onClick={() => refuse(u.id)}>Refuser</Button>
@@ -83,3 +94,5 @@ export default function Index() {
     </Box>
   );
 }
+
+Index.layout = page => <AdminLayout>{page}</AdminLayout>;

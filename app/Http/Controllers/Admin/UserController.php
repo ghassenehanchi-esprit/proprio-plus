@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -16,7 +17,7 @@ class UserController extends Controller
 
     public function data(Request $request)
     {
-        $query = User::withBasicInfo()->select('certification_status');
+        $query = User::withBasicInfo()->select('certification_status', 'identity_document');
 
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
@@ -49,5 +50,14 @@ class UserController extends Controller
         $user->update(['certification_status' => 'refusé']);
 
         return response()->json(['message' => "Certification refusée"]);
+    }
+
+    public function document(User $user)
+    {
+        if (!$user->identity_document) {
+            abort(404);
+        }
+
+        return response()->file(storage_path('app/public/' . $user->identity_document));
     }
 }

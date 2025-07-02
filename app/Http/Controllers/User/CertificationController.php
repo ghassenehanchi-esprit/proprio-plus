@@ -5,6 +5,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Models\User;
+use App\Notifications\CertificationRequestNotification;
 
 class CertificationController extends Controller
 {
@@ -26,6 +28,14 @@ class CertificationController extends Controller
             'identity_document' => $path,
             'certification_status' => 'en_attente',
         ]);
+
+        $admins = User::whereHas('roles', function ($q) {
+            $q->where('name', 'admin');
+        })->get();
+
+        foreach ($admins as $admin) {
+            $admin->notify(new CertificationRequestNotification($user));
+        }
 
         return response()->json(['message' => 'Document soumis pour vérification.']);
     }
