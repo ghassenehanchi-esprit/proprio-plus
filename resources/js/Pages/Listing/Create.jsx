@@ -17,7 +17,16 @@ import {
   Image,
   Heading,
   Text,
-  Progress,
+  Stepper,
+  Step,
+  StepIndicator,
+  StepStatus,
+  StepNumber,
+  StepTitle,
+  StepDescription,
+  StepSeparator,
+  Alert,
+  AlertIcon,
 } from '@chakra-ui/react';
 import AddressSearch from '@/Components/Listing/AddressSearch';
 
@@ -25,6 +34,12 @@ export default function Create({ categories: initialCategories = [] }) {
   const [step, setStep] = useState(1);
   const [previews, setPreviews] = useState([]);
   const [categories, setCategories] = useState(initialCategories);
+  const stepsData = [
+    { title: 'Informations', description: 'Titre et description' },
+    { title: 'Détails', description: 'Caractéristiques du bien' },
+    { title: 'Adresse', description: 'Localisation du bien' },
+    { title: 'Médias', description: 'Photos et documents' },
+  ];
 
   useEffect(() => {
     if (initialCategories.length === 0) {
@@ -82,12 +97,28 @@ export default function Create({ categories: initialCategories = [] }) {
   return (
     <Box as="form" onSubmit={submit} maxW="4xl" mx="auto" bg="white" p={6} rounded="md" boxShadow="md">
       <Heading size="lg" mb={4}>Créer une annonce</Heading>
-      <Flex align="center" mb={6} gap={4}>
-        <Text fontWeight="bold">Étape {step} / 4</Text>
-        <Progress value={(step / 4) * 100} flex="1" size="sm" colorScheme="brand" rounded="md" />
-      </Flex>
+      <Stepper index={step - 1} colorScheme="brand" mb={6} gap="0" size="sm">
+        {stepsData.map((s, i) => (
+          <Step key={s.title} onClick={() => setStep(i + 1)} cursor="pointer">
+            <StepIndicator>
+              <StepStatus complete={<StepNumber />} incomplete={<StepNumber />} active={<StepNumber />} />
+            </StepIndicator>
+            <Box flexShrink={0}>
+              <StepTitle>{s.title}</StepTitle>
+              <StepDescription>{s.description}</StepDescription>
+            </Box>
+            <StepSeparator />
+          </Step>
+        ))}
+      </Stepper>
       {step === 1 && (
-        <VStack spacing={4} align="stretch">
+        <>
+          <Image src="https://raw.githubusercontent.com/tabler/tabler-icons/master/icons/pencil.svg" boxSize="60px" mx="auto" mb={4} alt="informations" />
+          <Alert status="info" rounded="md" mb={4}>
+            <AlertIcon />
+            <Text fontSize="sm">Le titre est obligatoire (255 caractères max) et la description doit présenter clairement votre bien.</Text>
+          </Alert>
+          <VStack spacing={4} align="stretch">
           <FormControl isInvalid={errors.title}>
             <FormLabel>Titre</FormLabel>
             <Input value={data.title} onChange={(e) => setData('title', e.target.value)} />
@@ -109,9 +140,16 @@ export default function Create({ categories: initialCategories = [] }) {
             <FormErrorMessage>{errors.category_id}</FormErrorMessage>
           </FormControl>
         </VStack>
+        </>
       )}
 
       {step === 2 && (
+        <>
+        <Image src="https://raw.githubusercontent.com/tabler/tabler-icons/master/icons/adjustments.svg" boxSize="60px" mx="auto" mb={4} alt="details" />
+        <Alert status="info" rounded="md" mb={4}>
+          <AlertIcon />
+          <Text fontSize="sm">Les champs prix, surface et pièces sont obligatoires. Utilisez uniquement des valeurs numériques positives.</Text>
+        </Alert>
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
           <FormControl isInvalid={errors.price}>
             <FormLabel>Prix</FormLabel>
@@ -158,9 +196,16 @@ export default function Create({ categories: initialCategories = [] }) {
             <Checkbox isChecked={data.has_parking} onChange={(e) => setData('has_parking', e.target.checked)}>Parking</Checkbox>
           </Flex>
         </SimpleGrid>
+        </>
       )}
 
       {step === 3 && (
+        <>
+        <Image src="https://raw.githubusercontent.com/tabler/tabler-icons/master/icons/map-pin.svg" boxSize="60px" mx="auto" mb={4} alt="adresse" />
+        <Alert status="info" rounded="md" mb={4}>
+          <AlertIcon />
+          <Text fontSize="sm">Ville et code postal sont requis pour localiser votre bien.</Text>
+        </Alert>
         <VStack spacing={4} align="stretch">
           <FormControl isInvalid={errors.address}>
             <FormLabel>Adresse</FormLabel>
@@ -181,9 +226,16 @@ export default function Create({ categories: initialCategories = [] }) {
             </FormControl>
           </SimpleGrid>
         </VStack>
+        </>
       )}
 
       {step === 4 && (
+        <>
+        <Image src="https://raw.githubusercontent.com/tabler/tabler-icons/master/icons/photo.svg" boxSize="60px" mx="auto" mb={4} alt="media" />
+        <Alert status="info" rounded="md" mb={4}>
+          <AlertIcon />
+          <Text fontSize="sm">Ajoutez des photos attractives (JPG/PNG, 4 Mo max). Vous pouvez joindre des documents au format PDF ou image.</Text>
+        </Alert>
         <VStack spacing={4} align="stretch">
           <FormControl isInvalid={errors.gallery}>
             <FormLabel>Photos</FormLabel>
@@ -203,6 +255,7 @@ export default function Create({ categories: initialCategories = [] }) {
             <FormErrorMessage>{errors.documents}</FormErrorMessage>
           </FormControl>
         </VStack>
+        </>
       )}
 
       <Flex justify="space-between" mt={6}>
