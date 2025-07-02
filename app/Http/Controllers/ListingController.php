@@ -94,15 +94,39 @@ class ListingController extends Controller
 
     public function update(StoreListingRequest $request, Listing $listing)
     {
-        $this->authorize('update', $listing);
-        $listing->update($request->validated());
+        if ($listing->user_id !== Auth::id()) {
+            abort(403);
+        }
 
-        return response()->json(['message' => 'Annonce mise à jour']);
+        $data = $request->validated();
+
+        $pendingFields = [
+            'title', 'description', 'price', 'address',
+            'city', 'postal_code', 'category_id'
+        ];
+
+        foreach ($pendingFields as $field) {
+            if (array_key_exists($field, $data) && $data[$field] != $listing->$field) {
+                $data['status'] = ListingStatus::Pending;
+                break;
+            }
+        }
+
+        $listing->update($data);
+
+        $message = ($data['status'] ?? $listing->status?->value) === ListingStatus::Pending->value
+            ? 'Annonce mise à jour et en attente de validation'
+            : 'Annonce mise à jour';
+
+        return response()->json(['message' => $message, 'listing' => $listing->fresh()]);
     }
 
     public function destroy(Listing $listing)
     {
-        $this->authorize('delete', $listing);
+        if ($listing->user_id !== Auth::id()) {
+            abort(403);
+        }
+
         $listing->delete();
 
         return response()->json(['message' => 'Annonce supprimée']);
