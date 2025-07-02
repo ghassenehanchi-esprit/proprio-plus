@@ -107,6 +107,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/favorites', [PageController::class, 'favorites'])->name('favorites.index');
     Route::post('/listings/{listing}/favorite', [ListingController::class, 'toggle'])->name('favorites.toggle');
     Route::get('/account/settings', [PageController::class, 'accountSettings'])->name('account.settings');
+});
+
+Route::middleware(['auth', 'verified', 'certified'])->group(function () {
     Route::get('/messages', [PageController::class, 'messages'])->name('messages.index');
 });
 Route::middleware(['auth'])->group(function () {
