@@ -1,5 +1,5 @@
 import { Box, Heading, HStack, VStack, Text, Input, Button } from '@chakra-ui/react';
-import { usePage, router } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -15,11 +15,17 @@ export default function Index({ conversations = [], current }) {
     setMessages(res.data.messages);
   };
 
+  const refreshMessages = async () => {
+    if (!active) return;
+    const res = await axios.get(`/conversations/${active.id}`);
+    setMessages(res.data.messages);
+  };
+
   const send = async () => {
     if (!content) return;
-    await axios.post(`/conversations/${active.id}/messages`, { content });
+    const res = await axios.post(`/conversations/${active.id}/messages`, { content });
     setContent('');
-    loadConversation(active);
+    setMessages((ms) => [...ms, res.data]);
   };
 
   useEffect(() => {
@@ -28,6 +34,12 @@ export default function Index({ conversations = [], current }) {
       if (first) loadConversation(first);
     }
   }, []);
+
+  useEffect(() => {
+    if (!active) return;
+    const interval = setInterval(refreshMessages, 5000);
+    return () => clearInterval(interval);
+  }, [active]);
 
   return (
     <HStack align="start" spacing={6}>
