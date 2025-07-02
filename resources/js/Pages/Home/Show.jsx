@@ -37,12 +37,30 @@ export default function Show({ listing, similar = [] }) {
     category_id: listing.category_id,
   });
 
-  const Attribute = ({ label, value }) => (
-    <Flex fontFamily="body" color="gray.700">
-      <Text fontWeight="semibold" color="brand.700" mr={1}>
-        {label}:
-      </Text>
-      <Text>{value}</Text>
+  const icons = {
+    surface: 'https://cdn.jsdelivr.net/npm/lucide-static@0.263.0/icons/maximize-2.svg',
+    rooms: 'https://cdn.jsdelivr.net/npm/lucide-static@0.263.0/icons/layout.svg',
+    bedrooms: 'https://cdn.jsdelivr.net/npm/lucide-static@0.263.0/icons/bed.svg',
+    bathrooms: 'https://cdn.jsdelivr.net/npm/lucide-static@0.263.0/icons/bath.svg',
+    floor: 'https://cdn.jsdelivr.net/npm/lucide-static@0.263.0/icons/layers.svg',
+    year_built: 'https://cdn.jsdelivr.net/npm/lucide-static@0.263.0/icons/calendar.svg',
+    heating: 'https://cdn.jsdelivr.net/npm/lucide-static@0.263.0/icons/thermometer.svg',
+    has_terrace: 'https://cdn.jsdelivr.net/npm/lucide-static@0.263.0/icons/sun.svg',
+    has_parking: 'https://cdn.jsdelivr.net/npm/lucide-static@0.263.0/icons/car.svg',
+    has_garden: 'https://cdn.jsdelivr.net/npm/lucide-static@0.263.0/icons/leaf.svg',
+  };
+
+  const Attribute = ({ label, value, icon }) => (
+    <Flex align="center" gap={2} fontFamily="body" color="gray.700" fontSize="sm">
+      {icon && (
+        <img src={icon} alt="" width="20" height="20" style={{ display: 'block' }} />
+      )}
+      <Box>
+        <Text fontWeight="semibold" color="brand.700" lineHeight="1">
+          {label}
+        </Text>
+        <Text lineHeight="1.2">{value}</Text>
+      </Box>
     </Flex>
   );
 
@@ -134,22 +152,31 @@ export default function Show({ listing, similar = [] }) {
             </>
           )}
 
-          <SimpleGrid columns={{ base: 1, sm: 2 }} spacing={2} mt={4} fontSize="sm">
-            <Attribute label="Surface" value={`${listing.surface} m²`} />
-            <Attribute label="Pièces" value={listing.rooms} />
-            {listing.bedrooms && <Attribute label="Chambres" value={listing.bedrooms} />}
-            {listing.bathrooms && <Attribute label="Sdb" value={listing.bathrooms} />}
+          <SimpleGrid columns={{ base: 1, sm: 2 }} spacing={4} mt={4} fontSize="sm">
+            <Attribute icon={icons.surface} label="Surface" value={`${listing.surface} m²`} />
+            <Attribute icon={icons.rooms} label="Pièces" value={listing.rooms} />
+            {listing.bedrooms && (
+              <Attribute icon={icons.bedrooms} label="Chambres" value={listing.bedrooms} />
+            )}
+            {listing.bathrooms && (
+              <Attribute icon={icons.bathrooms} label="Sdb" value={listing.bathrooms} />
+            )}
             {listing.floor && (
               <Attribute
+                icon={icons.floor}
                 label="Étage"
                 value={`${listing.floor}${listing.total_floors ? `/${listing.total_floors}` : ''}`}
               />
             )}
-            {listing.year_built && <Attribute label="Année" value={listing.year_built} />}
-            {listing.heating && <Attribute label="Chauffage" value={listing.heating} />}
-            {listing.has_terrace && <Attribute label="Terrasse" value="Oui" />}
-            {listing.has_parking && <Attribute label="Parking" value="Oui" />}
-            {listing.has_garden && <Attribute label="Jardin" value="Oui" />}
+            {listing.year_built && (
+              <Attribute icon={icons.year_built} label="Année" value={listing.year_built} />
+            )}
+            {listing.heating && (
+              <Attribute icon={icons.heating} label="Chauffage" value={listing.heating} />
+            )}
+            {listing.has_terrace && <Attribute icon={icons.has_terrace} label="Terrasse" value="Oui" />}
+            {listing.has_parking && <Attribute icon={icons.has_parking} label="Parking" value="Oui" />}
+            {listing.has_garden && <Attribute icon={icons.has_garden} label="Jardin" value="Oui" />}
           </SimpleGrid>
 
           {!isOwner && (
