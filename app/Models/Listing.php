@@ -4,6 +4,7 @@ namespace App\Models;
 use App\Enums\ListingStatus;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Listing extends Model
 {
@@ -36,6 +37,8 @@ class Listing extends Model
         'status' => ListingStatus::class,
     ];
 
+    protected $appends = ['photos'];
+
     public function user() {
         return $this->belongsTo(User::class);
     }
@@ -62,6 +65,11 @@ class Listing extends Model
 
     public function gallery() {
         return $this->morphMany(File::class, 'fileable')->where('type', 'image');
+    }
+
+    public function photos(): Attribute
+    {
+        return Attribute::get(fn () => $this->gallery->pluck('url')->toArray());
     }
 
     public function scopeFilter($query, array $filters)
