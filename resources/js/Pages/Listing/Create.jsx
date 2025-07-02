@@ -1,5 +1,6 @@
 import { useForm } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
+import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
 import axios from 'axios';
 import {
   Box,
@@ -33,6 +34,7 @@ import AddressSearch from '@/Components/Listing/AddressSearch';
 export default function Create({ categories: initialCategories = [] }) {
   const [step, setStep] = useState(1);
   const [previews, setPreviews] = useState([]);
+  const [photos, setPhotos] = useState([]);
   const [categories, setCategories] = useState(initialCategories);
   const stepsData = [
     { title: 'Informations', description: 'Titre et description' },
@@ -68,7 +70,7 @@ export default function Create({ categories: initialCategories = [] }) {
     address: '',
     latitude: '',
     longitude: '',
-    gallery: null,
+    gallery: [],
     documents: null,
   });
 
@@ -79,10 +81,19 @@ export default function Create({ categories: initialCategories = [] }) {
     setData((d) => ({ ...d, city, postal_code, latitude: lat, longitude: lng }));
   };
 
-  const handleGalleryChange = (e) => {
-    const files = Array.from(e.target.files);
-    setData('gallery', e.target.files);
-    setPreviews(files.map((f) => URL.createObjectURL(f)));
+  const handleDrop = (accepted) => {
+    const allowed = accepted.slice(0, 6 - photos.length);
+    const newFiles = [...photos, ...allowed];
+    setPhotos(newFiles);
+    setData('gallery', newFiles);
+    setPreviews(newFiles.map((f) => URL.createObjectURL(f)));
+  };
+
+  const removePhoto = (index) => {
+    const newFiles = photos.filter((_, i) => i !== index);
+    setPhotos(newFiles);
+    setData('gallery', newFiles);
+    setPreviews(newFiles.map((f) => URL.createObjectURL(f)));
   };
 
   const handleDocumentsChange = (e) => {
@@ -239,13 +250,25 @@ export default function Create({ categories: initialCategories = [] }) {
         <VStack spacing={4} align="stretch">
           <FormControl isInvalid={errors.gallery}>
             <FormLabel>Photos</FormLabel>
-            <Input type="file" multiple onChange={handleGalleryChange} />
+            <Dropzone
+              onDrop={handleDrop}
+              accept={IMAGE_MIME_TYPE}
+              multiple
+            >
+              <Box p={6} border="2px dashed" borderColor="gray.300" rounded="md" textAlign="center" cursor="pointer">
+                <Text>Glissez-déposez des images ou cliquez pour sélectionner</Text>
+                <Text fontSize="sm" color="gray.500">{`${photos.length}/6 ajoutées`}</Text>
+              </Box>
+            </Dropzone>
             <FormErrorMessage>{errors.gallery}</FormErrorMessage>
           </FormControl>
           {previews.length > 0 && (
             <SimpleGrid columns={{ base: 2, md: 4 }} spacing={4}>
               {previews.map((src, i) => (
-                <Image key={i} src={src} alt="preview" objectFit="cover" h="100px" rounded="md" />
+                <Box key={i} position="relative">
+                  <Image src={src} alt="preview" objectFit="cover" h="100px" rounded="md" w="100%" />
+                  <Button size="xs" colorScheme="red" position="absolute" top="2px" right="2px" onClick={() => removePhoto(i)}>X</Button>
+                </Box>
               ))}
             </SimpleGrid>
           )}
