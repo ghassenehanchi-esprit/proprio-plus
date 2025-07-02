@@ -13,6 +13,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\NotificationController as AdminNotificationController;
+use App\Http\Controllers\Admin\ListingController as AdminListingController;
 use App\Http\Middleware\EnsureIsAdmin;
 use Illuminate\Http\Request;
 
@@ -52,8 +54,17 @@ Route::middleware(['auth', 'verified', EnsureIsAdmin::class])
     ->group(function () {
         Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
         Route::get('/users/data', [AdminUserController::class, 'data'])->name('users.data');
+        Route::get('/users/{user}/document', [AdminUserController::class, 'document'])->name('users.document');
         Route::post('/users/{user}/certify', [AdminUserController::class, 'certify'])->name('users.certify');
         Route::post('/users/{user}/refuse', [AdminUserController::class, 'refuse'])->name('users.refuse');
+
+        Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('notifications.index');
+        Route::post('/notifications/{notification}/read', [AdminNotificationController::class, 'markAsRead'])->name('notifications.read');
+        Route::post('/notifications/{notification}/unread', [AdminNotificationController::class, 'markAsUnread'])->name('notifications.unread');
+
+        Route::get('/listings', [AdminListingController::class, 'index'])->name('listings.index');
+        Route::get('/listings/data', [AdminListingController::class, 'data'])->name('listings.data');
+        Route::post('/listings/{listing}/status', [AdminListingController::class, 'setStatus'])->name('listings.status');
     });
 Route::middleware(['auth', 'verified', 'certified'])->group(function () {
     Route::resource('listings', ListingController::class)->except(['show']);
