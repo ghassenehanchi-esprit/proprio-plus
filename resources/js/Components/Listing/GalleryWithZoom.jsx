@@ -1,5 +1,13 @@
-import { Image, Modal, ModalOverlay, ModalContent, ModalBody, useDisclosure } from '@chakra-ui/react';
-import Slider from 'react-slick';
+import {
+  Image,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalBody,
+  useDisclosure,
+  SimpleGrid,
+  Box,
+} from '@chakra-ui/react';
 import { useState } from 'react';
 
 export default function GalleryWithZoom({ photos = [] }) {
@@ -11,32 +19,22 @@ export default function GalleryWithZoom({ photos = [] }) {
     onOpen();
   };
 
-  const sliderSettings = {
-    dots: true,
-    arrows: false,
-    infinite: true,
-    speed: 400,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-  };
-
   return (
     <>
-      <Slider {...sliderSettings}>
+      <SimpleGrid className="gallery-grid" columns={{ base: 1, sm: 2, md: 3 }} spacing={2}>
         {photos.map((src, i) => (
-          <Image
-            key={i}
-            src={src || '/placeholder.png'}
-            alt={`photo-${i}`}
-            objectFit="cover"
-            h="64"
-            w="full"
-            rounded="md"
-            onClick={() => open(src)}
-            cursor="pointer"
-          />
+          <Box key={i} onClick={() => open(src)} cursor="pointer">
+            <Image
+              src={src || '/placeholder.png'}
+              alt={`photo-${i}`}
+              objectFit="cover"
+              h="64"
+              w="full"
+              rounded="md"
+            />
+          </Box>
         ))}
-      </Slider>
+      </SimpleGrid>
       <Modal isOpen={isOpen} onClose={onClose} size="xl" isCentered>
         <ModalOverlay />
         <ModalContent bg="transparent" boxShadow="none">
