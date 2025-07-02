@@ -17,15 +17,7 @@ class PageController extends Controller
 
     public function search(Request $request)
     {
-        $listings = Listing::query()
-            ->with('category', 'user')
-            ->active()
-            ->filter($request->all())
-            ->withFavoriteStatus(auth()->id())
-            ->get();
-
         return Inertia::render('Listing/Search', [
-            'listings' => $listings,
             'filters' => $request->all(),
         ]);
     }
