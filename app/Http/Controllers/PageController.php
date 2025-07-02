@@ -19,7 +19,7 @@ class PageController extends Controller
     {
         $listings = Listing::query()
             ->with('category', 'user')
-            ->where('status', 'active')
+            ->active()
             ->filter($request->all())
             ->withFavoriteStatus(auth()->id())
             ->get();
@@ -77,7 +77,7 @@ class PageController extends Controller
         $similar = Listing::where('category_id', $listing->category_id)
             ->where('id', '!=', $listing->id)
             ->where('city', $listing->city)
-            ->where('status', 'active')
+            ->active()
             ->withFavoriteStatus(auth()->id())
             ->limit(4)
             ->get();

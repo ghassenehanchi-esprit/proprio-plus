@@ -11,7 +11,7 @@ class HomeController extends Controller
     public function index()
     {
         $featured = Listing::with('gallery')
-            ->where('status', 'active')
+            ->active()
             ->latest()
             ->take(6)
             ->get();

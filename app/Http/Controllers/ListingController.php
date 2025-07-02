@@ -6,6 +6,7 @@ use App\Http\Requests\StoreListingRequest;
 use App\Models\Favorite;
 use App\Models\Listing;
 use App\Models\Category;
+use App\Enums\ListingStatus;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,7 @@ class ListingController extends Controller
     {
         $listings = Listing::query()
             ->with('category', 'user')
-            ->where('status', 'active')
+            ->active()
             ->filter($request->all())
             ->withFavoriteStatus(auth()->id())
             ->paginate(10);
@@ -34,7 +35,7 @@ class ListingController extends Controller
     }
     public function all(Request $request): \Illuminate\Http\JsonResponse
     {
-        $listings = Listing::where('status', 'active')
+        $listings = Listing::active()
             ->whereNotNull('latitude')
             ->whereNotNull('longitude')
             ->filter($request->all())
@@ -54,7 +55,7 @@ class ListingController extends Controller
         $similar = Listing::where('category_id', $listing->category_id)
             ->where('id', '!=', $listing->id)
             ->where('city', $listing->city)
-            ->where('status', 'active')
+            ->active()
             ->withFavoriteStatus(auth()->id())
             ->limit(4)->get();
 
@@ -110,7 +111,7 @@ class ListingController extends Controller
     public function markAsSold(Listing $listing)
     {
         $this->authorize('update', $listing);
-        $listing->update(['status' => 'vendue']);
+        $listing->update(['status' => ListingStatus::Sold]);
 
         return response()->json(['message' => 'Annonce marquée comme vendue']);
     }
@@ -118,7 +119,7 @@ class ListingController extends Controller
     public function archive(Listing $listing)
     {
         $this->authorize('update', $listing);
-        $listing->update(['status' => 'archivée']);
+        $listing->update(['status' => ListingStatus::Archived]);
 
         return response()->json(['message' => 'Annonce archivée']);
     }
