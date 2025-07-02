@@ -9,7 +9,9 @@ import { useState } from 'react';
 
 export default function Show({ listing, similar = [] }) {
   const { auth } = usePage().props;
-  const photos = listing.gallery?.map(g => g.url) || [];
+  const photos = Array.isArray(listing.photos)
+    ? listing.photos
+    : JSON.parse(listing.photos || '[]');
   const isOwner = auth?.user?.id === listing.user_id;
   const [editing, setEditing] = useState(false);
   const [data, setData] = useState({
