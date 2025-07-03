@@ -114,6 +114,11 @@ class PageController extends Controller
         ]);
     }
 
+    public function clockings()
+    {
+        return Inertia::render('Account/Clockings');
+    }
+
     public function messages(Request $request)
     {
         $conversations = Conversation::where('buyer_id', auth()->id())

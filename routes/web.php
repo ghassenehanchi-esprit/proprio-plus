@@ -8,6 +8,7 @@ use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ClockingController;
 use App\Http\Controllers\SavedSearchController;
 use App\Http\Controllers\User\CertificationController;
 use App\Http\Controllers\User\ProfileController;
@@ -18,6 +19,8 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\NotificationController as AdminNotificationController;
 use App\Http\Controllers\Admin\ListingController as AdminListingController;
 use App\Http\Controllers\Admin\PageController as AdminPageController;
+use App\Http\Controllers\Admin\ReportController as AdminReportController;
+use App\Http\Controllers\Admin\ClockingController as AdminClockingController;
 use App\Http\Middleware\EnsureIsAdmin;
 use App\Http\Controllers\Admin\LoginController as AdminLoginController;
 use Illuminate\Http\Request;
@@ -75,6 +78,13 @@ use App\Http\Controllers\Admin\LoginController as AdminLoginController;
         Route::get('/pages', [AdminPageController::class, 'index'])->name('pages.index');
         Route::get('/pages/{page}/edit', [AdminPageController::class, 'edit'])->name('pages.edit');
         Route::post('/pages/{page}', [AdminPageController::class, 'update'])->name('pages.update');
+
+        Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');
+        Route::get('/reports/data', [AdminReportController::class, 'data'])->name('reports.data');
+        Route::post('/reports/{report}/status', [AdminReportController::class, 'updateStatus'])->name('reports.status');
+
+        Route::get('/clockings', [AdminClockingController::class, 'index'])->name('clockings.index');
+        Route::get('/clockings/data', [AdminClockingController::class, 'data'])->name('clockings.data');
     });
 Route::middleware(['auth', 'verified', 'certified'])->group(function () {
     Route::resource('listings', ListingController::class)->except(['show']);
@@ -103,6 +113,10 @@ Route::middleware(['auth', 'verified', 'certified'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/reports', [ReportController::class, 'index']);
     Route::post('/reports', [ReportController::class, 'store']);
+
+    Route::get('/clockings', [ClockingController::class, 'index']);
+    Route::post('/clockings', [ClockingController::class, 'clockIn']);
+    Route::post('/clockings/{clocking}/clock-out', [ClockingController::class, 'clockOut']);
 });
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/listings/search', [PageController::class, 'search'])->name('listings.search'); // Vue Inertia
@@ -128,6 +142,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/favorites', [PageController::class, 'favorites'])->name('favorites.index');
     Route::post('/listings/{listing}/favorite', [ListingController::class, 'toggle'])->name('favorites.toggle');
     Route::get('/account/settings', [PageController::class, 'accountSettings'])->name('account.settings');
+    Route::get('/account/clockings', [PageController::class, 'clockings'])->name('account.clockings');
 
     Route::get('/saved-searches', [SavedSearchController::class, 'index'])->name('searches.index');
     Route::post('/saved-searches', [SavedSearchController::class, 'store'])->name('searches.store');

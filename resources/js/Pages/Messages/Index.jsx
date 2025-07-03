@@ -14,6 +14,14 @@ export default function Index({ conversations: initial = {}, current }) {
   const [content, setContent] = useState('');
   const [conversations, setConversations] = useState(initial.data || []);
   const [nextPage, setNextPage] = useState(initial.next_page_url);
+  const reportUser = async () => {
+    if (!partner) return;
+    await axios.post('/reports', {
+      reported_user_id: partner.id,
+      reason: 'inappropriate behavior',
+      conversation_id: active.id,
+    });
+  };
   const messagesEndRef = useRef(null);
 
   const errorShown = useRef(false);
@@ -152,7 +160,7 @@ export default function Index({ conversations: initial = {}, current }) {
       <Box flex="1" bg="white" p={4} borderRadius="md">
         {active ? (
           <VStack align="stretch" spacing={4} h={{ base: '400px', md: '500px' }}>
-            <HStack justify="space-between">
+            <HStack justify="space-between" wrap="wrap" gap={2}>
               <Heading size="md">{active.subject || active.listing.title}</Heading>
               {partner && (
                 <HStack>
@@ -160,6 +168,7 @@ export default function Index({ conversations: initial = {}, current }) {
                   <Text fontSize="sm" color="gray.600">
                     Dernière connexion : {partner.last_active_at ? new Date(partner.last_active_at).toLocaleString() : 'N/A'}
                   </Text>
+                  <Button size="xs" variant="outline" onClick={reportUser}>Signaler</Button>
                 </HStack>
               )}
             </HStack>
