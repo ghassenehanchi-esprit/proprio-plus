@@ -1,39 +1,64 @@
-import { Box, FormControl, FormLabel, Input, Textarea, Button } from '@chakra-ui/react';
+import { Box, FormControl, FormLabel, Input, Button, Heading } from '@chakra-ui/react';
 import { useForm } from '@inertiajs/react';
+import { useState } from 'react';
 import AdminLayout from '@/Components/Admin/AdminLayout';
+import SectionEditor from '@/Components/Admin/SectionEditor';
 import { route } from 'ziggy-js';
 
 export default function Edit({ page }) {
   const { data, setData, post, processing } = useForm({
     title: page.title || '',
-    sections: JSON.stringify(page.sections || [], null, 2),
     images: null,
   });
 
-  const submit = e => {
+  const [sections, setSections] = useState(page.sections || []);
+
+  const updateSection = (index, updated) => {
+    setSections((secs) => secs.map((s, i) => (i === index ? updated : s)));
+  };
+
+  const addSection = () => {
+    setSections((secs) => [
+      ...secs,
+      { id: Date.now().toString(), text: '', image: '' },
+    ]);
+  };
+
+  const removeSection = (index) => {
+    setSections((secs) => secs.filter((_, i) => i !== index));
+  };
+
+  const submit = (e) => {
     e.preventDefault();
+    setData('sections', JSON.stringify(sections));
     post(route('admin.pages.update', page.id), { forceFormData: true });
   };
 
   return (
-    <Box as="form" onSubmit={submit} maxW="2xl" mx="auto">
+    <Box as="form" onSubmit={submit} maxW="3xl" mx="auto">
+      <Heading size="lg" mb={6}>Modifier la page</Heading>
       <FormControl mb={4}>
         <FormLabel>Titre</FormLabel>
-        <Input value={data.title} onChange={e => setData('title', e.target.value)} />
+        <Input value={data.title} onChange={(e) => setData('title', e.target.value)} />
       </FormControl>
-      <FormControl mb={4}>
-        <FormLabel>Sections (JSON)</FormLabel>
-        <Textarea
-          value={data.sections}
-          onChange={e => setData('sections', e.target.value)}
-          rows={10}
+      {sections.map((section, index) => (
+        <SectionEditor
+          key={section.id}
+          section={section}
+          onChange={(sec) => updateSection(index, sec)}
+          onRemove={() => removeSection(index)}
         />
-      </FormControl>
+      ))}
+      <Button size="sm" mb={4} onClick={addSection} variant="outline">
+        Ajouter une section
+      </Button>
       <FormControl mb={4}>
         <FormLabel>Galerie</FormLabel>
-        <Input type="file" multiple onChange={e => setData('images', e.target.files)} />
+        <Input type="file" multiple onChange={(e) => setData('images', e.target.files)} />
       </FormControl>
-      <Button type="submit" colorScheme="brand" isLoading={processing}>Enregistrer</Button>
+      <Button type="submit" colorScheme="brand" isLoading={processing}>
+        Enregistrer
+      </Button>
     </Box>
   );
 }
