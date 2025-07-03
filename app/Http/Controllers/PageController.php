@@ -12,7 +12,16 @@ class PageController extends Controller
 {
     public function home()
     {
-        return Inertia::render('Home/Index');
+        $bestMatches = Listing::with('gallery')
+            ->active()
+            ->withCount(['conversations', 'favoritedBy as favorites_count'])
+            ->orderByRaw('(conversations_count * 2 + favorites_count) desc')
+            ->take(6)
+            ->get();
+
+        return Inertia::render('Home/Index', [
+            'bestMatches' => $bestMatches,
+        ]);
     }
 
     public function search(Request $request)
