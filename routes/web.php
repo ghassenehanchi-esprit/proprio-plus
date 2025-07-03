@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\NotificationController as AdminNotificationController;
 use App\Http\Controllers\Admin\ListingController as AdminListingController;
+use App\Http\Controllers\Admin\PageController as AdminPageController;
 use App\Http\Middleware\EnsureIsAdmin;
 use Illuminate\Http\Request;
 
@@ -67,6 +68,10 @@ Route::middleware(['auth', 'verified', EnsureIsAdmin::class])
         Route::get('/listings', [AdminListingController::class, 'index'])->name('listings.index');
         Route::get('/listings/data', [AdminListingController::class, 'data'])->name('listings.data');
         Route::post('/listings/{listing}/status', [AdminListingController::class, 'setStatus'])->name('listings.status');
+
+        Route::get('/pages', [AdminPageController::class, 'index'])->name('pages.index');
+        Route::get('/pages/{page}/edit', [AdminPageController::class, 'edit'])->name('pages.edit');
+        Route::post('/pages/{page}', [AdminPageController::class, 'update'])->name('pages.update');
     });
 Route::middleware(['auth', 'verified', 'certified'])->group(function () {
     Route::resource('listings', ListingController::class)->except(['show']);
@@ -105,6 +110,10 @@ Route::get('/forgot-password', [PageController::class, 'forgotPassword'])->name(
 Route::get('/reset-password/{token}', [PageController::class, 'resetPassword'])->name('password.reset');
 Route::get('/verify-sms', [PageController::class, 'smsCode'])->name('verify.sms');
 Route::get('/upload-identity', [PageController::class, 'uploadIdentity'])->name('verify.identity');
+Route::get('/pages/{slug}', [PageController::class, 'page'])->name('pages.show');
+Route::get('/about-us', fn() => redirect()->route('pages.show', 'about-us'));
+Route::get('/code-of-conduct', fn() => redirect()->route('pages.show', 'code-of-conduct'));
+Route::get('/reglements', fn() => redirect()->route('pages.show', 'reglements'));
 Route::middleware(['auth'])->group(function () {
     Route::get('/favorites', [PageController::class, 'favorites'])->name('favorites.index');
     Route::post('/listings/{listing}/favorite', [ListingController::class, 'toggle'])->name('favorites.toggle');

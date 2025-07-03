@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Listing;
 use App\Models\User;
 use App\Models\Conversation;
+use App\Models\Page as StaticPage;
 
 class PageController extends Controller
 {
@@ -128,6 +129,14 @@ class PageController extends Controller
         return Inertia::render('Messages/Index', [
             'conversations' => $conversations,
             'current' => $request->conversation,
+        ]);
+    }
+
+    public function page(string $slug)
+    {
+        $page = StaticPage::where('slug', $slug)->with('images')->firstOrFail();
+        return Inertia::render('Page/Show', [
+            'page' => $page,
         ]);
     }
 }
