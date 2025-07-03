@@ -62,24 +62,6 @@ export default function Index({ conversations: initial = {}, current }) {
     }
   };
 
-  const refreshMessages = async () => {
-    if (!active) return;
-    try {
-      const res = await axios.get(`/conversations/${active.id}`);
-      setMessages(res.data.messages);
-      const other = res.data.seller_id === auth.user.id ? res.data.buyer : res.data.seller;
-      setPartner(other);
-      setTimeout(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-      }, 0);
-      errorShown.current = false;
-    } catch (e) {
-      if (!errorShown.current) {
-        sweetAlert('Erreur lors du rafraîchissement des messages');
-        errorShown.current = true;
-      }
-    }
-  };
 
   const send = async () => {
     if (!content) return;
@@ -107,11 +89,6 @@ export default function Index({ conversations: initial = {}, current }) {
     }
   }, [conversations, current]);
 
-  useEffect(() => {
-    if (!active) return;
-    const interval = setInterval(refreshMessages, 5000);
-    return () => clearInterval(interval);
-  }, [active]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
