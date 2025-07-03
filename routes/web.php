@@ -100,6 +100,7 @@ Route::middleware(['auth', 'verified', 'certified'])->group(function () {
     Route::post('/conversations/{conversation}/read', [ConversationController::class, 'markAsRead']);
     Route::post('/conversations/{conversation}/unread', [ConversationController::class, 'markAsUnread']);
 
+    Route::get('/conversations/{conversation}/messages', [MessageController::class, 'index'])->middleware('participant');
     Route::post('/conversations/{conversation}/messages', [MessageController::class, 'store'])->middleware('participant');
     Route::post('/conversations/{conversation}/meetings', [MeetingController::class, 'store'])->middleware('participant');
     Route::post('/meetings/{meeting}/status', [MeetingController::class, 'update'])->middleware('participant');

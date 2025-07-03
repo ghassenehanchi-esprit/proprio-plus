@@ -30,7 +30,8 @@ export default function Index({ conversations: initial = {}, current }) {
     try {
       setActive(conv);
       const res = await axios.get(`/conversations/${conv.id}`);
-      setMessages(res.data.messages);
+      const messagesRes = await axios.get(`/conversations/${conv.id}/messages`);
+      setMessages(messagesRes.data);
       const other = res.data.seller_id === auth.user.id ? res.data.buyer : res.data.seller;
       setPartner(other);
       setTimeout(() => {
