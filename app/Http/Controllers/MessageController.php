@@ -11,6 +11,14 @@ use Illuminate\Support\Facades\Storage;
 
 class MessageController extends Controller
 {
+    public function index(Conversation $conversation)
+    {
+        $this->authorize('view', $conversation);
+        $messages = $conversation->messages()->with('sender')->orderBy('created_at')->get();
+
+        return response()->json($messages);
+    }
+
     public function store(Request $request, Conversation $conversation)
     {
         if ($conversation->is_closed) {
