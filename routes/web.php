@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\NotificationController as AdminNotificationContro
 use App\Http\Controllers\Admin\ListingController as AdminListingController;
 use App\Http\Controllers\Admin\PageController as AdminPageController;
 use App\Http\Middleware\EnsureIsAdmin;
+use App\Http\Controllers\Admin\LoginController as AdminLoginController;
 use Illuminate\Http\Request;
 
 use Inertia\Inertia;
@@ -51,6 +52,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/certification', [CertificationController::class, 'submitDocument'])->name('certification.submit');
 });
 Route::middleware(['auth', 'verified', EnsureIsAdmin::class])
+use App\Http\Controllers\Admin\LoginController as AdminLoginController;
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
@@ -108,6 +110,11 @@ Route::get('/login', [PageController::class, 'login'])->name('login');
 Route::get('/register', [PageController::class, 'register'])->name('register');
 Route::get('/forgot-password', [PageController::class, 'forgotPassword'])->name('password.request');
 Route::get('/reset-password/{token}', [PageController::class, 'resetPassword'])->name('password.reset');
+Route::middleware(["guest"])->prefix("admin")->name("admin.")->group(function () {
+    Route::get("/login", [AdminLoginController::class, "showLoginForm"])->name("login");
+    Route::post("/login", [AdminLoginController::class, "login"])->name("login.post");
+});
+Route::post("/admin/logout", [AdminLoginController::class, "logout"])->middleware("auth")->name("admin.logout");
 Route::get('/verify-sms', [PageController::class, 'smsCode'])->name('verify.sms');
 Route::get('/upload-identity', [PageController::class, 'uploadIdentity'])->name('verify.identity');
 Route::get('/pages/{slug}', [PageController::class, 'page'])->name('pages.show');
