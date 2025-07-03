@@ -7,8 +7,9 @@ export default function AdminNavbar() {
   const { auth } = usePage().props;
 
   return (
-    <Flex as="nav" bg="gray.800" color="white" p={4} align="center">
-      <Link href="/admin/users">Administration</Link>
+    <Flex as="nav" bg="gray.800" color="white" p={4} align="center" gap={4}>
+      <Link href="/admin/users">Utilisateurs</Link>
+      <Link href="/admin/pages">Pages</Link>
       <Spacer />
       <AdminNotificationBell />
       <Menu>
