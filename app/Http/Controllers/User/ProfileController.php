@@ -9,7 +9,11 @@ class ProfileController extends Controller
 {
     public function edit()
     {
-        return response()->json(Auth::user());
+        $user = Auth::user()->only(['first_name', 'last_name', 'email', 'phone', 'created_at']);
+
+        return \Inertia\Inertia::render('Account/Profile', [
+            'user' => $user,
+        ]);
     }
 
     public function update(Request $request)
