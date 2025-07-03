@@ -37,7 +37,7 @@ class Listing extends Model
         'status' => ListingStatus::class,
     ];
 
-    protected $appends = ['photos', 'score'];
+    protected $appends = ['photos', 'score', 'similar_listings'];
 
     protected $withCount = [
         'conversations',
@@ -201,6 +201,59 @@ class Listing extends Model
             ->where('id', $this->id)
             ->filter($params)
             ->exists();
+    }
+
+    public function similarityWith(self $other): float
+    {
+        $score = 0.0;
+        if ($this->category_id === $other->category_id) {
+            $score += 3;
+        }
+        if ($this->city === $other->city) {
+            $score += 2;
+        }
+
+        if ($this->price && $other->price) {
+            $diff = abs($this->price - $other->price) / max($this->price, $other->price);
+            $score += (1 - min($diff, 1)) * 2;
+        }
+
+        foreach (['rooms', 'bedrooms', 'bathrooms'] as $attr) {
+            if ($this->$attr && $other->$attr && abs($this->$attr - $other->$attr) <= 1) {
+                $score += 1;
+            }
+        }
+
+        foreach (['has_terrace', 'has_parking', 'has_garden'] as $attr) {
+            if ($this->$attr && $other->$attr) {
+                $score += 0.5;
+            }
+        }
+
+        return $score;
+    }
+
+    public function similarListings(int $limit = 4)
+    {
+        $query = self::active()
+            ->where('id', '!=', $this->id)
+            ->with('category', 'user', 'gallery')
+            ->withFavoriteStatus(auth()->id())
+            ->where('category_id', $this->category_id)
+            ->where('city', $this->city);
+
+        $listings = $query->get();
+
+        foreach ($listings as $listing) {
+            $listing->similarity = $this->similarityWith($listing);
+        }
+
+        return $listings->sortByDesc('similarity')->take($limit)->values();
+    }
+
+    public function similarListingsAttribute(): Attribute
+    {
+        return Attribute::get(fn () => $this->similarListings());
     }
 
 

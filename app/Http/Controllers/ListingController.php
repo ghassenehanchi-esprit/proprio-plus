@@ -85,12 +85,8 @@ class ListingController extends Controller
             ->withFavoriteStatus(auth()->id())
             ->findOrFail($listing->id);
 
-        $similar = Listing::where('category_id', $listing->category_id)
-            ->where('id', '!=', $listing->id)
-            ->where('city', $listing->city)
-            ->active()
-            ->withFavoriteStatus(auth()->id())
-            ->limit(4)->get();
+        $listing->append('similar_listings');
+        $similar = $listing->similar_listings;
 
         return response()->json([
             'listing' => $listing,
