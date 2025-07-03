@@ -4,6 +4,7 @@ use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ReportController;
@@ -91,6 +92,8 @@ Route::middleware(['auth', 'verified', 'certified'])->group(function () {
     Route::post('/conversations/{conversation}/unread', [ConversationController::class, 'markAsUnread']);
 
     Route::post('/conversations/{conversation}/messages', [MessageController::class, 'store'])->middleware('participant');
+    Route::post('/conversations/{conversation}/meetings', [MeetingController::class, 'store'])->middleware('participant');
+    Route::post('/meetings/{meeting}/status', [MeetingController::class, 'update'])->middleware('participant');
     Route::post('/messages/{message}/read', [MessageController::class, 'markAsRead']);
 
     Route::get('/notifications', [NotificationController::class, 'index']);

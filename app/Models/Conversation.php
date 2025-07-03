@@ -2,6 +2,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Meeting;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use App\Policies\ConversationPolicy;
 
@@ -24,5 +25,9 @@ class Conversation extends Model
 
     public function messages() {
         return $this->hasMany(Message::class)->orderBy('created_at');
+    }
+
+    public function meetings() {
+        return $this->hasMany(Meeting::class);
     }
 }
