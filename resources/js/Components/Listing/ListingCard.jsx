@@ -13,13 +13,17 @@ import Slider from "react-slick";
 import { Link } from "@inertiajs/react";
 import {FaHeart, FaRegHeart, FaStar} from "react-icons/fa";
 import {useState} from "react";
-function FavoriteButton({ listingId, isFavorited }) {
+function FavoriteButton({ listingId, isFavorited, onToggle }) {
     const [favorited, setFavorited] = useState(isFavorited);
 
     const toggleFavorite = async () => {
         try {
             const response = await axios.post(`/listings/${listingId}/favorite`);
-            setFavorited(response.data.status === 'added');
+            const newStatus = response.data.status;
+            setFavorited(newStatus === 'added');
+            if (onToggle) {
+                onToggle(newStatus);
+            }
         } catch (error) {
             console.error('Erreur lors du toggle favori', error);
         }
@@ -39,7 +43,7 @@ function FavoriteButton({ listingId, isFavorited }) {
         />
     );
 }
-export default function ListingCard({ listing }) {
+export default function ListingCard({ listing, onToggle }) {
     const photos = Array.isArray(listing.photos)
         ? listing.photos
         : JSON.parse(listing.photos || '[]');
@@ -78,7 +82,7 @@ export default function ListingCard({ listing }) {
                         />
                     ))}
                 </Slider>
-                <FavoriteButton listingId={listing.id} isFavorited={listing.is_favorited} />
+                <FavoriteButton listingId={listing.id} isFavorited={listing.is_favorited} onToggle={onToggle} />
             </Box>
 
             <Flex direction="column" flex="1">
