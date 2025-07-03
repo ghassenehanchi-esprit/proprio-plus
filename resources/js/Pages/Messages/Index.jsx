@@ -1,5 +1,6 @@
 import { Box, Heading, HStack, VStack, Text, Input, Button, Avatar, IconButton } from '@chakra-ui/react';
-import { FaCheckDouble, FaEnvelope, FaEnvelopeOpen } from 'react-icons/fa';
+import { FaCheckDouble, FaEnvelope, FaEnvelopeOpen, FaReply } from 'react-icons/fa';
+import ListingCard from '@/Components/Listing/ListingCard';
 import { usePage } from '@inertiajs/react';
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
@@ -163,16 +164,38 @@ export default function Index({ conversations: initial = {}, current }) {
               )}
             </HStack>
             <VStack align="stretch" spacing={2} flex="1" overflowY="auto">
-              {messages.map(m => (
-                <Box key={m.id} alignSelf={m.sender_id === auth.user.id ? 'flex-end' : 'flex-start'} bg={m.sender_id === auth.user.id ? 'brand.200' : 'gray.100'} borderRadius="md" p={2}>
-                  <HStack>
-                    <Text>{m.content}</Text>
-                    {m.sender_id === auth.user.id && (
-                      <FaCheckDouble color={m.is_read ? 'blue' : 'gray'} />
-                    )}
-                  </HStack>
-                </Box>
-              ))}
+              {messages.map((m, idx) => {
+                const isMe = m.sender_id === auth.user.id;
+                const isFirstFromBuyer = idx === 0 && m.sender_id === active.buyer_id;
+                if (isFirstFromBuyer) {
+                  return (
+                    <Box key={m.id} alignSelf="flex-start" bg="gray.100" borderRadius="md" p={2}>
+                      <VStack align="stretch" spacing={2}>
+                        <ListingCard listing={active.listing} />
+                        <HStack fontSize="sm" color="gray.600">
+                          <FaReply />
+                          <Text>En réponse à cette annonce</Text>
+                        </HStack>
+                        <HStack>
+                          <Text>{m.content}</Text>
+                          {isMe && <FaCheckDouble color={m.is_read ? 'blue' : 'gray'} />}
+                        </HStack>
+                      </VStack>
+                    </Box>
+                  );
+                }
+
+                return (
+                  <Box key={m.id} alignSelf={isMe ? 'flex-end' : 'flex-start'} bg={isMe ? 'brand.200' : 'gray.100'} borderRadius="md" p={2}>
+                    <HStack>
+                      <Text>{m.content}</Text>
+                      {isMe && (
+                        <FaCheckDouble color={m.is_read ? 'blue' : 'gray'} />
+                      )}
+                    </HStack>
+                  </Box>
+                );
+              })}
               <div ref={messagesEndRef} />
             </VStack>
             <HStack>
