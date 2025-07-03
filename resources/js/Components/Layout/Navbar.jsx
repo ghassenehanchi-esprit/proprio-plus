@@ -65,6 +65,12 @@ export default function Navbar() {
                 />
             </Link>
 
+            <Flex ml={8} gap={4} display={{ base: 'none', md: 'flex' }}>
+                <Button as={Link} href="/about-us" variant="ghost">À propos</Button>
+                <Button as={Link} href="/code-of-conduct" variant="ghost">Code de conduite</Button>
+                <Button as={Link} href="/reglements" variant="ghost">Règlements</Button>
+            </Flex>
+
             <Spacer />
 
             {auth?.user ? (
@@ -91,6 +97,9 @@ export default function Navbar() {
                     <Menu>
                         <MenuButton as={IconButton} icon={<HamburgerIcon />} variant="ghost" />
                         <MenuList>
+                            <MenuItem as={Link} href="/about-us">À propos</MenuItem>
+                            <MenuItem as={Link} href="/code-of-conduct">Code de conduite</MenuItem>
+                            <MenuItem as={Link} href="/reglements">Règlements</MenuItem>
                             <MenuItem as={Link} href="/login">Se connecter</MenuItem>
                             <MenuItem as={Link} href="/register">S’inscrire</MenuItem>
                         </MenuList>

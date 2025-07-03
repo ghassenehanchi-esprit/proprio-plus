@@ -27,9 +27,13 @@ class PageController extends Controller
     {
         $data = $request->validate([
             'title' => 'required|string|max:255',
-            'content' => 'nullable|string',
+            'sections' => 'nullable',
             'images.*' => 'image',
         ]);
+
+        if (isset($data['sections']) && is_string($data['sections'])) {
+            $data['sections'] = json_decode($data['sections'], true);
+        }
 
         $page->update($data);
 

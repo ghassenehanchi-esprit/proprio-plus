@@ -9,7 +9,11 @@ class Page extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['slug', 'title', 'content'];
+    protected $fillable = ['slug', 'title', 'sections'];
+
+    protected $casts = [
+        'sections' => 'array',
+    ];
 
     protected $appends = ['photos'];
 
