@@ -195,6 +195,14 @@ class Listing extends Model
         return $this->scopeStatus($query, ListingStatus::Archived);
     }
 
+    public function matchesParams(array $params): bool
+    {
+        return self::query()
+            ->where('id', $this->id)
+            ->filter($params)
+            ->exists();
+    }
+
 
 }
 

@@ -6,6 +6,7 @@ use App\Http\Requests\StoreListingRequest;
 use App\Models\Favorite;
 use App\Models\Listing;
 use App\Models\Category;
+use App\Http\Controllers\SavedSearchController;
 use App\Enums\ListingStatus;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
@@ -117,6 +118,8 @@ class ListingController extends Controller
             }
         }
 
+        SavedSearchController::notifyMatches($listing);
+
         if ($request->wantsJson()) {
             return response()->json(['message' => 'Annonce créée avec succès', 'listing' => $listing]);
         }
@@ -213,5 +216,27 @@ class ListingController extends Controller
         ]);
 
         return response()->json(['status' => 'added']);
+    }
+
+    public function recommendations()
+    {
+        $user = auth()->user();
+        $query = Listing::with('category', 'user', 'gallery')
+            ->active()
+            ->withFavoriteStatus($user?->id);
+
+        $search = $user?->savedSearches()->latest()->first();
+        if ($search) {
+            $query->filter($search->params);
+        } else {
+            $favCats = $user?->favorites()->pluck('category_id');
+            if ($favCats && $favCats->count()) {
+                $query->whereIn('category_id', $favCats);
+            }
+        }
+
+        $recommendations = $query->orderBy('created_at', 'desc')->take(10)->get();
+
+        return response()->json(['data' => $recommendations]);
     }
 }

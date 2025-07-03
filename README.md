@@ -2,6 +2,8 @@
 
 Ce projet utilise **Laravel 12** avec **React** et Inertia pour construire une plateforme de vente immobilière. Tout le contenu est prévu en français.
 
+Un système de recommandations propose désormais automatiquement des annonces en fonction des recherches sauvegardées et des favoris des utilisateurs.
+
 ## Installation
 
 1. Cloner le dépôt puis installer les dépendances PHP et Node.

@@ -7,6 +7,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SavedSearchController;
 use App\Http\Controllers\User\CertificationController;
 use App\Http\Controllers\User\ProfileController;
 use Illuminate\Foundation\Application;
@@ -108,6 +109,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/favorites', [PageController::class, 'favorites'])->name('favorites.index');
     Route::post('/listings/{listing}/favorite', [ListingController::class, 'toggle'])->name('favorites.toggle');
     Route::get('/account/settings', [PageController::class, 'accountSettings'])->name('account.settings');
+
+    Route::get('/saved-searches', [SavedSearchController::class, 'index'])->name('searches.index');
+    Route::post('/saved-searches', [SavedSearchController::class, 'store'])->name('searches.store');
+    Route::delete('/saved-searches/{search}', [SavedSearchController::class, 'destroy'])->name('searches.destroy');
+
+    Route::get('/recommendations', [ListingController::class, 'recommendations'])->name('listings.recommendations');
 });
 
 Route::middleware(['auth', 'verified', 'certified'])->group(function () {
