@@ -7,6 +7,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
+use App\Notifications\CertificationApprovedNotification;
+use App\Notifications\CertificationRefusedNotification;
+use App\Notifications\CertificationReuploadNotification;
 
 class UserController extends Controller
 {
@@ -42,6 +45,8 @@ class UserController extends Controller
             'certification_date' => now(),
         ]);
 
+        $user->notify(new CertificationApprovedNotification());
+
         return response()->json(['message' => 'Utilisateur certifié avec succès']);
     }
 
@@ -49,7 +54,25 @@ class UserController extends Controller
     {
         $user->update(['certification_status' => 'refusé']);
 
+        $user->notify(new CertificationRefusedNotification());
+
         return response()->json(['message' => "Certification refusée"]);
+    }
+
+    public function requestReupload(User $user)
+    {
+        if ($user->identity_document) {
+            Storage::disk('public')->delete($user->identity_document);
+        }
+
+        $user->update([
+            'certification_status' => 'reupload_requis',
+            'identity_document' => null,
+        ]);
+
+        $user->notify(new CertificationReuploadNotification());
+
+        return response()->json(['message' => 'Demande de nouveau document envoyée']);
     }
 
     public function document(User $user)
