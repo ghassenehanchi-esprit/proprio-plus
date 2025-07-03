@@ -98,8 +98,10 @@ class ConversationController extends Controller
         $this->authorize('view', $conversation);
         DatabaseNotification::where('notifiable_id', Auth::id())
             ->whereNull('read_at')
-            ->where('data->conversation_id', $conversation->id)
             ->get()
+            ->filter(function ($notification) use ($conversation) {
+                return ($notification->data['conversation_id'] ?? null) === $conversation->id;
+            })
             ->each->markAsRead();
 
         $conversation->messages()
