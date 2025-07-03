@@ -11,6 +11,7 @@ import {
 import SearchBar from "@/Components/Listing/SearchBar.jsx";
 import FeatureSection from "@/Components/Listing/FeatureSection";
 import CreateListingCTA from "@/Components/Home/CreateListingCTA";
+import FadeInSection from "@/Components/UI/FadeInSection";
 import ListingCard from "@/Components/Listing/ListingCard";
 
 export default function Home({ bestMatches = [] }) {
@@ -18,25 +19,27 @@ export default function Home({ bestMatches = [] }) {
 
   return (
     <Box>
-        <Box position="relative" mb={10}>
-            <Image
-                src="/images/hero.png"
-                alt="Hero Image"
-                borderRadius="2xl"
-                w="full"
-                h={heroHeight}
-                objectFit="contain"
-            />
-            <Box
-                position="absolute"
-                top="50%"
-                left="50%"
-                transform="translate(-50%, -50%)"
-                width="90%"
-            >
-                <SearchBar />
+        <FadeInSection>
+            <Box position="relative" mb={10}>
+                <Image
+                    src="/images/hero.png"
+                    alt="Hero Image"
+                    borderRadius="2xl"
+                    w="full"
+                    h={heroHeight}
+                    objectFit="contain"
+                />
+                <Box
+                    position="absolute"
+                    top="50%"
+                    left="50%"
+                    transform="translate(-50%, -50%)"
+                    width="90%"
+                >
+                    <SearchBar />
+                </Box>
             </Box>
-        </Box>
+        </FadeInSection>
 
         <FeatureSection />
         <CreateListingCTA />

@@ -9,7 +9,7 @@
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=roboto:400,700|poppins:400,600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=inter:400,700|playfair-display:400,600&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
         @routes
