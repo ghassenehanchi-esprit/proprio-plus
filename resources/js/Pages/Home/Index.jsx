@@ -5,13 +5,15 @@ import {
   Text,
   Button,
   Image,
+  SimpleGrid,
   useBreakpointValue
 } from "@chakra-ui/react";
 import SearchBar from "@/Components/Listing/SearchBar.jsx";
 import FeatureSection from "@/Components/Listing/FeatureSection";
 import CreateListingCTA from "@/Components/Home/CreateListingCTA";
+import ListingCard from "@/Components/Listing/ListingCard";
 
-export default function Home() {
+export default function Home({ bestMatches = [] }) {
   const heroHeight = useBreakpointValue({ base: "240px", md: "320px", lg: "400px" });
 
   return (
@@ -38,6 +40,19 @@ export default function Home() {
 
         <FeatureSection />
         <CreateListingCTA />
+
+        {bestMatches.length > 0 && (
+            <Box mt={10} pb={10}>
+                <Heading size="lg" mb={6} textAlign="center">
+                    Annonces populaires
+                </Heading>
+                <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
+                    {bestMatches.map((l) => (
+                        <ListingCard key={l.id} listing={l} />
+                    ))}
+                </SimpleGrid>
+            </Box>
+        )}
     </Box>
   );
 }

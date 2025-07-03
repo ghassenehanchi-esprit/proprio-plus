@@ -37,7 +37,12 @@ class Listing extends Model
         'status' => ListingStatus::class,
     ];
 
-    protected $appends = ['photos'];
+    protected $appends = ['photos', 'score'];
+
+    protected $withCount = [
+        'conversations',
+        'favoritedBy as favorites_count',
+    ];
 
     public function user() {
         return $this->belongsTo(User::class);
@@ -70,6 +75,15 @@ class Listing extends Model
     public function photos(): Attribute
     {
         return Attribute::get(fn () => $this->gallery->pluck('url')->toArray());
+    }
+
+    public function score(): Attribute
+    {
+        return Attribute::get(function () {
+            $favorites = $this->favorites_count ?? $this->favoritedBy()->count();
+            $conversations = $this->conversations_count ?? $this->conversations()->count();
+            return $conversations * 2 + $favorites;
+        });
     }
 
     public function scopeFilter($query, array $filters)
