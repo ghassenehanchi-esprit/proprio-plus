@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Popover,
     PopoverTrigger,
@@ -20,10 +20,18 @@ import {
     Flex,
     Divider,
     Icon,
+    Select,
 } from '@chakra-ui/react';
 import { FaSlidersH, FaMinus, FaPlus } from 'react-icons/fa';
 
 export default function FilterPopover({ searchParams, setSearchParams }) {
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        fetch('/api/categories')
+            .then(r => r.json())
+            .then(setCategories);
+    }, []);
     const handleSliderChange = (type, val) => {
         if (type === 'price') {
             setSearchParams((prev) => ({ ...prev, min_price: val[0], max_price: val[1] }));
@@ -64,6 +72,21 @@ export default function FilterPopover({ searchParams, setSearchParams }) {
                 <PopoverArrow />
                 <PopoverHeader fontWeight="bold">Filtres avancés</PopoverHeader>
                 <PopoverBody as={VStack} spacing={4} align="stretch">
+
+                    {categories.length > 0 && (
+                        <Box>
+                            <Text mb={2}>Catégorie</Text>
+                            <Select
+                                value={searchParams.category_id || ''}
+                                onChange={e => setSearchParams(prev => ({ ...prev, category_id: e.target.value }))}
+                            >
+                                <option value="">Toutes</option>
+                                {categories.map(c => (
+                                    <option key={c.id} value={c.id}>{c.name}</option>
+                                ))}
+                            </Select>
+                        </Box>
+                    )}
 
                     {/* PRICE SLIDER */}
                     <Box>

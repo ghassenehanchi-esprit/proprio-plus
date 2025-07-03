@@ -11,7 +11,6 @@ import {
   FormErrorMessage,
   Input,
   Textarea,
-  Select,
   Checkbox,
   Flex,
   VStack,
@@ -31,6 +30,7 @@ import {
   AlertIcon,
 } from '@chakra-ui/react';
 import AddressSearch from '@/Components/Listing/AddressSearch';
+import CategoryGrid from '@/Components/Listing/CategoryGrid';
 
 export default function Create({ categories: initialCategories = [] }) {
   const [step, setStep] = useState(1);
@@ -155,12 +155,11 @@ export default function Create({ categories: initialCategories = [] }) {
           </FormControl>
           <FormControl isInvalid={errors.category_id}>
             <FormLabel>Catégorie</FormLabel>
-            <Select value={data.category_id} onChange={(e) => setData('category_id', e.target.value)}>
-              <option value="">Sélectionner</option>
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </Select>
+            <CategoryGrid
+              categories={categories}
+              value={data.category_id}
+              onChange={(id) => setData('category_id', id)}
+            />
             <FormErrorMessage>{errors.category_id}</FormErrorMessage>
           </FormControl>
         </VStack>
