@@ -1,7 +1,7 @@
 import { AppShell, Navbar, NavLink, Header, Group, Menu, Button } from '@mantine/core';
 import { Link, usePage } from '@inertiajs/react';
 import AdminNotificationBell from './AdminNotificationBell';
-import { FaUsers, FaFileAlt, FaHome } from 'react-icons/fa';
+import { FaUsers, FaFileAlt, FaHome, FaFlag, FaClock } from 'react-icons/fa';
 
 export default function AdminLayout({ children }) {
   const { auth } = usePage().props;
@@ -15,6 +15,8 @@ export default function AdminLayout({ children }) {
             <NavLink component={Link} href="/admin/users" label="Utilisateurs" icon={<FaUsers size={14} />} />
             <NavLink component={Link} href="/admin/listings" label="Annonces" icon={<FaHome size={14} />} />
             <NavLink component={Link} href="/admin/pages" label="Pages" icon={<FaFileAlt size={14} />} />
+            <NavLink component={Link} href="/admin/reports" label="Signalements" icon={<FaFlag size={14} />} />
+            <NavLink component={Link} href="/admin/clockings" label="Pointages" icon={<FaClock size={14} />} />
           </Navbar.Section>
         </Navbar>
       }

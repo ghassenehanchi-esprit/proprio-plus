@@ -87,6 +87,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Report::class, 'reported_user_id');
     }
 
+    public function clockings()
+    {
+        return $this->hasMany(Clocking::class);
+    }
+
     public function getLastActiveAtAttribute()
     {
         $timestamp = DB::table('sessions')
