@@ -34,10 +34,10 @@ const theme = extendTheme({
       },
       variants: {
         fancy: {
-          bgGradient: 'linear(to-r, brand.600, brand.400)',
+          bgGradient: 'linear(to-r, brand.600, orange.400)',
           color: 'white',
           _hover: {
-            bgGradient: 'linear(to-r, brand.700, brand.500)',
+            bgGradient: 'linear(to-r, brand.700, orange.500)',
           },
         },
       },
