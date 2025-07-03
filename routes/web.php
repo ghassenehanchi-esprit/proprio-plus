@@ -56,7 +56,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/certification', [CertificationController::class, 'submitDocument'])->name('certification.submit');
 });
 Route::middleware(['auth', 'verified', EnsureIsAdmin::class])
-use App\Http\Controllers\Admin\LoginController as AdminLoginController;
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
