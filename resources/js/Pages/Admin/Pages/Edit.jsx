@@ -6,7 +6,7 @@ import { route } from 'ziggy-js';
 export default function Edit({ page }) {
   const { data, setData, post, processing } = useForm({
     title: page.title || '',
-    content: page.content || '',
+    sections: JSON.stringify(page.sections || [], null, 2),
     images: null,
   });
 
@@ -22,8 +22,12 @@ export default function Edit({ page }) {
         <Input value={data.title} onChange={e => setData('title', e.target.value)} />
       </FormControl>
       <FormControl mb={4}>
-        <FormLabel>Contenu</FormLabel>
-        <Textarea value={data.content} onChange={e => setData('content', e.target.value)} />
+        <FormLabel>Sections (JSON)</FormLabel>
+        <Textarea
+          value={data.sections}
+          onChange={e => setData('sections', e.target.value)}
+          rows={10}
+        />
       </FormControl>
       <FormControl mb={4}>
         <FormLabel>Galerie</FormLabel>
