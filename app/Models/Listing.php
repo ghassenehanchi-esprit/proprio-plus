@@ -251,9 +251,9 @@ class Listing extends Model
         return $listings->sortByDesc('similarity')->take($limit)->values();
     }
 
-    public function similarListingsAttribute(): Attribute
+    public function getSimilarListingsAttribute()
     {
-        return Attribute::get(fn () => $this->similarListings());
+        return $this->similarListings();
     }
 
 
