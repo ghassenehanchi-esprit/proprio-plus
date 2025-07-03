@@ -16,16 +16,20 @@ import {
     Image
 } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
+import { useRecoilState } from 'recoil';
+import modeAtom from '@/state/modeAtom';
 import NotificationBell from "../UI/NotificationBell";
 import { Link, usePage } from "@inertiajs/react";
 import { route } from "ziggy-js";
 
 export default function Navbar() {
     const { auth } = usePage().props;
+    const [mode, setMode] = useRecoilState(modeAtom);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const isMobile = useBreakpointValue({ base: true, md: false });
 
     const [isScrolled, setIsScrolled] = useState(false);
+    const toggleMode = () => setMode(mode === 'buyer' ? 'seller' : 'buyer');
 
     // 🔁 Scroll effect to reduce height and change background
     useEffect(() => {
@@ -78,6 +82,9 @@ export default function Navbar() {
                 {auth.isAdmin && (
                     <Button as={Link} href="/admin/users" mr={4}>Admin</Button>
                 )}
+                <Button onClick={toggleMode} mr={4} variant="ghost">
+                    {mode === 'buyer' ? 'Mode vendeur' : 'Mode acheteur'}
+                </Button>
                 <NotificationBell />
                 <Menu>
                     <MenuButton as={Button} variant="ghost" rightIcon={<HamburgerIcon />}>
@@ -100,6 +107,9 @@ export default function Navbar() {
                             <MenuItem as={Link} href="/about-us">À propos</MenuItem>
                             <MenuItem as={Link} href="/code-of-conduct">Code de conduite</MenuItem>
                             <MenuItem as={Link} href="/reglements">Règlements</MenuItem>
+                            <MenuItem onClick={toggleMode}>
+                                {mode === 'buyer' ? 'Mode vendeur' : 'Mode acheteur'}
+                            </MenuItem>
                             <MenuItem as={Link} href="/login">Se connecter</MenuItem>
                             <MenuItem as={Link} href="/register">S’inscrire</MenuItem>
                         </MenuList>

@@ -13,6 +13,7 @@ import Slider from "react-slick";
 import { Link } from "@inertiajs/react";
 import {FaHeart, FaRegHeart, FaStar} from "react-icons/fa";
 import {useState} from "react";
+import axios from 'axios';
 function FavoriteButton({ listingId, isFavorited, onToggle }) {
     const [favorited, setFavorited] = useState(isFavorited);
 
