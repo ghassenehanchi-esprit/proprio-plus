@@ -32,7 +32,12 @@ class ListingController extends Controller
 
         $sort = $request->input('sort', 'created_at');
         $dir = $request->input('dir', 'desc');
-        $query->orderBy($sort, $dir);
+        if ($sort === 'score') {
+            $query->withCount(['conversations', 'favoritedBy as favorites_count'])
+                ->orderByRaw('(conversations_count * 2 + favorites_count) ' . $dir);
+        } else {
+            $query->orderBy($sort, $dir);
+        }
 
         $perPage = (int) $request->input('per_page', 10);
 

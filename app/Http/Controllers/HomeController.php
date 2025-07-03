@@ -10,14 +10,15 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $featured = Listing::with('gallery')
+        $bestMatches = Listing::with('gallery')
             ->active()
-            ->latest()
+            ->withCount(['conversations', 'favoritedBy as favorites_count'])
+            ->orderByRaw('(conversations_count * 2 + favorites_count) desc')
             ->take(6)
             ->get();
 
         return Inertia::render('Home/Index', [
-            'featured' => $featured
+            'bestMatches' => $bestMatches
         ]);
     }
 }
