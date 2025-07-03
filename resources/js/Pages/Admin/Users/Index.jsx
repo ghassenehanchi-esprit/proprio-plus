@@ -42,6 +42,10 @@ export default function Index() {
     router.post(route('admin.users.refuse', id), {}, { onSuccess: fetchUsers });
   };
 
+  const reupload = (id) => {
+    router.post(route('admin.users.reupload', id), {}, { onSuccess: fetchUsers });
+  };
+
   const viewDocument = (id) => {
     window.open(route('admin.users.document', id), '_blank');
   };
@@ -80,7 +84,8 @@ export default function Index() {
               </Td>
               <Td>
                 <Button size="sm" mr={2} onClick={() => certify(u.id)}>Certifier</Button>
-                <Button size="sm" variant="outline" onClick={() => refuse(u.id)}>Refuser</Button>
+                <Button size="sm" mr={2} variant="outline" onClick={() => refuse(u.id)}>Refuser</Button>
+                <Button size="sm" variant="ghost" onClick={() => reupload(u.id)}>Demander nouveau doc</Button>
               </Td>
             </Tr>
           ))}

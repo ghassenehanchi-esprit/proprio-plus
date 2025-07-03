@@ -57,6 +57,7 @@ Route::middleware(['auth', 'verified', EnsureIsAdmin::class])
         Route::get('/users/{user}/document', [AdminUserController::class, 'document'])->name('users.document');
         Route::post('/users/{user}/certify', [AdminUserController::class, 'certify'])->name('users.certify');
         Route::post('/users/{user}/refuse', [AdminUserController::class, 'refuse'])->name('users.refuse');
+        Route::post('/users/{user}/reupload', [AdminUserController::class, 'requestReupload'])->name('users.reupload');
 
         Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('notifications.index');
         Route::post('/notifications/{notification}/read', [AdminNotificationController::class, 'markAsRead'])->name('notifications.read');
