@@ -24,8 +24,8 @@ export default function Home({ bestMatches = [] }) {
                 alt="Hero Image"
                 borderRadius="2xl"
                 w="full"
-                h="80vh"
-                objectFit="contain" // <-- change ici
+                h={heroHeight}
+                objectFit="contain"
             />
             <Box
                 position="absolute"

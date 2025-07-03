@@ -111,7 +111,7 @@ export default function Index({ conversations: initial = {}, current }) {
 
   return (
     <HStack align="start" spacing={6}>
-      <VStack align="stretch" w="250px" spacing={1}>
+      <VStack align="stretch" w={{ base: 'full', md: '250px' }} spacing={1}>
         {conversations.map(c => {
           const owner = c.seller_id === auth.user.id ? c.buyer : c.seller;
           return (
