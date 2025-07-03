@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   VStack,
@@ -12,11 +12,19 @@ import {
   Checkbox,
   IconButton,
   Divider,
-  Button
+  Button,
+  Select
 } from '@chakra-ui/react';
 import { FaMinus, FaPlus } from 'react-icons/fa';
 
 export default function FilterSidebar({ searchParams, setSearchParams, onSearch }) {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/categories')
+      .then(r => r.json())
+      .then(setCategories);
+  }, []);
   const handleSliderChange = (type, val) => {
     if (type === 'price') {
       setSearchParams(prev => ({ ...prev, min_price: val[0], max_price: val[1] }));
@@ -42,6 +50,20 @@ export default function FilterSidebar({ searchParams, setSearchParams, onSearch 
 
   return (
     <VStack align="stretch" spacing={4} position="sticky" top="20px">
+      {categories.length > 0 && (
+        <Box>
+          <Text mb={2}>Catégorie</Text>
+          <Select
+            value={searchParams.category_id || ''}
+            onChange={e => setSearchParams(prev => ({ ...prev, category_id: e.target.value }))}
+          >
+            <option value="">Toutes</option>
+            {categories.map(c => (
+              <option key={c.id} value={c.id}>{c.name}</option>
+            ))}
+          </Select>
+        </Box>
+      )}
       <Box>
         <Text mb={2}>Prix (€)</Text>
         <RangeSlider

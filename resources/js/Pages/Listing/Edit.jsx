@@ -10,7 +10,6 @@ import {
   FormErrorMessage,
   Input,
   Textarea,
-  Select,
   Checkbox,
   SimpleGrid,
   Heading,
@@ -25,6 +24,7 @@ import {
   AlertDialogOverlay,
 } from '@chakra-ui/react';
 import AddressSearch from '@/Components/Listing/AddressSearch';
+import CategoryGrid from '@/Components/Listing/CategoryGrid';
 
 export default function Edit({ listing, categories: initialCategories = [] }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -104,12 +104,11 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
         </FormControl>
         <FormControl isInvalid={errors.category_id}>
           <FormLabel>Catégorie</FormLabel>
-          <Select value={data.category_id} onChange={e => setData('category_id', e.target.value)}>
-            <option value="">Sélectionner</option>
-            {categories.map(c => (
-              <option key={c.id} value={c.id}>{c.name}</option>
-            ))}
-          </Select>
+          <CategoryGrid
+            categories={categories}
+            value={data.category_id}
+            onChange={id => setData('category_id', id)}
+          />
           <FormErrorMessage>{errors.category_id}</FormErrorMessage>
         </FormControl>
       </VStack>
