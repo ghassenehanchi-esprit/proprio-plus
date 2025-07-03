@@ -41,7 +41,7 @@ export default function FilterSidebar({ searchParams, setSearchParams, onSearch 
   };
 
   return (
-    <VStack align="stretch" spacing={4} position="sticky" top="100px">
+    <VStack align="stretch" spacing={4} position="sticky" top="20px">
       <Box>
         <Text mb={2}>Prix (€)</Text>
         <RangeSlider
