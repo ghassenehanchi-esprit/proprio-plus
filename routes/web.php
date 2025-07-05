@@ -143,6 +143,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/listings/{listing}/favorite', [ListingController::class, 'toggle'])->name('favorites.toggle');
     Route::get('/account/settings', [PageController::class, 'accountSettings'])->name('account.settings');
     Route::get('/account/clockings', [PageController::class, 'clockings'])->name('account.clockings');
+    Route::get('/account/listings', [PageController::class, 'myListings'])->name('account.listings');
 
     Route::get('/saved-searches', [SavedSearchController::class, 'index'])->name('searches.index');
     Route::post('/saved-searches', [SavedSearchController::class, 'store'])->name('searches.store');

@@ -119,6 +119,19 @@ class PageController extends Controller
         return Inertia::render('Account/Clockings');
     }
 
+    public function myListings()
+    {
+        $listings = Listing::where('user_id', auth()->id())
+            ->with('category')
+            ->withCount('conversations')
+            ->latest()
+            ->get();
+
+        return Inertia::render('Listing/MyListings', [
+            'listings' => $listings,
+        ]);
+    }
+
     public function messages(Request $request)
     {
         $conversations = Conversation::where('buyer_id', auth()->id())
