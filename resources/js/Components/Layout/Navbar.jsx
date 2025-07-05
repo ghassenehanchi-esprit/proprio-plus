@@ -95,6 +95,7 @@ export default function Navbar() {
                         <MenuItem as={Link} href="/messages">Messages</MenuItem>
                         <MenuItem as={Link} href="/profile">Profil</MenuItem>
                         <MenuItem as={Link} href="/account/clockings">Pointage</MenuItem>
+                        <MenuItem as={Link} href="/account/listings">Mes annonces</MenuItem>
                         <MenuItem as={Link} href={route('account.settings')}>Paramètres du compte</MenuItem>
                         <MenuItem as={Link} href="/logout" method="post">Déconnexion</MenuItem>
                     </MenuList>
