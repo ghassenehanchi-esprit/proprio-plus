@@ -108,7 +108,7 @@ class ListingController extends Controller
         }
 
         if ($request->hasFile('gallery')) {
-            foreach ($request->file('gallery') as $file) {
+            foreach (array_slice($request->file('gallery'), 0, 6) as $file) {
                 $path = $file->store('listing_images', 'public');
                 $listing->gallery()->create(['path' => $path, 'type' => 'image']);
             }
@@ -155,7 +155,8 @@ class ListingController extends Controller
         }
 
         if ($request->hasFile('gallery')) {
-            foreach ($request->file('gallery') as $file) {
+            $remaining = max(0, 6 - $listing->gallery()->count());
+            foreach (array_slice($request->file('gallery'), 0, $remaining) as $file) {
                 $path = $file->store('listing_images', 'public');
                 $listing->gallery()->create(['path' => $path, 'type' => 'image']);
             }

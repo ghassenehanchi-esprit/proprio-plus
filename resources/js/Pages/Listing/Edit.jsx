@@ -35,7 +35,6 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
 
-  const [loading, setLoading] = useState(false);
 
   const {
     data,
@@ -137,41 +136,16 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
     }
   };
 
-  const submit = async e => {
+  const submit = e => {
     e.preventDefault();
-    const formData = new FormData();
-    Object.entries(data).forEach(([key, value]) => {
-      if (Array.isArray(value)) {
-        value.forEach(v => {
-          if (v !== null) formData.append(`${key}[]`, v);
-        });
-      } else if (value !== null && value !== '') {
-        formData.append(key, typeof value === 'boolean' ? Number(value) : value);
-      }
-    });
-    formData.append('_method', 'PUT');
-
-    setLoading(true);
-    try {
-      const res = await axios.post(`/listings/${listing.id}`, formData, {
-        headers: { 'Accept': 'application/json' },
-      });
-      setExistingPhotos(res.data.listing.gallery || []);
-      setExistingDocs(res.data.listing.documents || []);
-      setPhotos([]);
-      setPreviews([]);
-    } catch (err) {
-      if (err.response?.status === 422) {
+    if (processing) return;
+    put(`/listings/${listing.id}`, {
+      forceFormData: true,
+      onError: errs => {
         clearErrors();
-        Object.entries(err.response.data.errors).forEach(([field, messages]) => {
-          setError(field, messages[0]);
-        });
-      } else {
-        console.error(err);
-      }
-    } finally {
-      setLoading(false);
-    }
+        Object.entries(errs).forEach(([field, message]) => setError(field, message));
+      },
+    });
   };
 
   const remove = () => {
@@ -327,7 +301,7 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
       </VStack>
 
       <Flex justify="space-between" mt={6}>
-        <Button colorScheme="brand" type="submit" isLoading={loading}>Enregistrer</Button>
+        <Button colorScheme="brand" type="submit" isLoading={processing}>Enregistrer</Button>
         <Button colorScheme="red" variant="outline" onClick={onOpen}>Supprimer</Button>
       </Flex>
 
