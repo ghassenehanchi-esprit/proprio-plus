@@ -24,7 +24,7 @@ export default function NotificationBell() {
   const loadNotifications = async () => {
     try {
       const res = await axios.get('/notifications');
-      const data = res.data;
+      const data = Array.isArray(res.data) ? res.data : [];
 
       if (firstLoad.current) {
         setNotifications(data);
@@ -52,7 +52,10 @@ export default function NotificationBell() {
     setNotifications((ns) => ns.map((n) => (n.id === id ? { ...n, read_at: null } : n)));
   };
 
-  const unreadCount = notifications.filter((n) => !n.read_at).length || unreadNotifications;
+  const unreadCount =
+    (Array.isArray(notifications)
+      ? notifications.filter((n) => !n.read_at).length
+      : 0) || unreadNotifications;
 
   return (
     <Menu>
