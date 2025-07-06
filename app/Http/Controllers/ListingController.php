@@ -193,6 +193,46 @@ class ListingController extends Controller
         return response()->json(['message' => 'Annonce archivée']);
     }
 
+    public function signMandateForm(Listing $listing)
+    {
+        if ($listing->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        return Inertia::render('Listing/SignMandate', [
+            'listing' => $listing,
+        ]);
+    }
+
+    public function signMandate(Request $request, Listing $listing)
+    {
+        if ($listing->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $data = $request->validate([
+            'signature' => 'required',
+        ]);
+
+        $image = str_replace('data:image/png;base64,', '', $data['signature']);
+        $image = base64_decode($image);
+        $path = 'signatures/'.uniqid().'.png';
+        Storage::disk('public')->put($path, $image);
+
+        $doc = $listing->documentsToSign()->firstOrCreate([
+            'type' => 'mandat_exclusif',
+        ]);
+
+        $doc->signatures()->create([
+            'user_id' => Auth::id(),
+            'file_path' => $path,
+            'signed_at' => now(),
+        ]);
+
+        return redirect()->route('listings.edit', $listing->id)
+            ->with('message', 'Mandat signé');
+    }
+
     public function toggle(Request $request, Listing $listing)
     {
         $user = auth()->user();
