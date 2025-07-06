@@ -1,3 +1,4 @@
+import React from 'react';
 import { useForm } from '@inertiajs/react';
 import useErrorAlert from '@/hooks/useErrorAlert';
 import { useEffect, useRef, useState } from 'react';
@@ -15,6 +16,8 @@ import {
   Heading,
   VStack,
   Flex,
+  Image,
+  Link,
   useDisclosure,
   AlertDialog,
   AlertDialogBody,
@@ -58,6 +61,8 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
   useErrorAlert(errors);
 
   const [categories, setCategories] = useState(initialCategories);
+  const [existingPhotos, setExistingPhotos] = useState(listing.gallery || []);
+  const [existingDocs, setExistingDocs] = useState(listing.documents || []);
 
   useEffect(() => {
     if (initialCategories.length === 0) {
@@ -75,6 +80,24 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
 
   const handleDocumentsChange = e => {
     setData('documents', e.target.files);
+  };
+
+  const deletePhoto = async id => {
+    try {
+      await axios.delete(`/files/${id}`);
+      setExistingPhotos(photos => photos.filter(p => p.id !== id));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const deleteDoc = async id => {
+    try {
+      await axios.delete(`/files/${id}`);
+      setExistingDocs(docs => docs.filter(d => d.id !== id));
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const submit = e => {
@@ -179,12 +202,33 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
             <FormErrorMessage>{errors.postal_code}</FormErrorMessage>
           </FormControl>
         </SimpleGrid>
+        {existingPhotos.length > 0 && (
+          <SimpleGrid columns={{ base: 2, md: 4 }} spacing={4} mb={2}>
+            {existingPhotos.map(photo => (
+              <Box key={photo.id} position="relative">
+                <Image src={photo.url} alt="photo" objectFit="cover" h="100px" rounded="md" w="100%" />
+                <Button size="xs" colorScheme="red" position="absolute" top="2px" right="2px" onClick={() => deletePhoto(photo.id)}>X</Button>
+              </Box>
+            ))}
+          </SimpleGrid>
+        )}
         <FormControl isInvalid={errors.gallery} mt={4}>
           <FormLabel>Photos</FormLabel>
           <Input type="file" multiple onChange={handleGalleryChange} />
           <FormErrorMessage>{errors.gallery}</FormErrorMessage>
         </FormControl>
-        <FormControl isInvalid={errors.documents}>
+
+        {existingDocs.length > 0 && (
+          <VStack align="start" spacing={2} mt={4}>
+            {existingDocs.map(doc => (
+              <Flex key={doc.id} align="center">
+                <Link href={doc.url} isExternal mr={2}>{doc.path.split('/').pop()}</Link>
+                <Button size="xs" colorScheme="red" onClick={() => deleteDoc(doc.id)}>Supprimer</Button>
+              </Flex>
+            ))}
+          </VStack>
+        )}
+        <FormControl isInvalid={errors.documents} mt={4}>
           <FormLabel>Documents</FormLabel>
           <Input type="file" multiple onChange={handleDocumentsChange} />
           <FormErrorMessage>{errors.documents}</FormErrorMessage>
