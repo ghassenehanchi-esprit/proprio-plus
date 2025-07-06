@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'certified' => \App\Http\Middleware\EnsureUserIsCertified::class,
             'admin' => \App\Http\Middleware\EnsureIsAdmin::class,
             'participant' => \App\Http\Middleware\EnsureUserIsParticipant::class,
+            'terms' => \App\Http\Middleware\EnsureTermsAccepted::class,
         ]);
 
         $middleware->web(append: [

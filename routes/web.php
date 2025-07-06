@@ -12,6 +12,7 @@ use App\Http\Controllers\ClockingController;
 use App\Http\Controllers\SavedSearchController;
 use App\Http\Controllers\User\CertificationController;
 use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\User\TermsController;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Route;
@@ -48,14 +49,14 @@ Route::middleware([
     })->name('dashboard');
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'terms'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
     Route::get('/certification', [CertificationController::class, 'showForm'])->name('certification.form');
     Route::post('/certification', [CertificationController::class, 'submitDocument'])->name('certification.submit');
 });
-Route::middleware(['auth', 'verified', EnsureIsAdmin::class])
+Route::middleware(['auth', 'verified', 'terms', EnsureIsAdmin::class])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
@@ -85,12 +86,14 @@ Route::middleware(['auth', 'verified', EnsureIsAdmin::class])
         Route::get('/clockings', [AdminClockingController::class, 'index'])->name('clockings.index');
         Route::get('/clockings/data', [AdminClockingController::class, 'data'])->name('clockings.data');
     });
-Route::middleware(['auth', 'verified', 'certified'])->group(function () {
+Route::middleware(['auth', 'verified', 'terms', 'certified'])->group(function () {
     Route::resource('listings', ListingController::class)->except(['show']);
+    Route::get('listings/{listing}/exclusive-mandate', [ListingController::class, 'signMandateForm'])->name('listings.mandate.form');
+    Route::post('listings/{listing}/exclusive-mandate', [ListingController::class, 'signMandate'])->name('listings.mandate.sign');
     Route::post('listings/{listing}/mark-as-sold', [ListingController::class, 'markAsSold'])->name('listings.sold');
     Route::post('listings/{listing}/archive', [ListingController::class, 'archive'])->name('listings.archive');
 });
-Route::middleware(['auth', 'verified', 'certified'])->group(function () {
+Route::middleware(['auth', 'verified', 'terms', 'certified'])->group(function () {
     Route::get('/conversations', [ConversationController::class, 'index']);
     Route::post('/conversations', [ConversationController::class, 'store']);
     Route::get('/conversations/{conversation}', [ConversationController::class, 'show'])->middleware('participant');
@@ -110,7 +113,7 @@ Route::middleware(['auth', 'verified', 'certified'])->group(function () {
     Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead']);
     Route::post('/notifications/{notification}/unread', [NotificationController::class, 'markAsUnread']);
 });
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'terms'])->group(function () {
     Route::get('/reports', [ReportController::class, 'index']);
     Route::post('/reports', [ReportController::class, 'store']);
 
@@ -138,6 +141,11 @@ Route::get('/pages/{slug}', [PageController::class, 'page'])->name('pages.show')
 Route::get('/about-us', fn() => redirect()->route('pages.show', 'about-us'));
 Route::get('/code-of-conduct', fn() => redirect()->route('pages.show', 'code-of-conduct'));
 Route::get('/reglements', fn() => redirect()->route('pages.show', 'reglements'));
+
+Route::middleware(['auth', 'terms'])->group(function () {
+    Route::get('/terms-acceptance', [TermsController::class, 'show'])->name('terms.show');
+    Route::post('/terms-acceptance', [TermsController::class, 'accept'])->name('terms.accept');
+});
 Route::middleware(['auth'])->group(function () {
     Route::get('/favorites', [PageController::class, 'favorites'])->name('favorites.index');
     Route::post('/listings/{listing}/favorite', [ListingController::class, 'toggle'])->name('favorites.toggle');
@@ -152,7 +160,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/recommendations', [ListingController::class, 'recommendations'])->name('listings.recommendations');
 });
 
-Route::middleware(['auth', 'verified', 'certified'])->group(function () {
+Route::middleware(['auth', 'verified', 'terms', 'certified'])->group(function () {
     Route::get('/messages', [PageController::class, 'messages'])->name('messages.index');
 });
 Route::middleware(['auth'])->group(function () {
