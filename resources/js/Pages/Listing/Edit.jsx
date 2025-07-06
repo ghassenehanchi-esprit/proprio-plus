@@ -66,7 +66,7 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
     address: listing.address || '',
     latitude: listing.latitude || '',
     longitude: listing.longitude || '',
-    gallery: null,
+    gallery: [],
     documents: null,
   });
 
