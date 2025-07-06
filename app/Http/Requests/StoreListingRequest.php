@@ -12,7 +12,7 @@ class StoreListingRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
+        $rules = [
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
@@ -36,5 +36,13 @@ class StoreListingRequest extends FormRequest
             'documents.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:4096',
             'gallery.*' => 'nullable|image|max:4096',
         ];
+
+        if ($this->isMethod('put') || $this->isMethod('patch')) {
+            foreach ($rules as $field => $rule) {
+                $rules[$field] = 'sometimes|' . $rule;
+            }
+        }
+
+        return $rules;
     }
 }
