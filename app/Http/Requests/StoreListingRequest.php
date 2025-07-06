@@ -33,8 +33,10 @@ class StoreListingRequest extends FormRequest
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
             'category_id' => 'required|exists:categories,id',
+            'documents'   => 'nullable|array',
             'documents.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:4096',
-            'gallery.*' => 'nullable|image|max:4096',
+            'gallery'     => 'nullable|array',
+            'gallery.*'   => 'nullable|image|max:4096',
         ];
 
         if ($this->isMethod('put') || $this->isMethod('patch')) {
