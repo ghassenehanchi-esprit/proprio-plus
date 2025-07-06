@@ -163,7 +163,12 @@ class ListingController extends Controller
             ? 'Annonce mise à jour et en attente de validation'
             : 'Annonce mise à jour';
 
-        return response()->json(['message' => $message, 'listing' => $listing->fresh()]);
+        if ($request->wantsJson()) {
+            return response()->json(['message' => $message, 'listing' => $listing->fresh()]);
+        }
+
+        return redirect()->route('listings.show', $listing->id)
+            ->with('success', $message);
     }
 
     public function destroy(Listing $listing)
