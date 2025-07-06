@@ -1,4 +1,15 @@
-import { Box, Table, Flex, Button, Text } from '@mantine/core';
+import {
+  Box,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Flex,
+  Button,
+  Text,
+} from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { route } from 'ziggy-js';
@@ -19,30 +30,30 @@ export default function Index() {
 
   return (
     <Box>
-      <Table striped withTableBorder>
-        <thead>
-          <tr>
-            <th>Utilisateur</th>
-            <th>Entrée</th>
-            <th>Sortie</th>
-            <th>Note</th>
-          </tr>
-        </thead>
-        <tbody>
+      <Table variant="striped" colorScheme="gray" size="sm">
+        <Thead>
+          <Tr>
+            <Th>Utilisateur</Th>
+            <Th>Entrée</Th>
+            <Th>Sortie</Th>
+            <Th>Note</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
           {clockings.map(c => (
-            <tr key={c.id}>
-              <td>{c.user.first_name} {c.user.last_name}</td>
-              <td>{new Date(c.clock_in_at).toLocaleString()}</td>
-              <td>{c.clock_out_at ? new Date(c.clock_out_at).toLocaleString() : '—'}</td>
-              <td>{c.note || '—'}</td>
-            </tr>
+            <Tr key={c.id}>
+              <Td>{c.user.first_name} {c.user.last_name}</Td>
+              <Td>{new Date(c.clock_in_at).toLocaleString()}</Td>
+              <Td>{c.clock_out_at ? new Date(c.clock_out_at).toLocaleString() : '—'}</Td>
+              <Td>{c.note || '—'}</Td>
+            </Tr>
           ))}
-        </tbody>
+        </Tbody>
       </Table>
-      <Flex mt="md" justify="space-between" align="center">
-        <Button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>Précédent</Button>
+      <Flex mt={4} justify="space-between" align="center">
+        <Button onClick={() => setPage(p => Math.max(1, p - 1))} isDisabled={page === 1}>Précédent</Button>
         <Text>{page} / {lastPage}</Text>
-        <Button onClick={() => setPage(p => Math.min(lastPage, p + 1))} disabled={page === lastPage}>Suivant</Button>
+        <Button onClick={() => setPage(p => Math.min(lastPage, p + 1))} isDisabled={page === lastPage}>Suivant</Button>
       </Flex>
     </Box>
   );

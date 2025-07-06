@@ -1,4 +1,12 @@
-import { ActionIcon, Indicator, Menu, Text } from '@mantine/core';
+import {
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Badge,
+  Text,
+} from '@chakra-ui/react';
 import { FaBell } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -29,29 +37,43 @@ export default function AdminNotificationBell() {
   };
 
   return (
-    <Menu shadow="md" width={250}>
-      <Menu.Target>
-        <Indicator color="red" disabled={unreadCount === 0} label={unreadCount} size={16}>
-          <ActionIcon variant="subtle" size="lg">
-            <FaBell />
-          </ActionIcon>
-        </Indicator>
-      </Menu.Target>
-      <Menu.Dropdown>
+    <Menu>
+      <MenuButton
+        as={IconButton}
+        icon={<FaBell />}
+        variant="ghost"
+        position="relative"
+      >
+        {unreadCount > 0 && (
+          <Badge
+            colorScheme="red"
+            borderRadius="full"
+            position="absolute"
+            top="0"
+            right="0"
+            fontSize="0.6em"
+          >
+            {unreadCount}
+          </Badge>
+        )}
+      </MenuButton>
+      <MenuList>
         {notifications.length === 0 ? (
-          <Menu.Item>Aucune notification</Menu.Item>
+          <MenuItem>Aucune notification</MenuItem>
         ) : (
           notifications.map((n) => (
-            <Menu.Item
+            <MenuItem
               key={n.id}
               onClick={() => markAsRead(n.id)}
-              color={n.read_at ? undefined : 'blue'}
+              color={n.read_at ? undefined : 'blue.600'}
             >
-              <Text size="sm">Nouvelle demande de certification de {n.data.name}</Text>
-            </Menu.Item>
+              <Text fontSize="sm">
+                Nouvelle demande de certification de {n.data.name}
+              </Text>
+            </MenuItem>
           ))
         )}
-      </Menu.Dropdown>
+      </MenuList>
     </Menu>
   );
 }

@@ -1,15 +1,16 @@
 import { useForm } from '@inertiajs/react';
 import useErrorAlert from '@/hooks/useErrorAlert';
 import {
-  TextInput,
-  PasswordInput,
-  Checkbox,
-  Paper,
-  Title,
-  Container,
+  Box,
   Button,
-} from '@mantine/core';
-import { MantineProvider } from '@mantine/core';
+  Checkbox,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  Heading,
+  Input,
+  VStack,
+} from '@chakra-ui/react';
 
 export default function AdminLogin() {
   const { data, setData, post, processing, errors } = useForm({
@@ -26,42 +27,44 @@ export default function AdminLogin() {
   };
 
   return (
-    <Container size={420} my={40}>
-      <Title align="center" mb="md">
-        Connexion administrateur
-      </Title>
-      <Paper withBorder shadow="md" p="md">
+    <Flex minH="100vh" align="center" justify="center" bg="gray.50">
+      <Box bg="white" p={8} rounded="md" shadow="md" w="full" maxW="md">
+        <Heading size="lg" textAlign="center" mb={6}>
+          Connexion administrateur
+        </Heading>
         <form onSubmit={submit}>
-          <TextInput
-            label="Email"
-            placeholder="Votre email"
-            value={data.email}
-            onChange={(e) => setData('email', e.target.value)}
-            error={errors.email}
-            required
-          />
-          <PasswordInput
-            label="Mot de passe"
-            placeholder="Votre mot de passe"
-            value={data.password}
-            onChange={(e) => setData('password', e.target.value)}
-            error={errors.password}
-            mt="md"
-            required
-          />
-          <Checkbox
-            label="Se souvenir de moi"
-            checked={data.remember}
-            onChange={(e) => setData('remember', e.currentTarget.checked)}
-            mt="md"
-          />
-          <Button fullWidth mt="xl" type="submit" loading={processing}>
-            Se connecter
-          </Button>
+          <VStack spacing={4} align="stretch">
+            <FormControl isInvalid={errors.email}>
+              <Input
+                placeholder="Votre email"
+                value={data.email}
+                onChange={(e) => setData('email', e.target.value)}
+              />
+              <FormErrorMessage>{errors.email}</FormErrorMessage>
+            </FormControl>
+            <FormControl isInvalid={errors.password}>
+              <Input
+                type="password"
+                placeholder="Votre mot de passe"
+                value={data.password}
+                onChange={(e) => setData('password', e.target.value)}
+              />
+              <FormErrorMessage>{errors.password}</FormErrorMessage>
+            </FormControl>
+            <Checkbox
+              isChecked={data.remember}
+              onChange={(e) => setData('remember', e.target.checked)}
+            >
+              Se souvenir de moi
+            </Checkbox>
+            <Button colorScheme="brand" type="submit" w="full" isLoading={processing}>
+              Se connecter
+            </Button>
+          </VStack>
         </form>
-      </Paper>
-    </Container>
+      </Box>
+    </Flex>
   );
 }
 
-AdminLogin.layout = page => <MantineProvider>{page}</MantineProvider>;
+AdminLogin.layout = (page) => page;
