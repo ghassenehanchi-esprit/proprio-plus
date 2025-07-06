@@ -90,7 +90,7 @@ export default function ListingCard({ listing, onToggle }) {
                 <Stack spacing={3} p={4} flex="1">
                     <Text fontSize="xl" fontWeight="bold">{listing.title}</Text>
                     <Text fontSize="md" color="gray.600">{listing.city}, {listing.postal_code}</Text>
-                    <Text fontSize="lg" fontWeight="bold">{listing.price} €<Text as="span" fontWeight="normal" color="gray.500"> / nuit</Text></Text>
+                    <Text fontSize="lg" fontWeight="bold">{listing.price} €</Text>
                     <Text fontSize="sm" color="gray.600">Surface : {listing.surface} m²</Text>
                     <Text fontSize="sm" color="gray.600">Pièces : {listing.rooms}, Chambres : {listing.bedrooms}, Sdb : {listing.bathrooms}</Text>
                     <HStack spacing={3} pt={2}>
