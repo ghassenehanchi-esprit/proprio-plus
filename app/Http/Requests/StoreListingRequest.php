@@ -35,7 +35,7 @@ class StoreListingRequest extends FormRequest
             'category_id' => 'required|exists:categories,id',
             'documents'   => 'nullable|array',
             'documents.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:4096',
-            'gallery'     => 'nullable|array',
+            'gallery'     => 'nullable|array|max:6',
             'gallery.*'   => 'nullable|image|max:4096',
         ];
 
