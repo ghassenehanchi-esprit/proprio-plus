@@ -1,7 +1,8 @@
 import React from 'react';
 import { useForm } from '@inertiajs/react';
 import useErrorAlert from '@/hooks/useErrorAlert';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
+import { useDropzone } from 'react-dropzone';
 import axios from 'axios';
 import {
   Box,
@@ -18,6 +19,7 @@ import {
   Flex,
   Image,
   Link,
+  Text,
   useDisclosure,
   AlertDialog,
   AlertDialogBody,
@@ -63,6 +65,8 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
   const [categories, setCategories] = useState(initialCategories);
   const [existingPhotos, setExistingPhotos] = useState(listing.gallery || []);
   const [existingDocs, setExistingDocs] = useState(listing.documents || []);
+  const [photos, setPhotos] = useState([]);
+  const [previews, setPreviews] = useState([]);
 
   useEffect(() => {
     if (initialCategories.length === 0) {
@@ -74,8 +78,30 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
     setData(data => ({ ...data, city, postal_code, latitude: lat, longitude: lng }));
   };
 
-  const handleGalleryChange = e => {
-    setData('gallery', e.target.files);
+  const onDrop = useCallback(
+    accepted => {
+      const max = 6 - existingPhotos.length - photos.length;
+      const allowed = accepted.slice(0, max);
+      const newFiles = [...photos, ...allowed];
+      setPhotos(newFiles);
+      setData('gallery', newFiles);
+      setPreviews(newFiles.map(f => URL.createObjectURL(f)));
+    },
+    [photos, existingPhotos]
+  );
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: { 'image/*': [] },
+    multiple: true,
+    disabled: existingPhotos.length + photos.length >= 6,
+  });
+
+  const removePhotoPreview = index => {
+    const newFiles = photos.filter((_, i) => i !== index);
+    setPhotos(newFiles);
+    setData('gallery', newFiles);
+    setPreviews(newFiles.map(f => URL.createObjectURL(f)));
   };
 
   const handleDocumentsChange = e => {
@@ -214,9 +240,31 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
         )}
         <FormControl isInvalid={errors.gallery} mt={4}>
           <FormLabel>Photos</FormLabel>
-          <Input type="file" multiple onChange={handleGalleryChange} />
+          <Box
+            {...getRootProps()}
+            p={6}
+            border="2px dashed"
+            borderColor={isDragActive ? 'brand.500' : 'gray.300'}
+            rounded="md"
+            textAlign="center"
+            cursor={existingPhotos.length + photos.length >= 6 ? 'not-allowed' : 'pointer'}
+          >
+            <input {...getInputProps()} />
+            <Text>Glissez-déposez des images ou cliquez pour sélectionner</Text>
+            <Text fontSize="sm" color="gray.500">{`${existingPhotos.length + photos.length}/6 ajoutées`}</Text>
+          </Box>
           <FormErrorMessage>{errors.gallery}</FormErrorMessage>
         </FormControl>
+        {previews.length > 0 && (
+          <SimpleGrid columns={{ base: 2, md: 4 }} spacing={4} mt={2}>
+            {previews.map((src, i) => (
+              <Box key={i} position="relative">
+                <Image src={src} alt="preview" objectFit="cover" h="100px" rounded="md" w="100%" />
+                <Button size="xs" colorScheme="red" position="absolute" top="2px" right="2px" onClick={() => removePhotoPreview(i)}>X</Button>
+              </Box>
+            ))}
+          </SimpleGrid>
+        )}
 
         {existingDocs.length > 0 && (
           <VStack align="start" spacing={2} mt={4}>
