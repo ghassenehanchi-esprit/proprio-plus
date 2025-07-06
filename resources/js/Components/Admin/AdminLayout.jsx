@@ -1,4 +1,15 @@
-import { MantineProvider, AppShell, NavLink, Group, Menu, Button } from '@mantine/core';
+import {
+  Box,
+  Flex,
+  Link as ChakraLink,
+  Icon,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Button,
+  Text,
+} from '@chakra-ui/react';
 import { Link, usePage } from '@inertiajs/react';
 import AdminNotificationBell from './AdminNotificationBell';
 import { FaUsers, FaFileAlt, FaHome, FaFlag, FaClock } from 'react-icons/fa';
@@ -7,38 +18,53 @@ export default function AdminLayout({ children }) {
   const { auth } = usePage().props;
 
   return (
-    <MantineProvider>
-      <AppShell padding="md" navbar={{ width: 200 }} header={{ height: 60 }}>
-      <AppShell.Navbar p="xs">
-        <NavLink component={Link} href="/admin/users" label="Utilisateurs" icon={<FaUsers size={14} />} />
-        <NavLink component={Link} href="/admin/listings" label="Annonces" icon={<FaHome size={14} />} />
-        <NavLink component={Link} href="/admin/pages" label="Pages" icon={<FaFileAlt size={14} />} />
-        <NavLink component={Link} href="/admin/reports" label="Signalements" icon={<FaFlag size={14} />} />
-        <NavLink component={Link} href="/admin/clockings" label="Pointages" icon={<FaClock size={14} />} />
-      </AppShell.Navbar>
-
-      <AppShell.Header p="xs">
-        <Group justify="space-between" h="100%">
-          <Group>
-            <Link href="/">Accueil</Link>
-          </Group>
-          <Group>
+    <Flex minH="100vh">
+      <Box w="200px" bg="brand.600" color="white" p={4}>
+        <Flex direction="column" as="nav" gap={2} fontSize="sm">
+          <ChakraLink as={Link} href="/admin/users" display="flex" alignItems="center" gap={2}>
+            <Icon as={FaUsers} />
+            <Text>Utilisateurs</Text>
+          </ChakraLink>
+          <ChakraLink as={Link} href="/admin/listings" display="flex" alignItems="center" gap={2}
+            >
+            <Icon as={FaHome} />
+            <Text>Annonces</Text>
+          </ChakraLink>
+          <ChakraLink as={Link} href="/admin/pages" display="flex" alignItems="center" gap={2}
+            >
+            <Icon as={FaFileAlt} />
+            <Text>Pages</Text>
+          </ChakraLink>
+          <ChakraLink as={Link} href="/admin/reports" display="flex" alignItems="center" gap={2}
+            >
+            <Icon as={FaFlag} />
+            <Text>Signalements</Text>
+          </ChakraLink>
+          <ChakraLink as={Link} href="/admin/clockings" display="flex" alignItems="center" gap={2}
+            >
+            <Icon as={FaClock} />
+            <Text>Pointages</Text>
+          </ChakraLink>
+        </Flex>
+      </Box>
+      <Box flex="1" bg="gray.50">
+        <Flex as="header" bg="white" px={4} py={2} justify="space-between" align="center" shadow="sm">
+          <ChakraLink as={Link} href="/">Accueil</ChakraLink>
+          <Flex align="center" gap={3}>
             <AdminNotificationBell />
             <Menu>
-              <Menu.Target>
-                <Button variant="subtle">{auth.user.first_name}</Button>
-              </Menu.Target>
-              <Menu.Dropdown>
-                <Menu.Item component={Link} href="/">Aller au site</Menu.Item>
-                <Menu.Item component={Link} href="/admin/logout" method="post">Déconnexion</Menu.Item>
-              </Menu.Dropdown>
+              <MenuButton as={Button} variant="ghost">
+                {auth.user.first_name}
+              </MenuButton>
+              <MenuList>
+                <MenuItem as={Link} href="/">Aller au site</MenuItem>
+                <MenuItem as={Link} href="/admin/logout" method="post">Déconnexion</MenuItem>
+              </MenuList>
             </Menu>
-          </Group>
-        </Group>
-      </AppShell.Header>
-
-      <AppShell.Main>{children}</AppShell.Main>
-      </AppShell>
-    </MantineProvider>
+          </Flex>
+        </Flex>
+        <Box p={4}>{children}</Box>
+      </Box>
+    </Flex>
   );
 }

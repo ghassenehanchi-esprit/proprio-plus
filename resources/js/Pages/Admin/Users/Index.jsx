@@ -1,4 +1,17 @@
-import { Box, Table, TextInput, Button, Flex, Text, Anchor } from '@mantine/core';
+import {
+  Box,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Input,
+  Button,
+  Flex,
+  Text,
+  Link,
+} from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { router } from '@inertiajs/react';
@@ -52,49 +65,49 @@ export default function Index() {
 
   return (
     <Box>
-      <TextInput
+      <Input
         placeholder="Rechercher..."
-        mb="sm"
+        mb={2}
         value={query}
         onChange={(e) => {
           setQuery(e.target.value);
           setPage(1);
         }}
       />
-      <Table striped withTableBorder>
-        <thead>
-          <tr>
-            <th style={{ cursor: 'pointer' }} onClick={() => handleSort('last_name')}>Nom {sort === 'last_name' && (dir === 'asc' ? '▲' : '▼')}</th>
-            <th style={{ cursor: 'pointer' }} onClick={() => handleSort('email')}>Email {sort === 'email' && (dir === 'asc' ? '▲' : '▼')}</th>
-            <th style={{ cursor: 'pointer' }} onClick={() => handleSort('certification_status')}>Status {sort === 'certification_status' && (dir === 'asc' ? '▲' : '▼')}</th>
-            <th>Document</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
+      <Table variant="striped" colorScheme="gray" size="sm">
+        <Thead>
+          <Tr>
+            <Th cursor="pointer" onClick={() => handleSort('last_name')}>Nom {sort === 'last_name' && (dir === 'asc' ? '▲' : '▼')}</Th>
+            <Th cursor="pointer" onClick={() => handleSort('email')}>Email {sort === 'email' && (dir === 'asc' ? '▲' : '▼')}</Th>
+            <Th cursor="pointer" onClick={() => handleSort('certification_status')}>Status {sort === 'certification_status' && (dir === 'asc' ? '▲' : '▼')}</Th>
+            <Th>Document</Th>
+            <Th>Actions</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
           {users.map(u => (
-            <tr key={u.id}>
-              <td>{u.first_name} {u.last_name}</td>
-              <td>{u.email}</td>
-              <td>{u.certification_status || '—'}</td>
-              <td>
+            <Tr key={u.id}>
+              <Td>{u.first_name} {u.last_name}</Td>
+              <Td>{u.email}</Td>
+              <Td>{u.certification_status || '—'}</Td>
+              <Td>
                 {u.identity_document && (
-                  <Anchor onClick={() => viewDocument(u.id)}>Voir</Anchor>
+                  <Link onClick={() => viewDocument(u.id)}>Voir</Link>
                 )}
-              </td>
-              <td>
-                <Button size="xs" mr={4} onClick={() => certify(u.id)}>Certifier</Button>
-                <Button size="xs" mr={4} variant="outline" onClick={() => refuse(u.id)}>Refuser</Button>
-                <Button size="xs" variant="default" onClick={() => reupload(u.id)}>Demander nouveau doc</Button>
-              </td>
-            </tr>
+              </Td>
+              <Td>
+                <Button size="xs" mr={2} onClick={() => certify(u.id)}>Certifier</Button>
+                <Button size="xs" mr={2} variant="outline" onClick={() => refuse(u.id)}>Refuser</Button>
+                <Button size="xs" variant="ghost" onClick={() => reupload(u.id)}>Demander nouveau doc</Button>
+              </Td>
+            </Tr>
           ))}
-        </tbody>
+        </Tbody>
       </Table>
-      <Flex mt="md" justify="space-between" align="center">
-        <Button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>Précédent</Button>
+      <Flex mt={4} justify="space-between" align="center">
+        <Button onClick={() => setPage(p => Math.max(1, p - 1))} isDisabled={page === 1}>Précédent</Button>
         <Text>{page} / {lastPage}</Text>
-        <Button onClick={() => setPage(p => Math.min(lastPage, p + 1))} disabled={page === lastPage}>Suivant</Button>
+        <Button onClick={() => setPage(p => Math.min(lastPage, p + 1))} isDisabled={page === lastPage}>Suivant</Button>
       </Flex>
     </Box>
   );
