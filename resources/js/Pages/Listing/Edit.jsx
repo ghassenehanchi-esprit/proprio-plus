@@ -1,6 +1,6 @@
 import { useForm } from '@inertiajs/react';
 import useErrorAlert from '@/hooks/useErrorAlert';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import {
   Box,
@@ -57,7 +57,7 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
 
   useErrorAlert(errors);
 
-  const [categories, setCategories] = React.useState(initialCategories);
+  const [categories, setCategories] = useState(initialCategories);
 
   useEffect(() => {
     if (initialCategories.length === 0) {
