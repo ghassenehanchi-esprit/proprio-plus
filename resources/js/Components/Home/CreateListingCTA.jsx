@@ -15,7 +15,7 @@ export default function CreateListingCTA() {
           />
           <Box textAlign={{ base: "center", md: "left" }}>
             <Heading as="h2" size="xl" mb={4}>
-              Envie de vendre ou louer un bien ?
+              Envie de vendre votre bien ?
             </Heading>
             <Text fontSize="lg" mb={6}>
               Publiez votre annonce en quelques minutes et touchez des milliers

@@ -2,6 +2,8 @@
 
 Ce projet utilise **Laravel 12** avec **React** et Inertia pour construire une plateforme de vente immobilière. Tout le contenu est prévu en français.
 
+> **Note :** L'application est uniquement orientée vers la **vente** de biens immobiliers. Aucune fonctionnalité de prêt ou de financement n'est prévue.
+
 Un système de recommandations propose désormais automatiquement des annonces en fonction des recherches sauvegardées et des favoris des utilisateurs.
 
 ## Installation
