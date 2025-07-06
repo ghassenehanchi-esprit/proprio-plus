@@ -35,7 +35,18 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
 
-  const { data, setData, put, processing, errors, delete: destroy } = useForm({
+  const [loading, setLoading] = useState(false);
+
+  const {
+    data,
+    setData,
+    put,
+    processing,
+    errors,
+    setError,
+    clearErrors,
+    delete: destroy,
+  } = useForm({
     title: listing.title || '',
     description: listing.description || '',
     category_id: listing.category_id || '',
@@ -126,9 +137,41 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
     }
   };
 
-  const submit = e => {
+  const submit = async e => {
     e.preventDefault();
-    put(`/listings/${listing.id}`, { forceFormData: true });
+    const formData = new FormData();
+    Object.entries(data).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        value.forEach(v => {
+          if (v !== null) formData.append(`${key}[]`, v);
+        });
+      } else if (value !== null && value !== '') {
+        formData.append(key, typeof value === 'boolean' ? Number(value) : value);
+      }
+    });
+    formData.append('_method', 'PUT');
+
+    setLoading(true);
+    try {
+      const res = await axios.post(`/listings/${listing.id}`, formData, {
+        headers: { 'Accept': 'application/json' },
+      });
+      setExistingPhotos(res.data.listing.gallery || []);
+      setExistingDocs(res.data.listing.documents || []);
+      setPhotos([]);
+      setPreviews([]);
+    } catch (err) {
+      if (err.response?.status === 422) {
+        clearErrors();
+        Object.entries(err.response.data.errors).forEach(([field, messages]) => {
+          setError(field, messages[0]);
+        });
+      } else {
+        console.error(err);
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const remove = () => {
@@ -284,7 +327,7 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
       </VStack>
 
       <Flex justify="space-between" mt={6}>
-        <Button colorScheme="brand" type="submit" isLoading={processing}>Enregistrer</Button>
+        <Button colorScheme="brand" type="submit" isLoading={loading}>Enregistrer</Button>
         <Button colorScheme="red" variant="outline" onClick={onOpen}>Supprimer</Button>
       </Flex>
 

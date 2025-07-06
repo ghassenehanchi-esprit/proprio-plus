@@ -114,6 +114,8 @@ class ListingController extends Controller
             }
         }
 
+        $listing->load('gallery', 'documents');
+
         SavedSearchController::notifyMatches($listing);
 
         if ($request->wantsJson()) {
@@ -159,12 +161,14 @@ class ListingController extends Controller
             }
         }
 
+        $listing->load('gallery', 'documents');
+
         $message = ($data['status'] ?? $listing->status?->value) === ListingStatus::Pending->value
             ? 'Annonce mise à jour et en attente de validation'
             : 'Annonce mise à jour';
 
         if ($request->wantsJson()) {
-            return response()->json(['message' => $message, 'listing' => $listing->fresh()]);
+            return response()->json(['message' => $message, 'listing' => $listing]);
         }
 
         return redirect()->route('listings.show', $listing->id)
