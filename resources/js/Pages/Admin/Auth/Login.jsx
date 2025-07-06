@@ -9,6 +9,7 @@ import {
   Container,
   Button,
 } from '@mantine/core';
+import { MantineProvider } from '@mantine/core';
 
 export default function AdminLogin() {
   const { data, setData, post, processing, errors } = useForm({
@@ -62,3 +63,5 @@ export default function AdminLogin() {
     </Container>
   );
 }
+
+AdminLogin.layout = page => <MantineProvider>{page}</MantineProvider>;

@@ -1,4 +1,4 @@
-import { AppShell, NavLink, Group, Menu, Button } from '@mantine/core';
+import { MantineProvider, AppShell, NavLink, Group, Menu, Button } from '@mantine/core';
 import { Link, usePage } from '@inertiajs/react';
 import AdminNotificationBell from './AdminNotificationBell';
 import { FaUsers, FaFileAlt, FaHome, FaFlag, FaClock } from 'react-icons/fa';
@@ -7,7 +7,8 @@ export default function AdminLayout({ children }) {
   const { auth } = usePage().props;
 
   return (
-    <AppShell padding="md" navbar={{ width: 200 }} header={{ height: 60 }}>
+    <MantineProvider>
+      <AppShell padding="md" navbar={{ width: 200 }} header={{ height: 60 }}>
       <AppShell.Navbar p="xs">
         <NavLink component={Link} href="/admin/users" label="Utilisateurs" icon={<FaUsers size={14} />} />
         <NavLink component={Link} href="/admin/listings" label="Annonces" icon={<FaHome size={14} />} />
@@ -37,6 +38,7 @@ export default function AdminLayout({ children }) {
       </AppShell.Header>
 
       <AppShell.Main>{children}</AppShell.Main>
-    </AppShell>
+      </AppShell>
+    </MantineProvider>
   );
 }
