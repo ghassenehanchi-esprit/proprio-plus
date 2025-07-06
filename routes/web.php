@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\ListingController as AdminListingController;
 use App\Http\Controllers\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Admin\ReportController as AdminReportController;
 use App\Http\Controllers\Admin\ClockingController as AdminClockingController;
+use App\Http\Controllers\FileController;
 use App\Http\Middleware\EnsureIsAdmin;
 use App\Http\Controllers\Admin\LoginController as AdminLoginController;
 use Illuminate\Http\Request;
@@ -92,6 +93,7 @@ Route::middleware(['auth', 'verified', 'terms', 'certified'])->group(function ()
     Route::post('listings/{listing}/exclusive-mandate', [ListingController::class, 'signMandate'])->name('listings.mandate.sign');
     Route::post('listings/{listing}/mark-as-sold', [ListingController::class, 'markAsSold'])->name('listings.sold');
     Route::post('listings/{listing}/archive', [ListingController::class, 'archive'])->name('listings.archive');
+    Route::delete('/files/{file}', [FileController::class, 'destroy'])->name('files.destroy');
 });
 Route::middleware(['auth', 'verified', 'terms', 'certified'])->group(function () {
     Route::get('/conversations', [ConversationController::class, 'index']);
