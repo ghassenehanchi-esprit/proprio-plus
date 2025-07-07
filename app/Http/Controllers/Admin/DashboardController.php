@@ -21,7 +21,8 @@ class DashboardController extends Controller
             'pages' => Page::count(),
         ];
 
-        $listingStatus = Listing::selectRaw('status, count(*) as count')
+        $listingStatus = Listing::withoutEagerLoads()
+            ->selectRaw('status, count(*) as count')
             ->groupBy('status')
             ->pluck('count', 'status');
 
