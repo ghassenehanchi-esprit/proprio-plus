@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\EnsureIsAdmin::class,
             'participant' => \App\Http\Middleware\EnsureUserIsParticipant::class,
             'terms' => \App\Http\Middleware\EnsureTermsAccepted::class,
+            'conversation.open' => \App\Http\Middleware\EnsureConversationIsOpen::class,
         ]);
 
         $middleware->web(append: [

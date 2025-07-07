@@ -106,9 +106,9 @@ Route::middleware(['auth', 'verified', 'terms', 'certified'])->group(function ()
     Route::post('/conversations/{conversation}/unread', [ConversationController::class, 'markAsUnread']);
 
     Route::get('/conversations/{conversation}/messages', [MessageController::class, 'index'])->middleware('participant');
-    Route::post('/conversations/{conversation}/messages', [MessageController::class, 'store'])->middleware('participant');
-    Route::post('/conversations/{conversation}/meetings', [MeetingController::class, 'store'])->middleware('participant');
-    Route::post('/meetings/{meeting}/status', [MeetingController::class, 'update'])->middleware('participant');
+    Route::post('/conversations/{conversation}/messages', [MessageController::class, 'store'])->middleware(['participant', 'conversation.open']);
+    Route::post('/conversations/{conversation}/meetings', [MeetingController::class, 'store'])->middleware(['participant', 'conversation.open']);
+    Route::post('/meetings/{meeting}/status', [MeetingController::class, 'update'])->middleware(['participant', 'conversation.open']);
     Route::post('/messages/{message}/read', [MessageController::class, 'markAsRead']);
 
     Route::get('/notifications', [NotificationController::class, 'index']);
