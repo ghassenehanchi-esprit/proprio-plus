@@ -130,6 +130,7 @@ export default function SearchBar() {
                 opened={mapOpen}
                 toggle={() => setMapOpen(false)}
                 initialPosition={{ lat: searchParams.lat, lng: searchParams.lng }}
+                searchParams={cleanedParams}
             />
         </Flex>
     );
