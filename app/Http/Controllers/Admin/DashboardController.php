@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Listing;
+use Illuminate\Support\Facades\DB;
 use App\Models\Report;
 use App\Models\Page;
 use Inertia\Inertia;
@@ -21,8 +22,11 @@ class DashboardController extends Controller
             'pages' => Page::count(),
         ];
 
-        $listingStatus = Listing::withoutEagerLoads()
-            ->selectRaw('status, count(*) as count')
+        // Use the query builder directly to avoid the default withCount
+        // defined on the Listing model which would otherwise add extra
+        // columns and break the GROUP BY query.
+        $listingStatus = DB::table('listings')
+            ->select('status', DB::raw('count(*) as count'))
             ->groupBy('status')
             ->pluck('count', 'status');
 
