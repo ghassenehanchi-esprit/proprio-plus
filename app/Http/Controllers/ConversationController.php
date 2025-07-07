@@ -109,7 +109,15 @@ class ConversationController extends Controller
             ->where('is_read', false)
             ->update(['is_read' => true]);
 
-        $conversation = $conversation->fresh()->load(['messages.sender', 'seller', 'buyer', 'listing', 'meetings']);
+        $conversation = $conversation->fresh()->load([
+            'seller',
+            'buyer',
+            'listing',
+            'meetings',
+            'messages' => function ($q) {
+                $q->orderBy('created_at')->with('sender');
+            },
+        ]);
 
         return response()->json($conversation);
     }
