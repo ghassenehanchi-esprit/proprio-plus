@@ -1,9 +1,6 @@
 import {
   Box,
   Heading,
-  VStack,
-  Text,
-  Button,
   Image,
   SimpleGrid,
   useBreakpointValue
@@ -11,6 +8,9 @@ import {
 import SearchBar from "@/Components/Listing/SearchBar.jsx";
 import FeatureSection from "@/Components/Listing/FeatureSection";
 import CreateListingCTA from "@/Components/Home/CreateListingCTA";
+import PriceEstimationSection from "@/Components/Home/PriceEstimationSection";
+import ClientAdviceSection from "@/Components/Home/ClientAdviceSection";
+import UsageInstructionsSection from "@/Components/Home/UsageInstructionsSection";
 import FadeInSection from "@/Components/UI/FadeInSection";
 import ListingCard from "@/Components/Listing/ListingCard";
 
@@ -43,6 +43,9 @@ export default function Home({ bestMatches = [] }) {
 
         <FeatureSection />
         <CreateListingCTA />
+        <UsageInstructionsSection />
+        <PriceEstimationSection />
+        <ClientAdviceSection />
 
         {bestMatches.length > 0 && (
             <Box mt={10} pb={10}>

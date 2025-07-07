@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ConversationController;
+use App\Http\Controllers\MessageController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -10,3 +12,11 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 Route::get('/listings/map', [ListingController::class, 'all']);
 Route::get('/categories', [CategoryController::class, 'index']);
+
+Route::middleware(['auth:sanctum', 'verified', 'terms', 'certified'])->group(function () {
+    Route::get('/conversations', [ConversationController::class, 'index']);
+    Route::post('/conversations', [ConversationController::class, 'store']);
+    Route::get('/conversations/{conversation}', [ConversationController::class, 'show'])->middleware('participant');
+    Route::post('/conversations/{conversation}/messages', [MessageController::class, 'store'])->middleware('participant');
+    Route::get('/conversations/{conversation}/messages', [MessageController::class, 'index'])->middleware('participant');
+});

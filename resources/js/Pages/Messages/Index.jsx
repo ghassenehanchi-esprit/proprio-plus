@@ -1,4 +1,4 @@
-import { Box, Heading, HStack, VStack, Text, Input, Button, Avatar, IconButton } from '@chakra-ui/react';
+import { Box, Heading, HStack, VStack, Text, Input, Button, Avatar, IconButton, Link } from '@chakra-ui/react';
 import { FaCheckDouble, FaEnvelope, FaEnvelopeOpen, FaReply } from 'react-icons/fa';
 import ListingCard from '@/Components/Listing/ListingCard';
 import { usePage } from '@inertiajs/react';
@@ -35,6 +35,7 @@ export default function Index({ conversations: initial = {}, current }) {
       const messagesRes = await axios.get(`/conversations/${conv.id}/messages`);
       setMessages(messagesRes.data);
       setMeetings(res.data.meetings || []);
+
       const other = res.data.seller_id === auth.user.id ? res.data.buyer : res.data.seller;
       setPartner(other);
       setTimeout(() => {
@@ -51,17 +52,18 @@ export default function Index({ conversations: initial = {}, current }) {
 
   const loadMore = async () => {
     if (!nextPage) return;
-    const res = await axios.get(nextPage);
+    const apiUrl = nextPage.replace('/conversations', '/api/conversations');
+    const res = await axios.get(apiUrl);
     setConversations(cs => [...cs, ...res.data.data]);
     setNextPage(res.data.next_page_url);
   };
 
   const toggleRead = async (conv) => {
     if (conv.unread_count > 0) {
-      await axios.post(`/conversations/${conv.id}/read`);
+      await axios.post(`/api/conversations/${conv.id}/read`);
       setConversations(cs => cs.map(c => c.id === conv.id ? { ...c, unread_count: 0 } : c));
     } else {
-      await axios.post(`/conversations/${conv.id}/unread`);
+      await axios.post(`/api/conversations/${conv.id}/unread`);
       setConversations(cs => cs.map(c => c.id === conv.id ? { ...c, unread_count: 1 } : c));
     }
   };
@@ -75,7 +77,7 @@ export default function Index({ conversations: initial = {}, current }) {
   const send = async () => {
     if (!content) return;
     try {
-      const res = await axios.post(`/conversations/${active.id}/messages`, { content });
+      const res = await axios.post(`/api/conversations/${active.id}/messages`, { content });
       setContent('');
       setMessages((ms) => [...ms, res.data]);
       setTimeout(() => {
@@ -192,6 +194,9 @@ export default function Index({ conversations: initial = {}, current }) {
                         </HStack>
                         <HStack>
                           <Text>{m.content}</Text>
+                          {m.file_url && (
+                            <Link href={m.file_url} isExternal ml={2}>Fichier</Link>
+                          )}
                           {isMe && <FaCheckDouble color={m.is_read ? 'blue' : 'gray'} />}
                         </HStack>
                       </VStack>
@@ -203,6 +208,9 @@ export default function Index({ conversations: initial = {}, current }) {
                   <Box key={m.id} alignSelf={isMe ? 'flex-end' : 'flex-start'} bg={isMe ? 'brand.200' : 'gray.100'} borderRadius="md" p={2}>
                     <HStack>
                       <Text>{m.content}</Text>
+                      {m.file_url && (
+                        <Link href={m.file_url} isExternal ml={2}>Fichier</Link>
+                      )}
                       {isMe && (
                         <FaCheckDouble color={m.is_read ? 'blue' : 'gray'} />
                       )}
