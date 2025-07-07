@@ -63,6 +63,7 @@ Route::middleware(['auth', 'verified', 'terms', EnsureIsAdmin::class])
     ->name('admin.')
     ->group(function () {
         Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard/data', [AdminDashboardController::class, 'data'])->name('dashboard.data');
         Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
         Route::get('/users/data', [AdminUserController::class, 'data'])->name('users.data');
         Route::get('/users/{user}/document', [AdminUserController::class, 'document'])->name('users.document');
