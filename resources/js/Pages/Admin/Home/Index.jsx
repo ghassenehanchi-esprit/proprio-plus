@@ -96,10 +96,10 @@ export default function Index({ stats: initialStats = {}, listingStatus = {}, ca
   const StatCard = ({ icon, label, value }) => (
     <Box bg={cardBg} p={4} rounded="md" shadow="md" display="flex" alignItems="center" gap={3}>
       <Icon as={icon} boxSize={5} color="brand.600" />
-      <Box>
+      <Stat>
         <StatLabel>{label}</StatLabel>
         <StatNumber>{value}</StatNumber>
-      </Box>
+      </Stat>
     </Box>
   );
 
