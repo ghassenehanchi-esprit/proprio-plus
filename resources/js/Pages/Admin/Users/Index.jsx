@@ -79,7 +79,9 @@ export default function Index() {
           <Tr>
             <Th cursor="pointer" onClick={() => handleSort('last_name')}>Nom {sort === 'last_name' && (dir === 'asc' ? '▲' : '▼')}</Th>
             <Th cursor="pointer" onClick={() => handleSort('email')}>Email {sort === 'email' && (dir === 'asc' ? '▲' : '▼')}</Th>
+            <Th cursor="pointer" onClick={() => handleSort('phone')}>Téléphone {sort === 'phone' && (dir === 'asc' ? '▲' : '▼')}</Th>
             <Th cursor="pointer" onClick={() => handleSort('certification_status')}>Status {sort === 'certification_status' && (dir === 'asc' ? '▲' : '▼')}</Th>
+            <Th>Dernière activité</Th>
             <Th>Document</Th>
             <Th>Actions</Th>
           </Tr>
@@ -89,7 +91,9 @@ export default function Index() {
             <Tr key={u.id}>
               <Td>{u.first_name} {u.last_name}</Td>
               <Td>{u.email}</Td>
+              <Td>{u.phone}</Td>
               <Td>{u.certification_status || '—'}</Td>
+              <Td>{u.last_active_at ? new Date(u.last_active_at).toLocaleString() : '—'}</Td>
               <Td>
                 {u.identity_document && (
                   <Link onClick={() => viewDocument(u.id)}>Voir</Link>

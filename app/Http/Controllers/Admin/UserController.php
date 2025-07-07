@@ -20,7 +20,7 @@ class UserController extends Controller
 
     public function data(Request $request)
     {
-        $query = User::withBasicInfo()->select('certification_status', 'identity_document');
+        $query = User::withBasicInfo()->addSelect('certification_status', 'identity_document');
 
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {

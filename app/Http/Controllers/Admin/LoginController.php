@@ -39,7 +39,7 @@ class LoginController extends Controller
             ]);
         }
 
-        return redirect()->intended('/admin/users');
+        return redirect()->intended('/admin');
     }
 
     public function logout(Request $request)

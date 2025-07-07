@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\ListingController as AdminListingController;
 use App\Http\Controllers\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Admin\ReportController as AdminReportController;
 use App\Http\Controllers\Admin\ClockingController as AdminClockingController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\FileController;
 use App\Http\Middleware\EnsureIsAdmin;
 use App\Http\Controllers\Admin\LoginController as AdminLoginController;
@@ -61,6 +62,7 @@ Route::middleware(['auth', 'verified', 'terms', EnsureIsAdmin::class])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
+        Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
         Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
         Route::get('/users/data', [AdminUserController::class, 'data'])->name('users.data');
         Route::get('/users/{user}/document', [AdminUserController::class, 'document'])->name('users.document');
