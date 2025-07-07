@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'hellosign' => [
+        'key' => env('HELLOSIGN_API_KEY'),
+    ],
+
 ];
