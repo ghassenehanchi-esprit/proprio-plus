@@ -7,7 +7,16 @@ import {
   Heading,
   Select,
   Button,
+  Icon,
+  useColorModeValue,
 } from '@chakra-ui/react';
+import {
+  FaUsers,
+  FaHome,
+  FaCheckCircle,
+  FaFlag,
+  FaFileAlt,
+} from 'react-icons/fa';
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import AdminLayout from '@/Components/Admin/AdminLayout';
@@ -19,6 +28,8 @@ export default function Index({ stats: initialStats = {}, listingStatus = {}, ca
   const [filters, setFilters] = useState({ status: '', category_id: '' });
   const statusChart = useRef(null);
   const categoryChart = useRef(null);
+  const cardBg = useColorModeValue('white', 'gray.800');
+  const chartColors = ['#2a6ab2', '#ff6384', '#ff9f40', '#4bc0c0', '#9966ff', '#36a2eb'];
 
   const fetchData = async () => {
     const { data } = await axios.get(route('admin.dashboard.data'), { params: filters });
@@ -31,15 +42,27 @@ export default function Index({ stats: initialStats = {}, listingStatus = {}, ca
 
   useEffect(() => {
     if (!window.Chart) return;
+
     const statusCtx = document.getElementById('statusChart').getContext('2d');
     if (statusChart.current) statusChart.current.destroy();
     statusChart.current = new window.Chart(statusCtx, {
       type: 'bar',
       data: {
         labels: Object.keys(statusData),
-        datasets: [{ data: Object.values(statusData), backgroundColor: '#3182ce' }]
+        datasets: [
+          {
+            data: Object.values(statusData),
+            backgroundColor: chartColors[0],
+            borderRadius: 4,
+          },
+        ],
       },
-      options: { plugins: { legend: { display: false } } }
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } },
+      },
     });
 
     const catCtx = document.getElementById('categoryChart').getContext('2d');
@@ -48,8 +71,18 @@ export default function Index({ stats: initialStats = {}, listingStatus = {}, ca
       type: 'pie',
       data: {
         labels: Object.entries(categories).map(([_, name]) => name),
-        datasets: [{ data: Object.values(categoryData) }]
-      }
+        datasets: [
+          {
+            data: Object.values(categoryData),
+            backgroundColor: chartColors,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom' } },
+      },
     });
   }, [statusData, categoryData]);
 
@@ -59,6 +92,16 @@ export default function Index({ stats: initialStats = {}, listingStatus = {}, ca
     e.preventDefault();
     fetchData();
   };
+
+  const StatCard = ({ icon, label, value }) => (
+    <Box bg={cardBg} p={4} rounded="md" shadow="md" display="flex" alignItems="center" gap={3}>
+      <Icon as={icon} boxSize={5} color="brand.600" />
+      <Box>
+        <StatLabel>{label}</StatLabel>
+        <StatNumber>{value}</StatNumber>
+      </Box>
+    </Box>
+  );
 
   return (
     <Box>
@@ -78,40 +121,28 @@ export default function Index({ stats: initialStats = {}, listingStatus = {}, ca
         </Select>
         <Button type="submit">Filtrer</Button>
       </Box>
-      <SimpleGrid columns={{ base: 1, md: 3 }} spacing={4} mb={8}>
-        <Stat>
-          <StatLabel>Utilisateurs</StatLabel>
-          <StatNumber>{stats.users}</StatNumber>
-        </Stat>
-        <Stat>
-          <StatLabel>Annonces</StatLabel>
-          <StatNumber>{stats.listings}</StatNumber>
-        </Stat>
-        <Stat>
-          <StatLabel>Annonces actives</StatLabel>
-          <StatNumber>{stats.active_listings}</StatNumber>
-        </Stat>
-        <Stat>
-          <StatLabel>Signalements</StatLabel>
-          <StatNumber>{stats.reports}</StatNumber>
-        </Stat>
-        <Stat>
-          <StatLabel>Signalements en attente</StatLabel>
-          <StatNumber>{stats.pending_reports}</StatNumber>
-        </Stat>
-        <Stat>
-          <StatLabel>Pages</StatLabel>
-          <StatNumber>{stats.pages}</StatNumber>
-        </Stat>
+      <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={4} mb={8}>
+        <StatCard icon={FaUsers} label="Utilisateurs" value={stats.users} />
+        <StatCard icon={FaHome} label="Annonces" value={stats.listings} />
+        <StatCard icon={FaCheckCircle} label="Annonces actives" value={stats.active_listings} />
+        <StatCard icon={FaFlag} label="Signalements" value={stats.reports} />
+        <StatCard icon={FaFlag} label="Signalements en attente" value={stats.pending_reports} />
+        <StatCard icon={FaFileAlt} label="Pages" value={stats.pages} />
       </SimpleGrid>
-      <Box mb={8}>
-        <Heading size="md" mb={4}>Annonces par statut</Heading>
-        <canvas id="statusChart" height="200" />
-      </Box>
-      <Box>
-        <Heading size="md" mb={4}>Annonces par catégorie</Heading>
-        <canvas id="categoryChart" height="200" />
-      </Box>
+      <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+        <Box bg={cardBg} p={4} rounded="md" shadow="md">
+          <Heading size="md" mb={4}>Annonces par statut</Heading>
+          <Box h="300px">
+            <canvas id="statusChart" />
+          </Box>
+        </Box>
+        <Box bg={cardBg} p={4} rounded="md" shadow="md">
+          <Heading size="md" mb={4}>Annonces par catégorie</Heading>
+          <Box h="300px">
+            <canvas id="categoryChart" />
+          </Box>
+        </Box>
+      </SimpleGrid>
     </Box>
   );
 }
