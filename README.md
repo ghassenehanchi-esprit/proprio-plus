@@ -33,6 +33,7 @@ capturer les signatures. Pour générer des PDF, installez l'extension gratuite
 
 ```bash
 composer require barryvdh/laravel-dompdf
+composer require dropbox/sign
 ```
 
 Une fois la dépendance ajoutée, un nouveau point d'entrée permet de télécharger
@@ -44,6 +45,11 @@ GET /pdf/attestation/{listing}
 
 Cette route génère un PDF au format proche des attestations de loyer françaises
 en incluant la signature enregistrée.
+
+Si vous renseignez une clé API **HELLOSIGN_API_KEY** dans votre fichier `.env`,
+l'application utilisera l'API gratuite de **Dropbox Sign** (ex‑HelloSign) pour
+envoyer une demande de signature électronique officielle. Sans cette clé, la
+signature manuelle via `react-signature-canvas` sera utilisée.
 
 ### Étapes de signature
 

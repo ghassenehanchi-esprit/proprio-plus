@@ -12,6 +12,8 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Services\Signature\HelloSignService;
 
 class ListingController extends Controller
 {
@@ -218,6 +220,44 @@ class ListingController extends Controller
     {
         if ($listing->user_id !== Auth::id()) {
             abort(403);
+        }
+
+        $hellosignKey = config('services.hellosign.key');
+
+        if ($hellosignKey) {
+            $pdf = Pdf::loadView('pdf.attestation', [
+                'listing' => $listing,
+                'user' => auth()->user(),
+                'signaturePath' => null,
+            ]);
+
+            $tmpPath = storage_path('app/tmp/'.uniqid('mandate_').'.pdf');
+            if (! is_dir(dirname($tmpPath))) {
+                mkdir(dirname($tmpPath), 0755, true);
+            }
+            file_put_contents($tmpPath, $pdf->output());
+
+            $service = new HelloSignService($hellosignKey);
+            $requestId = $service->sendSignatureRequest(
+                $tmpPath,
+                auth()->user()->email,
+                auth()->user()->first_name.' '.auth()->user()->last_name,
+                'Signature Mandat',
+                'Veuillez signer le mandat exclusif en pièce jointe.'
+            );
+
+            $doc = $listing->documentsToSign()->firstOrCreate([
+                'type' => 'mandat_exclusif',
+            ]);
+
+            $doc->signatures()->create([
+                'user_id' => Auth::id(),
+                'file_path' => 'hellosign:'.$requestId,
+                'signed_at' => null,
+            ]);
+
+            return redirect()->route('listings.edit', $listing->id)
+                ->with('message', 'Demande de signature envoyée.');
         }
 
         $data = $request->validate([
