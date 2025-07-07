@@ -3,6 +3,7 @@ import { FaCheckDouble, FaEnvelope, FaEnvelopeOpen, FaReply } from 'react-icons/
 import ListingCard from '@/Components/Listing/ListingCard';
 import { usePage } from '@inertiajs/react';
 import { useState, useEffect, useRef } from 'react';
+import VisitScheduler from '@/Components/Meeting/VisitScheduler';
 import axios from 'axios';
 import sweetAlert from '@/libs/sweetalert';
 
@@ -14,6 +15,7 @@ export default function Index({ conversations: initial = {}, current }) {
   const [content, setContent] = useState('');
   const [conversations, setConversations] = useState(initial.data || []);
   const [nextPage, setNextPage] = useState(initial.next_page_url);
+  const [meetings, setMeetings] = useState([]);
   const reportUser = async () => {
     if (!partner) return;
     await axios.post('/reports', {
@@ -32,6 +34,7 @@ export default function Index({ conversations: initial = {}, current }) {
       const res = await axios.get(`/conversations/${conv.id}`);
       const messagesRes = await axios.get(`/conversations/${conv.id}/messages`);
       setMessages(messagesRes.data);
+      setMeetings(res.data.meetings || []);
       const other = res.data.seller_id === auth.user.id ? res.data.buyer : res.data.seller;
       setPartner(other);
       setTimeout(() => {
@@ -61,6 +64,11 @@ export default function Index({ conversations: initial = {}, current }) {
       await axios.post(`/conversations/${conv.id}/unread`);
       setConversations(cs => cs.map(c => c.id === conv.id ? { ...c, unread_count: 1 } : c));
     }
+  };
+
+  const respondMeeting = async (id, status) => {
+    await axios.post(`/meetings/${id}/status`, { status });
+    setMeetings(ms => ms.map(m => m.id === id ? { ...m, status } : m));
   };
 
 
@@ -147,10 +155,29 @@ export default function Index({ conversations: initial = {}, current }) {
                     Dernière connexion : {partner.last_active_at ? new Date(partner.last_active_at).toLocaleString() : 'N/A'}
                   </Text>
                   <Button size="xs" variant="outline" onClick={reportUser}>Signaler</Button>
+                  {auth.user.id === active.seller_id && (
+                    <VisitScheduler conversationId={active.id} onScheduled={() => loadConversation(active)} />
+                  )}
                 </HStack>
               )}
             </HStack>
             <VStack align="stretch" spacing={2} flex="1" overflowY="auto">
+              {meetings.map(m => (
+                <Box key={`meeting-${m.id}`} bg="gray.50" borderWidth="1px" borderRadius="md" p={2}>
+                  <HStack justify="space-between">
+                    <Text>Visite le {new Date(m.scheduled_at).toLocaleString()}</Text>
+                    {m.status === 'pending' && auth.user.id === active.buyer_id ? (
+                      <HStack>
+                        <Button size="xs" colorScheme="brand" onClick={() => respondMeeting(m.id, 'accepted')}>Accepter</Button>
+                        <Button size="xs" variant="outline" onClick={() => respondMeeting(m.id, 'declined')}>Refuser</Button>
+                      </HStack>
+                    ) : (
+                      <Text fontSize="sm" color="gray.600">{m.status}</Text>
+                    )}
+                  </HStack>
+                  {m.agenda && <Text fontSize="sm" color="gray.600" mt={2}>{m.agenda}</Text>}
+                </Box>
+              ))}
               {messages.map((m, idx) => {
                 const isMe = m.sender_id === auth.user.id;
                 const isFirstFromBuyer = idx === 0 && m.sender_id === active.buyer_id;
