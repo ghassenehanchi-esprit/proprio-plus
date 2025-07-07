@@ -16,6 +16,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { router } from '@inertiajs/react';
 import { route } from 'ziggy-js';
+import sweetAlert from '@/libs/sweetalert';
 import AdminLayout from '@/Components/Admin/AdminLayout';
 
 export default function Index() {
@@ -47,8 +48,14 @@ export default function Index() {
     }
   };
 
-  const certify = (id) => {
-    router.post(route('admin.users.certify', id), {}, { onSuccess: fetchUsers });
+  const certify = async (id) => {
+    try {
+      const { data } = await axios.post(route('admin.users.certify', id));
+      sweetAlert(data.message, 'success');
+      fetchUsers();
+    } catch (e) {
+      sweetAlert('Erreur lors de la certification');
+    }
   };
 
   const refuse = (id) => {
