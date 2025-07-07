@@ -18,7 +18,7 @@ import "leaflet/dist/leaflet.css";
 import Slider from "react-slick";
 import axios from "axios";
 
-const PopupMap = ({ opened, toggle, initialPosition }) => {
+const PopupMap = ({ opened, toggle, initialPosition, searchParams = {} }) => {
     const modalSize = useBreakpointValue({ base: "xl", md: "4xl", lg: "6xl" });
     const mapHeight = useBreakpointValue({ base: "300px", md: "500px" });
     const [coords, setCoords] = useState([]);
@@ -34,9 +34,14 @@ const PopupMap = ({ opened, toggle, initialPosition }) => {
 
     const fetchListings = async (lat, lng) => {
         try {
-            const response = await axios.get('/api/listings/map', {
-                params: { lat, lng, radius: 10 }
-            });
+            const params = {
+                ...searchParams,
+                lat,
+                lng,
+                radius: searchParams.radius || 10,
+                per_page: 100,
+            };
+            const response = await axios.get('/api/listings', { params });
             if (Array.isArray(response.data.data)) {
                 setCoords(response.data.data);
             } else {
@@ -59,7 +64,7 @@ const PopupMap = ({ opened, toggle, initialPosition }) => {
             map.on('moveend', handleMove);
             handleMove();
             return () => map.off('moveend', handleMove);
-        }, [map]);
+        }, [map, searchParams]);
 
         return null;
     };
