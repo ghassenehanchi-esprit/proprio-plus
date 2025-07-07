@@ -47,6 +47,17 @@ class PageSeeder extends Seeder
                     ],
                 ],
             ],
+            [
+                'slug' => 'faq',
+                'title' => 'FAQ',
+                'sections' => [
+                    [
+                        'id' => 'intro',
+                        'text' => 'Questions fréquemment posées à propos du service.',
+                        'image' => '/images/auth-back.png',
+                    ],
+                ],
+            ],
         ];
 
         foreach ($pages as $data) {

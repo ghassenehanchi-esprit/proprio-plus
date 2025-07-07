@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react';
 import { Link, usePage } from '@inertiajs/react';
 import AdminNotificationBell from './AdminNotificationBell';
-import { FaUsers, FaFileAlt, FaHome, FaFlag, FaClock } from 'react-icons/fa';
+import { FaUsers, FaFileAlt, FaHome, FaFlag, FaClock, FaChartPie } from 'react-icons/fa';
 
 export default function AdminLayout({ children }) {
   const { auth } = usePage().props;
@@ -21,6 +21,10 @@ export default function AdminLayout({ children }) {
     <Flex minH="100vh">
       <Box w="200px" bg="brand.600" color="white" p={4}>
         <Flex direction="column" as="nav" gap={2} fontSize="sm">
+          <ChakraLink as={Link} href="/admin" display="flex" alignItems="center" gap={2}>
+            <Icon as={FaChartPie} />
+            <Text>Dashboard</Text>
+          </ChakraLink>
           <ChakraLink as={Link} href="/admin/users" display="flex" alignItems="center" gap={2}>
             <Icon as={FaUsers} />
             <Text>Utilisateurs</Text>
