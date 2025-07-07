@@ -160,6 +160,9 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/saved-searches/{search}', [SavedSearchController::class, 'destroy'])->name('searches.destroy');
 
     Route::get('/recommendations', [ListingController::class, 'recommendations'])->name('listings.recommendations');
+
+    // Génération d'une attestation de loyer au format PDF
+    Route::get('/pdf/attestation/{listing}', [\App\Http\Controllers\PdfController::class, 'attestation'])->name('pdf.attestation');
 });
 
 Route::middleware(['auth', 'verified', 'terms', 'certified'])->group(function () {
