@@ -16,6 +16,7 @@ import FilterSidebar from './FilterSidebar';
 export default function ResponsiveFilters({ searchParams, setSearchParams, onSearch }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const isMobile = useBreakpointValue({ base: true, md: false });
+  const drawerSize = useBreakpointValue({ base: 'full', sm: 'xs' });
 
   if (isMobile) {
     return (
@@ -23,7 +24,7 @@ export default function ResponsiveFilters({ searchParams, setSearchParams, onSea
         <Button mb={4} onClick={onOpen} colorScheme="brand">
           Filtres
         </Button>
-        <Drawer placement="left" isOpen={isOpen} onClose={onClose}>
+        <Drawer placement="left" isOpen={isOpen} onClose={onClose} size={drawerSize}>
           <DrawerOverlay />
           <DrawerContent>
             <DrawerCloseButton />
