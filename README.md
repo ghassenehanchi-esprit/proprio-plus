@@ -11,6 +11,9 @@ Un système de recommandations propose désormais automatiquement des annonces e
 1. Cloner le dépôt puis installer les dépendances PHP et Node.
 2. Copier le fichier `.env.example` vers `.env` puis ajuster la configuration.
 3. Lancer les migrations avec `php artisan migrate`.
+4. Si vous utilisez un serveur front-end distinct (par exemple Vite sur le port 5173),
+   ajoutez ce domaine dans la variable `SANCTUM_STATEFUL_DOMAINS` de votre `.env`
+   afin que l'authentification reste active.
 
 ## Développement
 
