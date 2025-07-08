@@ -187,7 +187,7 @@ export default function Index({ conversations: initial = {}, current }) {
                   return (
                     <Box key={m.id} alignSelf="flex-start" bg="gray.100" borderRadius="md" p={2}>
                       <VStack align="stretch" spacing={2}>
-                        <ListingCard listing={active.listing} />
+                        <ListingCard listing={active.listing} size="sm" />
                         <HStack fontSize="sm" color="gray.600">
                           <FaReply />
                           <Text>En réponse à cette annonce</Text>
