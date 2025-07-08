@@ -44,7 +44,8 @@ function FavoriteButton({ listingId, isFavorited, onToggle }) {
         />
     );
 }
-export default function ListingCard({ listing, onToggle }) {
+export default function ListingCard({ listing, onToggle, size = 'md' }) {
+    const isSmall = size === 'sm';
     const photos = Array.isArray(listing.photos)
         ? listing.photos
         : JSON.parse(listing.photos || '[]');
@@ -68,9 +69,11 @@ export default function ListingCard({ listing, onToggle }) {
             position="relative"
             transition="transform 0.2s"
             _hover={{ boxShadow: 'lg', transform: 'translateY(-2px)' }}
-            direction={{ base: 'column', md: 'row' }}
+            direction={{ base: 'column', md: isSmall ? 'column' : 'row' }}
+            maxW={isSmall ? '350px' : 'full'}
+            w="full"
         >
-            <Box position="relative" w={{ base: '100%', md: '40%' }}>
+            <Box position="relative" w={{ base: '100%', md: isSmall ? '100%' : '40%' }}>
                 <Slider {...sliderSettings}>
                     {photos.map((photo, idx) => (
                         <Image
@@ -78,7 +81,7 @@ export default function ListingCard({ listing, onToggle }) {
                             src={photo || "/placeholder.jpg"}
                             alt={`Photo ${idx + 1}`}
                             objectFit="cover"
-                            height="220px"
+                            height={isSmall ? '150px' : '220px'}
                             width="100%"
                         />
                     ))}
@@ -87,10 +90,10 @@ export default function ListingCard({ listing, onToggle }) {
             </Box>
 
             <Flex direction="column" flex="1">
-                <Stack spacing={3} p={4} flex="1">
-                    <Text fontSize="xl" fontWeight="bold">{listing.title}</Text>
-                    <Text fontSize="md" color="gray.600">{listing.city}, {listing.postal_code}</Text>
-                    <Text fontSize="lg" fontWeight="bold">{listing.price} €</Text>
+                <Stack spacing={isSmall ? 2 : 3} p={isSmall ? 2 : 4} flex="1">
+                    <Text fontSize={isSmall ? 'md' : 'xl'} fontWeight="bold">{listing.title}</Text>
+                    <Text fontSize={isSmall ? 'sm' : 'md'} color="gray.600">{listing.city}, {listing.postal_code}</Text>
+                    <Text fontSize={isSmall ? 'md' : 'lg'} fontWeight="bold">{listing.price} €</Text>
                     <Text fontSize="sm" color="gray.600">Surface : {listing.surface} m²</Text>
                     <Text fontSize="sm" color="gray.600">Pièces : {listing.rooms}, Chambres : {listing.bedrooms}, Sdb : {listing.bathrooms}</Text>
                     <HStack spacing={3} pt={2}>
@@ -99,7 +102,7 @@ export default function ListingCard({ listing, onToggle }) {
                     </HStack>
                 </Stack>
                 <Flex px={4} pb={4} justify="flex-end">
-                    <Button as={Link} href={`/listings/${listing.id}`} colorScheme="brand" size="sm">
+                    <Button as={Link} href={`/listings/${listing.id}`} colorScheme="brand" size={isSmall ? 'xs' : 'sm'}>
                         Voir l'annonce
                     </Button>
                 </Flex>
