@@ -19,4 +19,6 @@ Route::middleware(['auth:sanctum', 'verified', 'terms', 'certified'])->group(fun
     Route::get('/conversations/{conversation}', [ConversationController::class, 'show'])->middleware('participant');
     Route::post('/conversations/{conversation}/messages', [MessageController::class, 'store'])->middleware(['participant', 'conversation.open']);
     Route::get('/conversations/{conversation}/messages', [MessageController::class, 'index'])->middleware('participant');
+
+    Route::post('/meetings/{meeting}/status', [\App\Http\Controllers\MeetingController::class, 'update'])->middleware(['participant', 'conversation.open']);
 });

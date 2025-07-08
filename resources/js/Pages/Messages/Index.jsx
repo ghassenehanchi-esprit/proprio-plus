@@ -69,7 +69,7 @@ export default function Index({ conversations: initial = {}, current }) {
   };
 
   const respondMeeting = async (id, status) => {
-    await axios.post(`/meetings/${id}/status`, { status });
+    await axios.post(`/api/meetings/${id}/status`, { status });
     setMeetings(ms => ms.map(m => m.id === id ? { ...m, status } : m));
   };
 
