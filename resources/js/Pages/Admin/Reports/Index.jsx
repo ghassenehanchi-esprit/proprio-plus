@@ -16,18 +16,20 @@ import axios from 'axios';
 import { route } from 'ziggy-js';
 import AdminLayout from '@/Components/Admin/AdminLayout';
 
-export default function Index() {
+export default function Index({ filters = {} }) {
+  const [status, setStatus] = useState(filters.status || '');
+
   const [reports, setReports] = useState([]);
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
 
   const load = async () => {
-    const { data } = await axios.get(route('admin.reports.data'), { params: { page } });
+    const { data } = await axios.get(route('admin.reports.data'), { params: { page, status } });
     setReports(data.data);
     setLastPage(data.last_page || 1);
   };
 
-  useEffect(() => { load(); }, [page]);
+  useEffect(() => { load(); }, [page, status]);
 
   const updateStatus = async (id, status) => {
     await axios.post(route('admin.reports.status', id), { status });
@@ -36,6 +38,13 @@ export default function Index() {
 
   return (
     <Box>
+      <Flex mb={2} gap={2} flexWrap="wrap">
+        <Select placeholder="Statut" value={status} onChange={(e) => { setStatus(e.target.value); setPage(1); }} w="200px">
+          <option value="pending">pending</option>
+          <option value="reviewed">reviewed</option>
+          <option value="blocked">blocked</option>
+        </Select>
+      </Flex>
       <Table variant="striped" colorScheme="gray" size="sm">
         <Thead>
           <Tr>

@@ -7,15 +7,18 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use App\Notifications\CertificationApprovedNotification;
 use App\Notifications\CertificationRefusedNotification;
 use App\Notifications\CertificationReuploadNotification;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('Admin/Users/Index');
+        return Inertia::render('Admin/Users/Index', [
+            'filters' => $request->only('status', 'online'),
+        ]);
     }
 
     public function data(Request $request)
@@ -28,6 +31,17 @@ class UserController extends Controller
                     ->orWhere('last_name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%");
             });
+        }
+
+        if ($status = $request->input('status')) {
+            $query->where('certification_status', $status);
+        }
+
+        if ($request->boolean('online')) {
+            $ids = \DB::table('sessions')
+                ->where('last_activity', '>=', now()->subMinutes(5)->timestamp)
+                ->pluck('user_id');
+            $query->whereIn('id', $ids);
         }
 
         $sort = $request->input('sort', 'id');

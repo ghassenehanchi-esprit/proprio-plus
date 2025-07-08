@@ -9,9 +9,11 @@ use Inertia\Inertia;
 
 class ListingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('Admin/Listings/Index');
+        return Inertia::render('Admin/Listings/Index', [
+            'filters' => $request->only('status'),
+        ]);
     }
 
     public function data(Request $request)
@@ -20,6 +22,10 @@ class ListingController extends Controller
 
         if ($search = $request->input('search')) {
             $query->where('title', 'like', "%{$search}%");
+        }
+
+        if ($status = $request->input('status')) {
+            $query->where('status', $status);
         }
 
         $sort = $request->input('sort', 'created_at');

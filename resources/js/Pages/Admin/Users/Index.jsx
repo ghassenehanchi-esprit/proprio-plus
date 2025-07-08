@@ -19,17 +19,19 @@ import { route } from 'ziggy-js';
 import sweetAlert from '@/libs/sweetalert';
 import AdminLayout from '@/Components/Admin/AdminLayout';
 
-export default function Index() {
+export default function Index({ filters = {} }) {
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
   const [users, setUsers] = useState([]);
   const [lastPage, setLastPage] = useState(1);
   const [sort, setSort] = useState('id');
   const [dir, setDir] = useState('asc');
+  const [status, setStatus] = useState(filters.status || '');
+  const [online, setOnline] = useState(filters.online || false);
 
   const fetchUsers = async () => {
     const { data } = await axios.get(route('admin.users.data'), {
-      params: { search: query, page, sort, dir }
+      params: { search: query, page, sort, dir, status, online }
     });
     setUsers(data.data);
     setLastPage(data.last_page || 1);
@@ -37,7 +39,7 @@ export default function Index() {
 
   useEffect(() => {
     fetchUsers();
-  }, [query, page, sort, dir]);
+  }, [query, page, sort, dir, status, online]);
 
   const handleSort = column => {
     if (sort === column) {
@@ -81,6 +83,33 @@ export default function Index() {
           setPage(1);
         }}
       />
+      <Flex mb={2} gap={2} flexWrap="wrap">
+        <Select
+          placeholder="Certification"
+          value={status}
+          onChange={(e) => {
+            setStatus(e.target.value);
+            setPage(1);
+          }}
+          w="200px"
+        >
+          <option value="en_attente">en_attente</option>
+          <option value="certifié">certifié</option>
+          <option value="refusé">refusé</option>
+          <option value="reupload_requis">reupload_requis</option>
+        </Select>
+        <label>
+          <input
+            type="checkbox"
+            checked={online}
+            onChange={(e) => {
+              setOnline(e.target.checked);
+              setPage(1);
+            }}
+          />
+          Utilisateurs en ligne
+        </label>
+      </Flex>
       <Table variant="striped" colorScheme="gray" size="sm">
         <Thead>
           <Tr>

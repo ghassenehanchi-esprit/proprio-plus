@@ -9,6 +9,7 @@ import {
   Button,
   Icon,
   useColorModeValue,
+  Link as ChakraLink,
 } from '@chakra-ui/react';
 import {
   FaUsers,
@@ -16,7 +17,11 @@ import {
   FaCheckCircle,
   FaFlag,
   FaFileAlt,
+  FaListUl,
 } from 'react-icons/fa';
+import { motion } from 'framer-motion';
+import { Link } from '@inertiajs/react';
+import { route } from 'ziggy-js';
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import AdminLayout from '@/Components/Admin/AdminLayout';
@@ -93,14 +98,26 @@ export default function Index({ stats: initialStats = {}, listingStatus = {}, ca
     fetchData();
   };
 
-  const StatCard = ({ icon, label, value }) => (
-    <Box bg={cardBg} p={4} rounded="md" shadow="md" display="flex" alignItems="center" gap={3}>
-      <Icon as={icon} boxSize={5} color="brand.600" />
-      <Stat>
-        <StatLabel>{label}</StatLabel>
-        <StatNumber>{value}</StatNumber>
-      </Stat>
-    </Box>
+  const MotionBox = motion(Box);
+  const StatLinkCard = ({ icon, label, value, href }) => (
+    <ChakraLink as={Link} href={href} _hover={{ textDecoration: 'none' }}>
+      <MotionBox
+        bg={cardBg}
+        p={4}
+        rounded="md"
+        shadow="md"
+        display="flex"
+        alignItems="center"
+        gap={3}
+        whileHover={{ scale: 1.05 }}
+      >
+        <Icon as={icon} boxSize={5} color="brand.600" />
+        <Stat>
+          <StatLabel>{label}</StatLabel>
+          <StatNumber>{value}</StatNumber>
+        </Stat>
+      </MotionBox>
+    </ChakraLink>
   );
 
   return (
@@ -122,12 +139,17 @@ export default function Index({ stats: initialStats = {}, listingStatus = {}, ca
         <Button type="submit">Filtrer</Button>
       </Box>
       <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={4} mb={8}>
-        <StatCard icon={FaUsers} label="Utilisateurs" value={stats.users} />
-        <StatCard icon={FaHome} label="Annonces" value={stats.listings} />
-        <StatCard icon={FaCheckCircle} label="Annonces actives" value={stats.active_listings} />
-        <StatCard icon={FaFlag} label="Signalements" value={stats.reports} />
-        <StatCard icon={FaFlag} label="Signalements en attente" value={stats.pending_reports} />
-        <StatCard icon={FaFileAlt} label="Pages" value={stats.pages} />
+        <StatLinkCard icon={FaUsers} label="Utilisateurs" value={stats.users} href={route('admin.users.index')} />
+        <StatLinkCard icon={FaUsers} label="En attente" value={stats.pending_users} href={`${route('admin.users.index')}?status=en_attente`} />
+        <StatLinkCard icon={FaCheckCircle} label="Certifiés" value={stats.verified_users} href={`${route('admin.users.index')}?status=certifié`} />
+        <StatLinkCard icon={FaListUl} label="En ligne" value={stats.online_users} href={`${route('admin.users.index')}?online=1`} />
+        <StatLinkCard icon={FaHome} label="Annonces" value={stats.listings} href={route('admin.listings.index')} />
+        <StatLinkCard icon={FaHome} label="En attente" value={stats.pending_listings} href={`${route('admin.listings.index')}?status=pending`} />
+        <StatLinkCard icon={FaHome} label="Vendues" value={stats.sold_listings} href={`${route('admin.listings.index')}?status=vendue`} />
+        <StatLinkCard icon={FaCheckCircle} label="Actives" value={stats.active_listings} href={`${route('admin.listings.index')}?status=active`} />
+        <StatLinkCard icon={FaFlag} label="Signalements" value={stats.reports} href={route('admin.reports.index')} />
+        <StatLinkCard icon={FaFlag} label="Signalements en attente" value={stats.pending_reports} href={`${route('admin.reports.index')}?status=pending`} />
+        <StatLinkCard icon={FaFileAlt} label="Pages" value={stats.pages} href={route('admin.pages.index')} />
       </SimpleGrid>
       <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
         <Box bg={cardBg} p={4} rounded="md" shadow="md">

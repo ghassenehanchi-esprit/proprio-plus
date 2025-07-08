@@ -8,16 +8,23 @@ use Inertia\Inertia;
 
 class ReportController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('Admin/Reports/Index');
+        return Inertia::render('Admin/Reports/Index', [
+            'filters' => $request->only('status'),
+        ]);
     }
 
     public function data(Request $request)
     {
-        $reports = Report::with(['reporter', 'reported', 'conversation.listing'])
-            ->orderByDesc('created_at')
-            ->paginate(20);
+        $query = Report::with(['reporter', 'reported', 'conversation.listing'])
+            ->orderByDesc('created_at');
+
+        if ($status = $request->input('status')) {
+            $query->where('status', $status);
+        }
+
+        $reports = $query->paginate(20);
         return $reports;
     }
 

@@ -3,19 +3,21 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { route } from 'ziggy-js';
 import AdminLayout from '@/Components/Admin/AdminLayout';
+import { usePage } from '@inertiajs/react';
 
-export default function Index() {
+export default function Index({ filters = {} }) {
   const [listings, setListings] = useState([]);
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
+  const [status, setStatus] = useState(filters.status || '');
 
   const fetchListings = async () => {
-    const { data } = await axios.get(route('admin.listings.data'), { params: { page } });
+    const { data } = await axios.get(route('admin.listings.data'), { params: { page, status } });
     setListings(data.data);
     setLastPage(data.last_page || 1);
   };
 
-  useEffect(() => { fetchListings(); }, [page]);
+  useEffect(() => { fetchListings(); }, [page, status]);
 
   const updateStatus = async (id, status) => {
     await axios.post(route('admin.listings.status', id), { status });
@@ -24,6 +26,14 @@ export default function Index() {
 
   return (
     <Box>
+      <Flex mb={2} gap={2}>
+        <Select placeholder="Statut" value={status} onChange={(e) => { setStatus(e.target.value); setPage(1); }} w="200px">
+          <option value="active">active</option>
+          <option value="pending">pending</option>
+          <option value="vendue">vendue</option>
+          <option value="archivée">archivée</option>
+        </Select>
+      </Flex>
       <Table variant="striped" colorScheme="gray">
         <Thead>
           <Tr>

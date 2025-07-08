@@ -9,22 +9,27 @@ import {
   MenuItem,
   Button,
   Text,
+  IconButton,
+  Slide,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { Link, usePage } from '@inertiajs/react';
 import AdminNotificationBell from './AdminNotificationBell';
-import { FaUsers, FaFileAlt, FaHome, FaFlag, FaClock, FaChartPie } from 'react-icons/fa';
+import { FaUsers, FaFileAlt, FaHome, FaFlag, FaClock, FaChartPie, FaBars } from 'react-icons/fa';
 
 export default function AdminLayout({ children }) {
   const { auth } = usePage().props;
+  const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true });
 
   return (
-    <Flex minH="100vh">
-      <Box w="200px" bg="brand.600" color="white" p={4}>
-        <Flex direction="column" as="nav" gap={2} fontSize="sm">
-          <ChakraLink as={Link} href="/admin" display="flex" alignItems="center" gap={2}>
-            <Icon as={FaChartPie} />
-            <Text>Dashboard</Text>
-          </ChakraLink>
+    <Flex minH="100vh" bg="gray.100">
+      <Slide direction="left" in={isOpen} style={{ width: '200px' }}>
+        <Box w="200px" bg="brand.600" color="white" p={4} h="100vh" position="fixed">
+          <Flex direction="column" as="nav" gap={2} fontSize="sm">
+            <ChakraLink as={Link} href="/admin" display="flex" alignItems="center" gap={2}>
+              <Icon as={FaChartPie} />
+              <Text>Dashboard</Text>
+            </ChakraLink>
           <ChakraLink as={Link} href="/admin/users" display="flex" alignItems="center" gap={2}>
             <Icon as={FaUsers} />
             <Text>Utilisateurs</Text>
@@ -51,8 +56,10 @@ export default function AdminLayout({ children }) {
           </ChakraLink>
         </Flex>
       </Box>
-      <Box flex="1" bg="gray.50">
-        <Flex as="header" bg="white" px={4} py={2} justify="space-between" align="center" shadow="sm">
+      </Slide>
+      <Box flex="1" ml={isOpen ? '200px' : 0} transition="margin 0.2s" bg="gray.50">
+        <Flex as="header" bg="white" px={4} py={2} justify="space-between" align="center" shadow="sm" position="sticky" top={0} zIndex={1}>
+          <IconButton icon={<FaBars />} variant="ghost" onClick={onToggle} aria-label="Toggle menu" />
           <ChakraLink as={Link} href="/">Accueil</ChakraLink>
           <Flex align="center" gap={3}>
             <AdminNotificationBell />

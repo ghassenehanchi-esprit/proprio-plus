@@ -25,6 +25,11 @@ Exécuter les tests avec :
 php artisan test
 ```
 
+### Admin Permissions
+
+Toutes les routes sous le préfixe `/admin` sont protégées par le middleware `EnsureIsAdmin` qui vérifie que l'utilisateur possède le rôle `admin`.
+Assignez ce rôle à un utilisateur via la relation `roles` pour lui donner accès au panneau d'administration.
+
 ## Signature électronique et génération de PDF
 
 Le projet s'appuie sur le composant React **react-signature-canvas** pour
