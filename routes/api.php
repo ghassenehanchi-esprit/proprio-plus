@@ -13,7 +13,7 @@ Route::get('/user', function (Request $request) {
 Route::get('/listings/map', [ListingController::class, 'all']);
 Route::get('/categories', [CategoryController::class, 'index']);
 
-Route::middleware(['auth:sanctum', 'verified', 'terms', 'certified'])->group(function () {
+Route::middleware(['auth', 'verified', 'terms', 'certified'])->group(function () {
     Route::get('/conversations', [ConversationController::class, 'index']);
     Route::post('/conversations', [ConversationController::class, 'store']);
     Route::get('/conversations/{conversation}', [ConversationController::class, 'show'])->middleware('participant');
