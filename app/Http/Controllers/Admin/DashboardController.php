@@ -17,7 +17,14 @@ class DashboardController extends Controller
     {
         $stats = [
             'users' => User::count(),
+            'pending_users' => User::where('certification_status', 'en_attente')->count(),
+            'verified_users' => User::where('certification_status', 'certifié')->count(),
+            'online_users' => DB::table('sessions')
+                ->where('last_activity', '>=', now()->subMinutes(5)->timestamp)
+                ->distinct('user_id')->count('user_id'),
             'listings' => Listing::count(),
+            'pending_listings' => Listing::where('status', 'pending')->count(),
+            'sold_listings' => Listing::sold()->count(),
             'active_listings' => Listing::active()->count(),
             'reports' => Report::count(),
             'pending_reports' => Report::where('status', 'pending')->count(),
@@ -67,7 +74,14 @@ class DashboardController extends Controller
 
         $stats = [
             'users' => User::count(),
+            'pending_users' => User::where('certification_status', 'en_attente')->count(),
+            'verified_users' => User::where('certification_status', 'certifié')->count(),
+            'online_users' => DB::table('sessions')
+                ->where('last_activity', '>=', now()->subMinutes(5)->timestamp)
+                ->distinct('user_id')->count('user_id'),
             'listings' => $query->count(),
+            'pending_listings' => (clone $query)->where('status', 'pending')->count(),
+            'sold_listings' => (clone $query)->sold()->count(),
             'active_listings' => (clone $query)->where('status', 'active')->count(),
             'reports' => Report::count(),
             'pending_reports' => Report::where('status', 'pending')->count(),
