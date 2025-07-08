@@ -13,3 +13,16 @@ axios.get('/sanctum/csrf-cookie').catch(() => {
   // It's safe to ignore errors here as the request simply
   // ensures the cookie exists before any authenticated call.
 });
+
+// Redirect to the login page whenever an authenticated request
+// receives a 401 response. This typically means the user's
+// session has expired or they were never authenticated.
+axios.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response && error.response.status === 401) {
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
