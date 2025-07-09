@@ -15,15 +15,9 @@ export default function PriceEstimationSection() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await axios.get(
-          "https://www.sogefi-sig.com/geoservices-apis-wms/api-dvf/",
-          {
-            // Disable credentials so the third-party API can respond
-            // with a wildcard Access-Control-Allow-Origin header
-            // without causing CORS errors in browsers.
-            withCredentials: false,
-          }
-        );
+        const res = await axios.get("/api/price-estimations", {
+          withCredentials: false,
+        });
         if (Array.isArray(res.data)) {
           setData(res.data);
         }

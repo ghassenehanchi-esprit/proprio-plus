@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\PriceEstimationController;
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\MessageController;
 use Illuminate\Http\Request;
@@ -12,6 +13,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 Route::get('/listings/map', [ListingController::class, 'all']);
 Route::get('/categories', [CategoryController::class, 'index']);
+Route::get('/price-estimations', [PriceEstimationController::class, 'index']);
 
 Route::middleware(['auth', 'verified', 'terms', 'certified'])->group(function () {
     Route::get('/conversations', [ConversationController::class, 'index']);
