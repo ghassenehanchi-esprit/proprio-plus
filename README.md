@@ -70,3 +70,11 @@ Le processus de vente est sécurisé par plusieurs documents électroniques :
 
 Les signatures sont stockées en base et peuvent être intégrées dans les PDF générés via l'API ci-dessus.
 
+## Estimation immobilière via API
+
+La page d'accueil affiche une estimation indicative des prix au m². Ces données
+sont désormais récupérées depuis l'API **DVF** fournie par Sogefi :
+<https://www.sogefi-sig.com/geoservices-apis-wms/api-dvf/>. Si l'API n'est pas
+disponible, des valeurs par défaut sont utilisées afin de garantir un rendu
+cohérent de la section d'estimation.
+

@@ -1,13 +1,34 @@
 import { Box, Heading, SimpleGrid, VStack, Text } from "@chakra-ui/react";
 import FadeInSection from "../UI/FadeInSection";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
-const data = [
+const fallbackData = [
   { label: "Appartement", value: 3000 },
   { label: "Maison", value: 2500 },
   { label: "Terrain", value: 1500 },
 ];
 
 export default function PriceEstimationSection() {
+  const [data, setData] = useState(fallbackData);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const res = await axios.get(
+          "https://www.sogefi-sig.com/geoservices-apis-wms/api-dvf/"
+        );
+        if (Array.isArray(res.data)) {
+          setData(res.data);
+        }
+      } catch (e) {
+        console.error("Failed to fetch estimation data", e);
+      }
+    }
+
+    fetchData();
+  }, []);
+
   const max = Math.max(...data.map((d) => d.value));
   return (
     <FadeInSection>
