@@ -119,6 +119,11 @@ class PageController extends Controller
         return Inertia::render('Account/Clockings');
     }
 
+    public function visits()
+    {
+        return Inertia::render('Account/Visits');
+    }
+
     public function myListings()
     {
         $listings = Listing::where('user_id', auth()->id())

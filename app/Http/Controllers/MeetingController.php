@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Conversation;
 use App\Models\Meeting;
+use App\Models\Visit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\MeetingProposalNotification;
@@ -66,6 +67,24 @@ class MeetingController extends Controller
         ]);
 
         $meeting->update(['status' => $data['status']]);
+
+        if ($meeting->type === 'visit') {
+            if ($data['status'] === 'accepted') {
+                Visit::updateOrCreate([
+                    'listing_id' => $conversation->listing_id,
+                    'user_id' => $conversation->buyer_id,
+                    'visit_datetime' => $meeting->scheduled_at,
+                ], [
+                    'status' => 'planifiee',
+                    'mode' => 'physique',
+                ]);
+            } else {
+                Visit::where('listing_id', $conversation->listing_id)
+                    ->where('user_id', $conversation->buyer_id)
+                    ->where('visit_datetime', $meeting->scheduled_at)
+                    ->delete();
+            }
+        }
 
         return response()->json($meeting);
     }

@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\MeetingController;
+use App\Http\Controllers\VisitController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ReportController;
@@ -22,6 +23,7 @@ use App\Http\Controllers\Admin\ListingController as AdminListingController;
 use App\Http\Controllers\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Admin\ReportController as AdminReportController;
 use App\Http\Controllers\Admin\ClockingController as AdminClockingController;
+use App\Http\Controllers\Admin\VisitController as AdminVisitController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\FileController;
 use App\Http\Middleware\EnsureIsAdmin;
@@ -89,6 +91,9 @@ Route::middleware(['auth', 'verified', 'terms', EnsureIsAdmin::class])
 
         Route::get('/clockings', [AdminClockingController::class, 'index'])->name('clockings.index');
         Route::get('/clockings/data', [AdminClockingController::class, 'data'])->name('clockings.data');
+
+        Route::get('/visits', [AdminVisitController::class, 'index'])->name('visits.index');
+        Route::get('/visits/data', [AdminVisitController::class, 'data'])->name('visits.data');
     });
 Route::middleware(['auth', 'verified', 'terms', 'certified'])->group(function () {
     Route::resource('listings', ListingController::class)->except(['show']);
@@ -112,6 +117,7 @@ Route::middleware(['auth', 'verified', 'terms', 'certified'])->group(function ()
     Route::post('/conversations/{conversation}/messages', [MessageController::class, 'store'])->middleware(['participant', 'conversation.open']);
     Route::post('/conversations/{conversation}/meetings', [MeetingController::class, 'store'])->middleware(['participant', 'conversation.open']);
     Route::post('/meetings/{meeting}/status', [MeetingController::class, 'update'])->middleware(['participant', 'conversation.open']);
+    Route::get('/visits', [VisitController::class, 'index']);
     Route::post('/messages/{message}/read', [MessageController::class, 'markAsRead']);
 
     Route::get('/notifications', [NotificationController::class, 'index']);
@@ -156,6 +162,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/listings/{listing}/favorite', [ListingController::class, 'toggle'])->name('favorites.toggle');
     Route::get('/account/settings', [PageController::class, 'accountSettings'])->name('account.settings');
     Route::get('/account/clockings', [PageController::class, 'clockings'])->name('account.clockings');
+    Route::get('/account/visits', [PageController::class, 'visits'])->name('account.visits');
     Route::get('/account/listings', [PageController::class, 'myListings'])->name('account.listings');
 
     Route::get('/saved-searches', [SavedSearchController::class, 'index'])->name('searches.index');
