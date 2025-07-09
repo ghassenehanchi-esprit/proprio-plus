@@ -52,7 +52,9 @@ export default function Index({ conversations: initial = {}, current }) {
 
   const loadMore = async () => {
     if (!nextPage) return;
-    const apiUrl = nextPage.replace('/conversations', '/api/conversations');
+    const apiUrl = nextPage
+      .replace('/messages', '/conversations')
+      .replace('/api/conversations', '/conversations');
     const res = await axios.get(apiUrl);
     setConversations(cs => [...cs, ...res.data.data]);
     setNextPage(res.data.next_page_url);
@@ -60,16 +62,16 @@ export default function Index({ conversations: initial = {}, current }) {
 
   const toggleRead = async (conv) => {
     if (conv.unread_count > 0) {
-      await axios.post(`/api/conversations/${conv.id}/read`);
+      await axios.post(`/conversations/${conv.id}/read`);
       setConversations(cs => cs.map(c => c.id === conv.id ? { ...c, unread_count: 0 } : c));
     } else {
-      await axios.post(`/api/conversations/${conv.id}/unread`);
+      await axios.post(`/conversations/${conv.id}/unread`);
       setConversations(cs => cs.map(c => c.id === conv.id ? { ...c, unread_count: 1 } : c));
     }
   };
 
   const respondMeeting = async (id, status) => {
-    await axios.post(`/api/meetings/${id}/status`, { status });
+    await axios.post(`/meetings/${id}/status`, { status });
     setMeetings(ms => ms.map(m => m.id === id ? { ...m, status } : m));
   };
 
@@ -77,7 +79,7 @@ export default function Index({ conversations: initial = {}, current }) {
   const send = async () => {
     if (!content) return;
     try {
-      const res = await axios.post(`/api/conversations/${active.id}/messages`, { content });
+      const res = await axios.post(`/conversations/${active.id}/messages`, { content });
       setContent('');
       setMessages((ms) => [...ms, res.data]);
       setTimeout(() => {
