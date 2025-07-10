@@ -36,11 +36,11 @@ Assignez ce rôle à un utilisateur via la relation `roles` pour lui donner acc�
 ## Signature électronique et génération de PDF
 
 Le projet s'appuie sur le composant React **react-signature-canvas** pour
-capturer les signatures. Pour générer des PDF, installez l'extension gratuite
-`barryvdh/laravel-dompdf` :
+capturer les signatures. Pour générer des PDF, installez l'extension
+`barryvdh/laravel-snappy` :
 
 ```bash
-composer require barryvdh/laravel-dompdf
+composer require barryvdh/laravel-snappy
 composer require dropbox/sign
 ```
 
@@ -78,6 +78,8 @@ Le processus de vente est sécurisé par plusieurs documents électroniques :
 4. **Compromis de vente** puis **acte définitif** : les deux parties finalisent la vente.
 
 Les signatures sont stockées en base et peuvent être intégrées dans les PDF générés via l'API ci-dessus.
+
+Les administrateurs peuvent superviser ces documents depuis le tableau de bord à l'adresse `/admin/documents` et approuver chaque fichier une fois vérifié.
 
 ## Estimation immobilière via API
 
