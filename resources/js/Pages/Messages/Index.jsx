@@ -4,6 +4,7 @@ import ListingCard from '@/Components/Listing/ListingCard';
 import { usePage } from '@inertiajs/react';
 import { useState, useEffect, useRef } from 'react';
 import VisitScheduler from '@/Components/Meeting/VisitScheduler';
+import VisitRequestCard from '@/Components/Meeting/VisitRequestCard';
 import axios from 'axios';
 import sweetAlert from '@/libs/sweetalert';
 
@@ -167,20 +168,14 @@ export default function Index({ conversations: initial = {}, current }) {
             </HStack>
             <VStack align="stretch" spacing={2} flex="1" overflowY="auto">
               {meetings.map(m => (
-                <Box key={`meeting-${m.id}`} bg="gray.50" borderWidth="1px" borderRadius="md" p={2}>
-                  <HStack justify="space-between">
-                    <Text>Visite le {new Date(m.scheduled_at).toLocaleString()}</Text>
-                    {m.status === 'pending' && auth.user.id === active.buyer_id ? (
-                      <HStack>
-                        <Button size="xs" colorScheme="brand" onClick={() => respondMeeting(m.id, 'accepted')}>Accepter</Button>
-                        <Button size="xs" variant="outline" onClick={() => respondMeeting(m.id, 'declined')}>Refuser</Button>
-                      </HStack>
-                    ) : (
-                      <Text fontSize="sm" color="gray.600">{m.status}</Text>
-                    )}
-                  </HStack>
-                  {m.agenda && <Text fontSize="sm" color="gray.600" mt={2}>{m.agenda}</Text>}
-                </Box>
+                <VisitRequestCard
+                  key={`meeting-${m.id}`}
+                  meeting={m}
+                  listing={active.listing}
+                  seller={active.seller}
+                  isBuyer={auth.user.id === active.buyer_id}
+                  onRespond={status => respondMeeting(m.id, status)}
+                />
               ))}
               {messages.map((m, idx) => {
                 const isMe = m.sender_id === auth.user.id;
