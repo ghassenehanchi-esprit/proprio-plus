@@ -18,29 +18,30 @@ class HelloSignService
      * Send a PDF for signing using HelloSign.
      *
      * @param string $filePath Path to the PDF that should be signed.
-     * @param string $signerEmail Email address of the signer.
-     * @param string $signerName Name of the signer.
-     * @param string $subject Subject of the email sent to the signer.
-     * @param string $message Optional message to include in the email.
+     * @param array  $signers  Array of [email => name] pairs.
+     * @param string $subject  Subject of the email sent to signers.
+     * @param string $message  Optional message to include in the email.
      * @return string The signature request ID.
      */
     public function sendSignatureRequest(
         string $filePath,
-        string $signerEmail,
-        string $signerName,
+        array $signers,
         string $subject = 'Please sign the attached document',
         string $message = ''
     ): string {
-        $signer = new SubSignatureRequestSigner([
-            'email_address' => $signerEmail,
-            'name' => $signerName,
-        ]);
+        $signerObjects = [];
+        foreach ($signers as $email => $name) {
+            $signerObjects[] = new SubSignatureRequestSigner([
+                'email_address' => $email,
+                'name' => $name,
+            ]);
+        }
 
         $request = new SignatureRequestSendRequest([
             'title' => $subject,
             'subject' => $subject,
             'message' => $message,
-            'signers' => [$signer],
+            'signers' => $signerObjects,
             'file_path' => [$filePath],
         ]);
 

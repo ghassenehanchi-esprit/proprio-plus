@@ -173,6 +173,10 @@ Route::middleware(['auth'])->group(function () {
 
     // Génération d'une attestation de loyer au format PDF
     Route::get('/pdf/attestation/{listing}', [\App\Http\Controllers\PdfController::class, 'attestation'])->name('pdf.attestation');
+    Route::get('/pdf/mandat/{listing}', [\App\Http\Controllers\PdfController::class, 'mandat'])->name('pdf.mandat');
+    Route::get('/pdf/visite/{listing}', [\App\Http\Controllers\PdfController::class, 'bonDeVisite'])->name('pdf.visite');
+    Route::get('/pdf/offre/{listing}', [\App\Http\Controllers\PdfController::class, 'offreAchat'])->name('pdf.offre');
+    Route::get('/pdf/compromis/{listing}', [\App\Http\Controllers\PdfController::class, 'compromis'])->name('pdf.compromis');
 });
 
 Route::middleware(['auth', 'verified', 'terms', 'certified'])->group(function () {

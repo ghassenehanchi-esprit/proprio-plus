@@ -51,6 +51,15 @@ une **attestation de loyer** signée :
 GET /pdf/attestation/{listing}
 ```
 
+D'autres documents peuvent être générés de la même façon :
+
+```text
+GET /pdf/mandat/{listing}
+GET /pdf/visite/{listing}
+GET /pdf/offre/{listing}
+GET /pdf/compromis/{listing}
+```
+
 Cette route génère un PDF au format proche des attestations de loyer françaises
 en incluant la signature enregistrée.
 
