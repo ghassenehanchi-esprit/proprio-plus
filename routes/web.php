@@ -94,6 +94,10 @@ Route::middleware(['auth', 'verified', 'terms', EnsureIsAdmin::class])
 
         Route::get('/visits', [AdminVisitController::class, 'index'])->name('visits.index');
         Route::get('/visits/data', [AdminVisitController::class, 'data'])->name('visits.data');
+
+        Route::get('/documents', [\App\Http\Controllers\Admin\DocumentController::class, 'index'])->name('documents.index');
+        Route::get('/documents/data', [\App\Http\Controllers\Admin\DocumentController::class, 'data'])->name('documents.data');
+        Route::post('/documents/{document}/approve', [\App\Http\Controllers\Admin\DocumentController::class, 'approve'])->name('documents.approve');
     });
 Route::middleware(['auth', 'verified', 'terms', 'certified'])->group(function () {
     Route::resource('listings', ListingController::class)->except(['show']);

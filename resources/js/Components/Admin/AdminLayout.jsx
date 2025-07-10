@@ -59,6 +59,11 @@ export default function AdminLayout({ children }) {
             <Icon as={FaCalendarAlt} />
             <Text>Visites</Text>
           </ChakraLink>
+          <ChakraLink as={Link} href="/admin/documents" display="flex" alignItems="center" gap={2}
+            >
+            <Icon as={FaFileAlt} />
+            <Text>Documents</Text>
+          </ChakraLink>
         </Flex>
       </Box>
       </Slide>
