@@ -225,11 +225,8 @@ class ListingController extends Controller
         $hellosignKey = config('services.hellosign.key');
 
         if ($hellosignKey) {
-            $pdf = Pdf::loadView('pdf.attestation', [
-                'listing' => $listing,
-                'user' => auth()->user(),
-                'signaturePath' => null,
-            ]);
+            $pdfService = new \App\Services\Pdf\DocumentPdfService();
+            $pdf = $pdfService->generate('mandat_exclusif', $listing);
 
             $tmpPath = storage_path('app/tmp/'.uniqid('mandate_').'.pdf');
             if (! is_dir(dirname($tmpPath))) {
@@ -240,8 +237,7 @@ class ListingController extends Controller
             $service = new HelloSignService($hellosignKey);
             $requestId = $service->sendSignatureRequest(
                 $tmpPath,
-                auth()->user()->email,
-                auth()->user()->first_name.' '.auth()->user()->last_name,
+                [auth()->user()->email => auth()->user()->first_name.' '.auth()->user()->last_name],
                 'Signature Mandat',
                 'Veuillez signer le mandat exclusif en pièce jointe.'
             );
