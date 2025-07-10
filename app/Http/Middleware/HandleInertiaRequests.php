@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use App\Models\Message;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -44,6 +45,15 @@ class HandleInertiaRequests extends Middleware
             ],
             'unreadNotifications' => $request->user()
                 ? $request->user()->unreadNotifications()->count()
+                : 0,
+            'unreadMessages' => $request->user()
+                ? Message::whereHas('conversation', function ($q) use ($request) {
+                    $q->where('buyer_id', $request->user()->id)
+                      ->orWhere('seller_id', $request->user()->id);
+                })
+                    ->where('sender_id', '!=', $request->user()->id)
+                    ->where('is_read', false)
+                    ->count()
                 : 0,
             'flash' => [
                 'success' => $request->session()->get('success'),

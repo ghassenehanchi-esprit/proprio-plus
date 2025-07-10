@@ -19,6 +19,7 @@ import { HamburgerIcon } from "@chakra-ui/icons";
 import { useRecoilState } from 'recoil';
 import modeAtom from '@/state/modeAtom';
 import NotificationBell from "../UI/NotificationBell";
+import MessagesBell from "../UI/MessagesBell";
 import { Link, usePage } from "@inertiajs/react";
 import { route } from "ziggy-js";
 
@@ -86,6 +87,7 @@ export default function Navbar() {
                     {mode === 'buyer' ? 'Mode vendeur' : 'Mode acheteur'}
                 </Button>
                 <NotificationBell />
+                <MessagesBell />
                 <Menu>
                     <MenuButton as={Button} variant="ghost" rightIcon={<HamburgerIcon />}>
                         <Avatar size="sm" name={auth.user.first_name} />

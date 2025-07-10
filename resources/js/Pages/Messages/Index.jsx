@@ -108,6 +108,27 @@ export default function Index({ conversations: initial = {}, current }) {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  useEffect(() => {
+    if (!active) return;
+    const fetchNew = async () => {
+      try {
+        const res = await axios.get(`/conversations/${active.id}/messages`);
+        const data = res.data || [];
+        setMessages(ms => {
+          if (ms.length !== data.length || (ms[ms.length - 1]?.id !== data[data.length - 1]?.id)) {
+            return data;
+          }
+          return ms;
+        });
+        if (data.some(m => !m.is_read && m.sender_id !== auth.user.id)) {
+          await axios.post(`/conversations/${active.id}/read`);
+        }
+      } catch (e) {}
+    };
+    const interval = setInterval(fetchNew, 5000);
+    return () => clearInterval(interval);
+  }, [active]);
+
   return (
     <HStack align="start" spacing={6}>
       <VStack align="stretch" w={{ base: 'full', md: '250px' }} spacing={1}>
