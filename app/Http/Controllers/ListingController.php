@@ -8,6 +8,7 @@ use App\Models\Listing;
 use App\Models\Category;
 use App\Http\Controllers\SavedSearchController;
 use App\Enums\ListingStatus;
+use App\Notifications\ListingFavoritedNotification;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -295,6 +296,10 @@ class ListingController extends Controller
             'user_id' => $user->id,
             'listing_id' => $listing->id
         ]);
+
+        if ($user->id !== $listing->user_id) {
+            $listing->user->notify(new ListingFavoritedNotification($listing, $user));
+        }
 
         return response()->json(['status' => 'added']);
     }

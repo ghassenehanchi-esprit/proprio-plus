@@ -14,6 +14,7 @@ class NotificationController extends Controller
 
             return [
                 'id' => $notification->id,
+                'type' => $notification->type,
                 'read_at' => $notification->read_at,
                 'created_at' => $notification->created_at,
                 'data' => $notification->data,

@@ -52,6 +52,27 @@ export default function NotificationBell() {
     setNotifications((ns) => ns.map((n) => (n.id === id ? { ...n, read_at: null } : n)));
   };
 
+  const getInfo = (n) => {
+    const name = `${n.sender.first_name} ${n.sender.last_name}`;
+    if (n.type.includes('NewMessageNotification')) {
+      return {
+        text: `${name} vous a envoyé un message`,
+        href: `/messages?conversation=${n.data.conversation_id}`,
+      };
+    }
+    if (n.type.includes('MeetingProposalNotification')) {
+      const base =
+        n.data.type === 'visit'
+          ? `${name} vous a demandé une visite`
+          : `${name} vous propose un rendez-vous`;
+      return { text: base, href: `/messages?conversation=${n.data.conversation_id}` };
+    }
+    if (n.type.includes('ListingFavoritedNotification')) {
+      return { text: `${name} a ajouté votre annonce à ses favoris`, href: `/listings/${n.data.listing_id}` };
+    }
+    return { text: n.data.content || 'Notification', href: '#' };
+  };
+
   const unreadCount =
     (Array.isArray(notifications)
       ? notifications.filter((n) => !n.read_at).length
@@ -70,27 +91,30 @@ export default function NotificationBell() {
         {notifications.length === 0 ? (
           <MenuItem>Aucune notification</MenuItem>
         ) : (
-          notifications.map((n) => (
-            <MenuItem
-              key={n.id}
-              bg={n.read_at ? 'white' : 'gray.100'}
-              _hover={{ bg: n.read_at ? 'gray.50' : 'gray.200' }}
-              as={Link}
-              href={`/messages?conversation=${n.data.conversation_id}`}
-            >
-              <HStack align="start" spacing={3} w="100%">
-                <Avatar size="sm" name={`${n.sender.first_name} ${n.sender.last_name}`} />
-                <Box flex="1">
-                  <Text fontSize="sm" mb={1}>{n.data.content}</Text>
-                  {n.read_at ? (
-                    <Button size="xs" onClick={(e) => { e.preventDefault(); markAsUnread(n.id); }}>Marquer comme non lue</Button>
-                  ) : (
-                    <Button size="xs" onClick={(e) => { e.preventDefault(); markAsRead(n.id); }}>Marquer comme lue</Button>
-                  )}
-                </Box>
-              </HStack>
-            </MenuItem>
-          ))
+          notifications.map((n) => {
+            const { text, href } = getInfo(n);
+            return (
+              <MenuItem
+                key={n.id}
+                bg={n.read_at ? 'white' : 'gray.100'}
+                _hover={{ bg: n.read_at ? 'gray.50' : 'gray.200' }}
+                as={Link}
+                href={href}
+              >
+                <HStack align="start" spacing={3} w="100%">
+                  <Avatar size="sm" name={`${n.sender.first_name} ${n.sender.last_name}`} />
+                  <Box flex="1">
+                    <Text fontSize="sm" mb={1}>{text}</Text>
+                    {n.read_at ? (
+                      <Button size="xs" onClick={(e) => { e.preventDefault(); markAsUnread(n.id); }}>Marquer comme non lue</Button>
+                    ) : (
+                      <Button size="xs" onClick={(e) => { e.preventDefault(); markAsRead(n.id); }}>Marquer comme lue</Button>
+                    )}
+                  </Box>
+                </HStack>
+              </MenuItem>
+            );
+          })
         )}
       </MenuList>
     </Menu>
