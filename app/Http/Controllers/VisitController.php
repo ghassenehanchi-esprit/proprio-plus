@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Visit;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\VisitFeedbackRequestNotification;
 
 class VisitController extends Controller
 {
@@ -75,14 +76,59 @@ class VisitController extends Controller
             ->first();
 
         if ($conversation) {
-            \App\Models\Message::create([
+            $message = \App\Models\Message::create([
                 'conversation_id' => $conversation->id,
                 'sender_id' => Auth::id(),
                 'content' => 'Le vendeur a confirmé la visite : '.(request('comment') ?? ''),
                 'is_read' => false,
             ]);
+
+            \App\Models\Message::create([
+                'conversation_id' => $conversation->id,
+                'sender_id' => Auth::id(),
+                'content' => "Comment s'est passée la visite ? Vous pouvez laisser une note et faire une offre depuis cette conversation.",
+                'is_read' => false,
+            ]);
+
+            if ($recipient = \App\Models\User::find($conversation->buyer_id)) {
+                $recipient->notify(new \App\Notifications\NewMessageNotification($message));
+                $recipient->notify(new VisitFeedbackRequestNotification($visit));
+            }
         }
 
         return response()->json(['status' => 'confirmed']);
+    }
+
+    public function feedback(Visit $visit)
+    {
+        if ($visit->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $data = request()->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'feedback' => 'nullable|string',
+        ]);
+
+        $visit->update($data);
+
+        $conversation = \App\Models\Conversation::where('listing_id', $visit->listing_id)
+            ->where('buyer_id', $visit->user_id)
+            ->first();
+
+        if ($conversation) {
+            $msg = \App\Models\Message::create([
+                'conversation_id' => $conversation->id,
+                'sender_id' => Auth::id(),
+                'content' => 'Avis sur la visite : ' . $data['rating'] . '/5' . ($data['feedback'] ? ' - '.$data['feedback'] : ''),
+                'is_read' => false,
+            ]);
+
+            if ($recipient = \App\Models\User::find($conversation->seller_id)) {
+                $recipient->notify(new \App\Notifications\NewMessageNotification($msg));
+            }
+        }
+
+        return response()->json(['status' => 'saved']);
     }
 }
