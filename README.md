@@ -84,8 +84,9 @@ Les administrateurs peuvent superviser ces documents depuis le tableau de bord �
 ## Estimation immobilière via API
 
 La page d'accueil affiche une estimation indicative des prix au m². Ces données
-sont désormais récupérées depuis l'API **DVF** fournie par Sogefi :
-<https://www.sogefi-sig.com/geoservices-apis-wms/api-dvf/>. Si l'API n'est pas
-disponible, des valeurs par défaut sont utilisées afin de garantir un rendu
-cohérent de la section d'estimation.
+sont désormais récupérées via l'API **DVF** du Cerema :
+<https://datafoncier.cerema.fr/api>. Vous devez créer un compte sur ce portail
+afin d'obtenir une clé d'API personnelle à renseigner dans `DVF_API_KEY`.
+Si l'API n'est pas disponible, des valeurs par défaut sont utilisées afin de
+garantir un rendu cohérent de la section d'estimation.
 

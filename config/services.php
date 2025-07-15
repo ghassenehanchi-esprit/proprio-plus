@@ -39,4 +39,9 @@ return [
         'key' => env('HELLOSIGN_API_KEY'),
     ],
 
+    'dvf' => [
+        'url' => env('DVF_API_URL', 'https://datafoncier.cerema.fr/api'),
+        'key' => env('DVF_API_KEY'),
+    ],
+
 ];
