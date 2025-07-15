@@ -5,6 +5,7 @@ use App\Enums\ListingStatus;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Facades\DB;
 
 class Listing extends Model
 {
@@ -149,11 +150,20 @@ class Listing extends Model
             $lng = $filters['lng'];
             $radius = $filters['radius'] ?? 10;
 
-            $haversine = "(6371 * acos(cos(radians($lat)) * cos(radians(latitude)) * cos(radians(longitude) - radians($lng)) + sin(radians($lat)) * sin(radians(latitude))))";
+            if (DB::connection()->getDriverName() === 'sqlite') {
+                $latDelta = $radius / 111;
+                $lngDelta = $radius / (111 * max(cos(deg2rad($lat)), 0.00001));
 
-            $query->selectRaw("*, $haversine AS distance")
-                ->having("distance", "<=", $radius)
-                ->orderBy("distance");
+                $query->whereBetween('latitude', [$lat - $latDelta, $lat + $latDelta])
+                    ->whereBetween('longitude', [$lng - $lngDelta, $lng + $lngDelta])
+                    ->orderByRaw('ABS(latitude - ?) + ABS(longitude - ?)', [$lat, $lng]);
+            } else {
+                $haversine = "(6371 * acos(cos(radians($lat)) * cos(radians(latitude)) * cos(radians(longitude) - radians($lng)) + sin(radians($lat)) * sin(radians(latitude))))";
+
+                $query->selectRaw("*, $haversine AS distance")
+                    ->having('distance', '<=', $radius)
+                    ->orderBy('distance');
+            }
         }
 
         return $query;
