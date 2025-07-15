@@ -14,10 +14,15 @@ import { Link } from "@inertiajs/react";
 import {FaHeart, FaRegHeart, FaStar} from "react-icons/fa";
 import {useState} from "react";
 import axios from 'axios';
+import { motion } from 'framer-motion';
+
+const MotionIconButton = motion(IconButton);
 function FavoriteButton({ listingId, isFavorited, onToggle }) {
     const [favorited, setFavorited] = useState(isFavorited);
 
     const toggleFavorite = async () => {
+        const optimistic = !favorited;
+        setFavorited(optimistic);
         try {
             const response = await axios.post(`/listings/${listingId}/favorite`);
             const newStatus = response.data.status;
@@ -26,12 +31,14 @@ function FavoriteButton({ listingId, isFavorited, onToggle }) {
                 onToggle(newStatus);
             }
         } catch (error) {
+            setFavorited(!optimistic);
             console.error('Erreur lors du toggle favori', error);
         }
     };
 
     return (
-        <IconButton
+        <MotionIconButton
+            whileTap={{ scale: 0.9 }}
             icon={favorited ? <FaHeart color="red" /> : <FaRegHeart />}
             variant="ghost"
             size="sm"
