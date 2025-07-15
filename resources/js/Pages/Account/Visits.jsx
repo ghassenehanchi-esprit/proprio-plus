@@ -1,4 +1,4 @@
-import { Box, Heading, VStack, Text } from '@chakra-ui/react';
+import { Box, Heading, VStack, Text, useColorModeValue } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -19,12 +19,14 @@ export default function Visits() {
       <Text fontWeight="bold">{visit.listing.title}</Text>
       <Text>{new Date(visit.visit_datetime).toLocaleString()}</Text>
       {showUser && visit.user && (
-        <Text fontSize="sm" color="gray.600">
+        <Text fontSize="sm" color={useColorModeValue('gray.600', 'white')}>
           Pour: {visit.user.first_name} {visit.user.last_name}
         </Text>
       )}
       {visit.listing.address && (
-        <Text fontSize="sm" color="gray.600">{visit.listing.address}</Text>
+        <Text fontSize="sm" color={useColorModeValue('gray.600', 'white')}>
+          {visit.listing.address}
+        </Text>
       )}
     </Box>
   );

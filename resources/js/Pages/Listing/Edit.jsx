@@ -27,6 +27,7 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import AddressSearch from '@/Components/Listing/AddressSearch';
 import CategoryGrid from '@/Components/Listing/CategoryGrid';
@@ -281,7 +282,7 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
           >
             <input {...getInputProps()} />
             <Text>Glissez-déposez des images ou cliquez pour sélectionner</Text>
-            <Text fontSize="sm" color="gray.500">{`${existingPhotos.length + photos.length}/6 ajoutées`}</Text>
+            <Text fontSize="sm" color={useColorModeValue('gray.500', 'white')}>{`${existingPhotos.length + photos.length}/6 ajoutées`}</Text>
           </Box>
           <FormErrorMessage>{errors.gallery}</FormErrorMessage>
         </FormControl>

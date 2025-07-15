@@ -11,6 +11,7 @@ import {
   Stack,
   Autocomplete
 } from '@mantine/core';
+import { useColorModeValue } from '@chakra-ui/react';
 import { useForm } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -102,7 +103,7 @@ export default function SearchBarMantine() {
 
           <Popover opened={popoverOpened} onChange={setPopoverOpened} width={300} position="bottom">
             <Popover.Target>
-              <Button variant="outline" color="gray" onClick={() => setPopoverOpened((o) => !o)}>
+              <Button variant="outline" style={{ color: useColorModeValue('gray', 'white') }} onClick={() => setPopoverOpened((o) => !o)}>
                 Filtres avancés
               </Button>
             </Popover.Target>

@@ -1,4 +1,4 @@
-import { Box, Heading, SimpleGrid, Text, Icon } from "@chakra-ui/react";
+import { Box, Heading, SimpleGrid, Text, Icon, useColorModeValue } from "@chakra-ui/react";
 import { FaSearch, FaHandshake, FaBell } from "react-icons/fa";
 import FadeInSection from "../UI/FadeInSection";
 
@@ -16,7 +16,7 @@ export default function ClientAdviceSection() {
         <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6}>
           {advices.map((a, i) => (
             <Box key={i} p={5} borderRadius="lg" bg="surface" boxShadow="sm">
-              <Icon as={a.icon} boxSize={8} color="brand.500" mb={3} />
+              <Icon as={a.icon} boxSize={8} color={useColorModeValue('brand.500', 'white')} mb={3} />
               <Text>{a.text}</Text>
             </Box>
           ))}

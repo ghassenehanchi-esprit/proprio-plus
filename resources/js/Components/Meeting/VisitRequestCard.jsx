@@ -1,4 +1,4 @@
-import { Box, VStack, Text, HStack, Divider, Icon, Button } from '@chakra-ui/react';
+import { Box, VStack, Text, HStack, Divider, Icon, Button, useColorModeValue } from '@chakra-ui/react';
 import { FaCalendar, FaMapMarkerAlt, FaUser, FaClock, FaStickyNote } from 'react-icons/fa';
 
 export default function VisitRequestCard({ meeting, listing, seller, onRespond, isBuyer }) {
@@ -33,7 +33,7 @@ export default function VisitRequestCard({ meeting, listing, seller, onRespond, 
       <VStack align="stretch" spacing={4} divider={<Divider />}>
         <Box>
           <Text fontWeight="semibold" fontSize="lg">Proposition de Visite</Text>
-          <Text fontSize="sm" color="gray.600">
+          <Text fontSize="sm" color={useColorModeValue('gray.600', 'white')}>
             Je vous propose une visite pour le bien {listing.title} à l'adresse {listing.address} selon les préférences que vous avez partagées.
           </Text>
         </Box>
@@ -41,7 +41,7 @@ export default function VisitRequestCard({ meeting, listing, seller, onRespond, 
           {details.map((d) => (
             <HStack key={d.label} justify="space-between" align="start">
               <HStack spacing={2} minW="150px">
-                <Icon as={d.icon} color="gray.500" />
+                <Icon as={d.icon} color={useColorModeValue('gray.500', 'white')} />
                 <Text fontWeight="medium">{d.label}</Text>
               </HStack>
               <Text textAlign="right" flex="1">{d.value}</Text>
@@ -55,7 +55,7 @@ export default function VisitRequestCard({ meeting, listing, seller, onRespond, 
           </HStack>
         )}
         {meeting.status !== 'pending' && (
-          <Text fontSize="sm" color="gray.600" alignSelf="flex-end">{meeting.status}</Text>
+          <Text fontSize="sm" color={useColorModeValue('gray.600', 'white')} alignSelf="flex-end">{meeting.status}</Text>
         )}
       </VStack>
     </Box>

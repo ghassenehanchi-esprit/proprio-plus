@@ -3,7 +3,8 @@ import {
   Heading,
   SimpleGrid,
   Text,
-  Icon
+  Icon,
+  useColorModeValue
 } from "@chakra-ui/react";
 import FadeInSection from "../UI/FadeInSection";
 import { FaShieldAlt, FaMoneyBillWave, FaBolt } from "react-icons/fa";
@@ -22,9 +23,9 @@ export default function FeatureSection() {
         <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6}>
           {features.map((f, i) => (
             <Box key={i} p={5} borderRadius="lg" bg="surface" boxShadow="sm">
-              <Icon as={f.icon} boxSize={8} color="brand.500" mb={3} />
+              <Icon as={f.icon} boxSize={8} color={useColorModeValue('brand.500', 'white')} mb={3} />
               <Heading size="md" mb={2}>{f.title}</Heading>
-              <Text fontSize="sm" color="gray.600">{f.text}</Text>
+              <Text fontSize="sm" color={useColorModeValue('gray.600', 'white')}>{f.text}</Text>
             </Box>
           ))}
         </SimpleGrid>

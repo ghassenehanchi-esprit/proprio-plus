@@ -1,4 +1,4 @@
-import { Box, Heading, VStack, HStack, Icon, Text } from "@chakra-ui/react";
+import { Box, Heading, VStack, HStack, Icon, Text, useColorModeValue } from "@chakra-ui/react";
 import { FaSearch, FaRegStar, FaEnvelope } from "react-icons/fa";
 import FadeInSection from "../UI/FadeInSection";
 
@@ -16,7 +16,7 @@ export default function UsageInstructionsSection() {
         <VStack spacing={6} align="stretch" maxW="3xl" mx="auto">
           {steps.map((s, i) => (
             <HStack key={i} spacing={4} align="flex-start">
-              <Icon as={s.icon} boxSize={8} color="brand.500" />
+              <Icon as={s.icon} boxSize={8} color={useColorModeValue('brand.500', 'white')} />
               <Box>
                 <Text fontWeight="bold">{s.title}</Text>
                 <Text>{s.text}</Text>
