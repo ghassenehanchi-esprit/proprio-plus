@@ -28,6 +28,16 @@ export default function Edit({ page }) {
     setSections((secs) => secs.filter((_, i) => i !== index));
   };
 
+  const moveSection = (index, delta) => {
+    setSections((secs) => {
+      const next = [...secs];
+      const target = index + delta;
+      if (target < 0 || target >= secs.length) return secs;
+      [next[index], next[target]] = [next[target], next[index]];
+      return next;
+    });
+  };
+
   const submit = (e) => {
     e.preventDefault();
     setData('sections', JSON.stringify(sections));
@@ -47,6 +57,8 @@ export default function Edit({ page }) {
           section={section}
           onChange={(sec) => updateSection(index, sec)}
           onRemove={() => removeSection(index)}
+          onMoveUp={() => moveSection(index, -1)}
+          onMoveDown={() => moveSection(index, 1)}
         />
       ))}
       <Button size="sm" mb={4} onClick={addSection} variant="outline">

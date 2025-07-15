@@ -33,6 +33,10 @@ php artisan test
 Toutes les routes sous le préfixe `/admin` sont protégées par le middleware `EnsureIsAdmin` qui vérifie que l'utilisateur possède le rôle `admin`.
 Assignez ce rôle à un utilisateur via la relation `roles` pour lui donner accès au panneau d'administration.
 
+### Gestion des pages
+
+Depuis l'interface d'administration, les sections des pages peuvent être réordonnées grâce aux flèches haut/bas. Chaque section permet d'ajouter une image et un texte riche affiché en HTML de manière sécurisée. Ajoutez autant de sections que nécessaire pour construire des pages totalement responsives.
+
 ## Signature électronique et génération de PDF
 
 Le projet s'appuie sur le composant React **react-signature-canvas** pour
