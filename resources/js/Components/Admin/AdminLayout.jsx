@@ -22,7 +22,7 @@ export default function AdminLayout({ children }) {
   const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true });
 
   return (
-    <Flex minH="100vh" bg="gray.100">
+    <Flex minH="100vh" bg="inputBg">
       <Slide direction="left" in={isOpen} style={{ width: '200px' }}>
         <Box w="200px" bg="brand.600" color="white" p={4} h="100vh" position="fixed">
           <Flex direction="column" as="nav" gap={2} fontSize="sm">
@@ -67,8 +67,8 @@ export default function AdminLayout({ children }) {
         </Flex>
       </Box>
       </Slide>
-      <Box flex="1" ml={isOpen ? '200px' : 0} transition="margin 0.2s" bg="gray.50">
-        <Flex as="header" bg="white" px={4} py={2} justify="space-between" align="center" shadow="sm" position="sticky" top={0} zIndex={1}>
+      <Box flex="1" ml={isOpen ? '200px' : 0} transition="margin 0.2s" bg="surfaceSubtle">
+        <Flex as="header" bg="surface" px={4} py={2} justify="space-between" align="center" shadow="sm" position="sticky" top={0} zIndex={1}>
           <IconButton icon={<FaBars />} variant="ghost" onClick={onToggle} aria-label="Toggle menu" />
           <ChakraLink as={Link} href="/">Accueil</ChakraLink>
           <Flex align="center" gap={3}>

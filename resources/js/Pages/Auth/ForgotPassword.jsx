@@ -16,8 +16,8 @@ export default function ForgotPassword() {
   };
 
   return (
-    <Flex minH="100vh" bg="gray.50">
-      <Flex flex={1} justify="center" align="center" bg="white">
+    <Flex minH="100vh" bg="surfaceSubtle">
+      <Flex flex={1} justify="center" align="center" bg="surface">
         <Box w="full" maxW="md" p={8}>
           <Heading size="lg" mb={6} textAlign="center">Mot de passe oublié</Heading>
           <form onSubmit={submit}>
@@ -25,7 +25,7 @@ export default function ForgotPassword() {
               <Input
                 name="email"
                 placeholder="Adresse email"
-                bg="gray.100"
+                bg="inputBg"
                 value={data.email}
                 onChange={(e) => setData('email', e.target.value)}
               />

@@ -29,7 +29,7 @@ export default function VisitRequestCard({ meeting, listing, seller, onRespond, 
   }
 
   return (
-    <Box bg="gray.50" p={5} borderRadius="lg" w="full">
+    <Box bg="surfaceSubtle" p={5} borderRadius="lg" w="full">
       <VStack align="stretch" spacing={4} divider={<Divider />}>
         <Box>
           <Text fontWeight="semibold" fontSize="lg">Proposition de Visite</Text>

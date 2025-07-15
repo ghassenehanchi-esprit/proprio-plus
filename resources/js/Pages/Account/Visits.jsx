@@ -30,7 +30,7 @@ export default function Visits() {
   );
 
   return (
-    <Box p={8} maxW="3xl" mx="auto" bg="white" rounded="md" shadow="md">
+    <Box p={8} maxW="3xl" mx="auto" bg="surface" rounded="md" shadow="md">
       <Heading size="md" mb={4}>Mes visites prévues</Heading>
       <VStack align="stretch" spacing={2} mb={8} maxH="300px" overflowY="auto">
         {buyerVisits.map(v => (

@@ -5,7 +5,7 @@ import { Link } from "@inertiajs/react";
 export default function CreateListingCTA() {
   return (
     <FadeInSection>
-      <Box bg="gray.50" py={10} px={{ base: 4, md: 8 }}>
+      <Box bg="surfaceSubtle" py={10} px={{ base: 4, md: 8 }}>
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={8} alignItems="center">
           <Image
             src="/images/hero.png"

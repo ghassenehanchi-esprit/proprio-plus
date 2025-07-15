@@ -133,7 +133,7 @@ export default function Create({ categories: initialCategories = [] }) {
   };
 
   return (
-    <Box as="form" onSubmit={submit} maxW="4xl" mx="auto" bg="white" p={6} rounded="md" boxShadow="md">
+    <Box as="form" onSubmit={submit} maxW="4xl" mx="auto" bg="surface" p={6} rounded="md" boxShadow="md">
       <Heading size="lg" mb={4}>Créer une annonce</Heading>
       <Stepper index={step - 1} colorScheme="brand" mb={6} gap="0" size="sm">
         {stepsData.map((s, i) => (

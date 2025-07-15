@@ -58,11 +58,11 @@ export default function AddressSearch({ onSelect }) {
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Adresse ou ville"
         rounded="xl"
-        bg="gray.50"
+        bg="surfaceSubtle"
       />
       {suggestions.length > 0 && (
         <List
-          bg="white"
+          bg="surface"
           border="1px solid #e2e8f0"
           mt={2}
           rounded="md"
@@ -78,7 +78,7 @@ export default function AddressSearch({ onSelect }) {
               key={idx}
               px={4}
               py={2}
-              _hover={{ bg: 'gray.100', cursor: 'pointer' }}
+              _hover={{ bg: 'inputBg', cursor: 'pointer' }}
               onClick={() => handleSelect(item)}
             >
               <Text fontSize="sm">{item.display_name}</Text>

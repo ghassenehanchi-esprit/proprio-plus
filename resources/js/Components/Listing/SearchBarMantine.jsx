@@ -59,7 +59,7 @@ export default function SearchBarMantine() {
   };
 
   return (
-    <Box maw={1000} mx="auto" p="md" bg="white" radius="md" shadow="md">
+    <Box maw={1000} mx="auto" p="md" bg="surface" radius="md" shadow="md">
       <form onSubmit={handleSubmit}>
         <Stack spacing="sm">
           <Autocomplete

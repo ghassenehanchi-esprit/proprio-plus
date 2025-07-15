@@ -30,8 +30,8 @@ export default function Login() {
     };
 
     return (
-        <Flex height="100vh" bg="gray.50">
-            <Flex flex={1} justify="center" align="center" bg="white">
+        <Flex height="100vh" bg="surfaceSubtle">
+            <Flex flex={1} justify="center" align="center" bg="surface">
                 <Box w="full" maxW="md" p={8}>
                     <Flex justify="center" mb={6}>
                         <Image src="/logo.png" alt="Logo" height="50px" />
@@ -44,7 +44,7 @@ export default function Login() {
                                 <Input
                                     name="email"
                                     placeholder="Veuillez entrer votre adresse e-mail"
-                                    bg="gray.100"
+                                    bg="inputBg"
                                     value={data.email}
                                     onChange={(e) => setData('email', e.target.value)}
                                 />
@@ -55,7 +55,7 @@ export default function Login() {
                                     name="password"
                                     type="password"
                                     placeholder="Veuillez entrer votre mot de passe"
-                                    bg="gray.100"
+                                    bg="inputBg"
                                     value={data.password}
                                     onChange={(e) => setData('password', e.target.value)}
                                 />

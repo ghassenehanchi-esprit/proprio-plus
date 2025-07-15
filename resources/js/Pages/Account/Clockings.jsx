@@ -33,7 +33,7 @@ export default function Clockings() {
   };
 
   return (
-    <Box p={8} maxW="xl" mx="auto" bg="white" rounded="md" shadow="md">
+    <Box p={8} maxW="xl" mx="auto" bg="surface" rounded="md" shadow="md">
       <Heading size="md" mb={4}>Pointage</Heading>
       <VStack align="stretch" spacing={2} mb={4} maxH="300px" overflowY="auto">
         {clockings.map(c => (

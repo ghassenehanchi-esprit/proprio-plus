@@ -20,8 +20,8 @@ export default function ResetPassword({ token, email }) {
   };
 
   return (
-    <Flex minH="100vh" bg="gray.50">
-      <Flex flex={1} justify="center" align="center" bg="white">
+    <Flex minH="100vh" bg="surfaceSubtle">
+      <Flex flex={1} justify="center" align="center" bg="surface">
         <Box w="full" maxW="md" p={8}>
           <Heading size="lg" mb={6} textAlign="center">Réinitialiser le mot de passe</Heading>
           <form onSubmit={submit}>
@@ -31,7 +31,7 @@ export default function ResetPassword({ token, email }) {
                   name="email"
                   type="email"
                   placeholder="Adresse email"
-                  bg="gray.100"
+                  bg="inputBg"
                   value={data.email}
                   onChange={(e) => setData('email', e.target.value)}
                 />
@@ -42,7 +42,7 @@ export default function ResetPassword({ token, email }) {
                   name="password"
                   type="password"
                   placeholder="Nouveau mot de passe"
-                  bg="gray.100"
+                  bg="inputBg"
                   value={data.password}
                   onChange={(e) => setData('password', e.target.value)}
                 />
@@ -53,7 +53,7 @@ export default function ResetPassword({ token, email }) {
                   name="password_confirmation"
                   type="password"
                   placeholder="Confirmez le mot de passe"
-                  bg="gray.100"
+                  bg="inputBg"
                   value={data.password_confirmation}
                   onChange={(e) => setData('password_confirmation', e.target.value)}
                 />

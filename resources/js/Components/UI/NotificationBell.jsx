@@ -96,8 +96,8 @@ export default function NotificationBell() {
             return (
               <MenuItem
                 key={n.id}
-                bg={n.read_at ? 'white' : 'gray.100'}
-                _hover={{ bg: n.read_at ? 'gray.50' : 'gray.200' }}
+                bg={n.read_at ? 'surface' : 'inputBg'}
+                _hover={{ bg: n.read_at ? 'surfaceSubtle' : 'gray.200' }}
                 as={Link}
                 href={href}
               >

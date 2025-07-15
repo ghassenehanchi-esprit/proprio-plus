@@ -33,7 +33,7 @@ export default function Index({ stats: initialStats = {}, listingStatus = {}, ca
   const [filters, setFilters] = useState({ status: '', category_id: '' });
   const statusChart = useRef(null);
   const categoryChart = useRef(null);
-  const cardBg = useColorModeValue('white', 'gray.800');
+  const cardBg = useColorModeValue('surface', 'gray.800');
   const chartColors = ['#2a6ab2', '#ff6384', '#ff9f40', '#4bc0c0', '#9966ff', '#36a2eb'];
 
   const fetchData = async () => {

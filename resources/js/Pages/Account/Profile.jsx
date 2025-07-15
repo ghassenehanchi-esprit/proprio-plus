@@ -10,6 +10,7 @@ import {
   Button,
   Icon,
   HStack,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { EmailIcon, PhoneIcon, CalendarIcon } from '@chakra-ui/icons';
 
@@ -21,17 +22,18 @@ export default function Profile({ user }) {
   }
 
   const fullName = `${pageUser.first_name} ${pageUser.last_name}`;
+  const gradient = useColorModeValue('linear(to-br, white, gray.50)', 'linear(to-br, gray.700, gray.800)');
 
   return (
     <Flex justify="center" p={{ base: 4, md: 8 }}>
       <Box
-        bg="white"
+        bg="surface"
         p={8}
         rounded="xl"
         shadow="lg"
         w="full"
         maxW="2xl"
-        bgGradient="linear(to-br, white, gray.50)"
+        bgGradient={gradient}
       >
         <Stack direction={{ base: 'column', md: 'row' }} spacing={8} align="center">
           <Avatar name={fullName} size="2xl" />

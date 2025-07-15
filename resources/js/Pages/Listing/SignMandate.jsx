@@ -14,7 +14,7 @@ export default function SignMandate({ listing }) {
     };
 
     return (
-        <Box maxW="3xl" mx="auto" mt={8} bg="white" p={8} rounded="md" shadow="md">
+        <Box maxW="3xl" mx="auto" mt={8} bg="surface" p={8} rounded="md" shadow="md">
             <Heading size="lg" mb={4}>Mandat exclusif</Heading>
             <Text mb={6}>Veuillez signer ce mandat pour confirmer la mise en vente exclusive de votre bien.</Text>
             <VStack as="form" onSubmit={submit} spacing={4} align="flex-start">
