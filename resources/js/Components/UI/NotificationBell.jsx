@@ -53,8 +53,8 @@ export default function NotificationBell() {
   };
 
   const getInfo = (n) => {
-    const name = `${n.sender.first_name} ${n.sender.last_name}`;
-    const countText = n.unread_count > 1 ? ` (${n.unread_count} non lus)` : '';
+    const name = n.sender ? `${n.sender.first_name} ${n.sender.last_name}` : '';
+
     if (n.type.includes('NewMessageNotification')) {
       return {
         text: `${name} vous a envoyé un message${countText}`,
@@ -69,7 +69,8 @@ export default function NotificationBell() {
       return { text: `${base}${countText}`, href: `/messages?conversation=${n.data.conversation_id}` };
     }
     if (n.type.includes('ListingFavoritedNotification')) {
-      return { text: `${name} a ajouté votre annonce à ses favoris${countText}`, href: `/listings/${n.data.listing_id}` };
+      return { text: `Votre annonce a été ajoutée aux favoris`, href: `/listings/${n.data.listing_id}`, hideSender: true };
+
     }
     return { text: (n.data.content || 'Notification') + countText, href: '#' };
   };
@@ -109,8 +110,9 @@ export default function NotificationBell() {
         {groupedNotifications.length === 0 ? (
           <MenuItem>Aucune notification</MenuItem>
         ) : (
-          groupedNotifications.map((n) => {
-            const { text, href } = getInfo(n);
+          notifications.map((n) => {
+            const { text, href, hideSender } = getInfo(n);
+
             return (
               <MenuItem
                 key={n.id}
@@ -120,7 +122,9 @@ export default function NotificationBell() {
                 href={href}
               >
                 <HStack align="start" spacing={3} w="100%">
-                  <Avatar size="sm" name={`${n.sender.first_name} ${n.sender.last_name}`} />
+                  {!hideSender && (
+                    <Avatar size="sm" name={`${n.sender.first_name} ${n.sender.last_name}`} />
+                  )}
                   <Box flex="1">
                     <Text fontSize="sm" mb={1}>{text}</Text>
                     {n.read_at ? (
