@@ -93,7 +93,7 @@ export default function Index({ conversations: initial = {}, current }) {
 
   const respondMeeting = async (id, status) => {
     try {
-      await axios.post(`/meetings/${id}/status`, { status });
+      await axios.post(`/api/meetings/${id}/status`, { status });
       sweetAlert(
         status === 'accepted' ? 'Visite acceptée' : 'Visite refusée',
         'success'
