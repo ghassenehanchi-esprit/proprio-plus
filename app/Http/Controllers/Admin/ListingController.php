@@ -47,4 +47,13 @@ class ListingController extends Controller
 
         return response()->json(['message' => 'Status mis à jour']);
     }
+
+    public function documents(Listing $listing)
+    {
+        $listing->load('documents');
+        return Inertia::render('Admin/Listings/Documents', [
+            'listing' => $listing,
+            'documents' => $listing->documents,
+        ]);
+    }
 }

@@ -41,6 +41,7 @@ export default function Index({ filters = {} }) {
             <Th>Propriétaire</Th>
             <Th>Status</Th>
             <Th>Actions</Th>
+            <Th>Documents</Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -56,6 +57,11 @@ export default function Index({ filters = {} }) {
                   <option value="vendue">vendue</option>
                   <option value="archivée">archivée</option>
                 </Select>
+              </Td>
+              <Td>
+                <Button size="xs" as="a" href={route('admin.listings.documents', l.id)}>
+                  Voir
+                </Button>
               </Td>
             </Tr>
           ))}
