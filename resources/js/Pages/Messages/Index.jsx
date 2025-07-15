@@ -21,6 +21,17 @@ export default function Index({ conversations: initial = {}, current }) {
   const [nextPage, setNextPage] = useState(initial.next_page_url);
   const [meetings, setMeetings] = useState([]);
   const [visit, setVisit] = useState(null);
+
+  const hasPendingVisit = meetings.some(m => m.type === 'visit' && m.status === 'pending');
+  const reportUser = async () => {
+    if (!partner) return;
+    await axios.post('/reports', {
+      reported_user_id: partner.id,
+      reason: 'inappropriate behavior',
+      conversation_id: active.id,
+    });
+  };
+
   const messagesEndRef = useRef(null);
 
   const errorShown = useRef(false);
@@ -179,7 +190,11 @@ export default function Index({ conversations: initial = {}, current }) {
                   </Text>
                   <ReportModal reportedUserId={partner.id} conversationId={active.id} />
                   {auth.user.id === active.seller_id && (
-                    <VisitScheduler conversationId={active.id} onScheduled={() => loadConversation(active)} />
+                    <VisitScheduler
+                      conversationId={active.id}
+                      onScheduled={() => loadConversation(active)}
+                      disabled={hasPendingVisit}
+                    />
                   )}
                 </HStack>
               )}

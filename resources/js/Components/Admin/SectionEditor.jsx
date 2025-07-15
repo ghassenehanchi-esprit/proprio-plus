@@ -1,15 +1,23 @@
 import { Box, FormControl, FormLabel, IconButton, Input, Flex } from '@chakra-ui/react';
-import { CloseIcon } from '@chakra-ui/icons';
+import { CloseIcon, ArrowUpIcon, ArrowDownIcon } from '@chakra-ui/icons';
 import RichTextEditor from './RichTextEditor';
 
-export default function SectionEditor({ section, onChange, onRemove }) {
+export default function SectionEditor({ section, onChange, onRemove, onMoveUp, onMoveDown }) {
   const update = (field, value) => {
     onChange && onChange({ ...section, [field]: value });
   };
 
   return (
     <Box border="1px" borderColor="gray.200" borderRadius="md" p={4} mb={4} bg="white">
-      <Flex justify="flex-end">
+      <Flex justify="space-between" mb={2}>
+        <Flex gap={1}>
+          {onMoveUp && (
+            <IconButton size="sm" icon={<ArrowUpIcon />} aria-label="move up" onClick={onMoveUp} />
+          )}
+          {onMoveDown && (
+            <IconButton size="sm" icon={<ArrowDownIcon />} aria-label="move down" onClick={onMoveDown} />
+          )}
+        </Flex>
         {onRemove && (
           <IconButton size="sm" icon={<CloseIcon />} aria-label="remove" onClick={onRemove} />
         )}
