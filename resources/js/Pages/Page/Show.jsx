@@ -1,4 +1,10 @@
-import { Box, Heading, Text, Image, VStack } from '@chakra-ui/react';
+import { Box, Heading, Image, VStack } from '@chakra-ui/react';
+
+const sanitize = (html) => {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  doc.querySelectorAll('script,iframe,object,embed').forEach(el => el.remove());
+  return doc.body.innerHTML;
+};
 
 export default function Show({ page }) {
   return (
@@ -11,7 +17,7 @@ export default function Show({ page }) {
               <Image src={section.image} alt="" mb={2} borderRadius="md" />
             )}
             {section.text && (
-              <Text whiteSpace="pre-line">{section.text}</Text>
+              <Box dangerouslySetInnerHTML={{ __html: sanitize(section.text) }} />
             )}
           </Box>
         ))}
