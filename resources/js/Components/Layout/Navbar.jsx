@@ -44,6 +44,8 @@ export default function Navbar() {
     const height = isScrolled ? "60px" : "80px";
     const transition = "all 0.3s ease";
 
+    const logoSrc = useColorModeValue('/logo.png', '/logo - blanc.png');
+
     return (
         <Flex
             as="nav"
@@ -59,7 +61,7 @@ export default function Navbar() {
         >
             <Link href="/">
                 <Image
-                    src="/logo.png"
+                    src={logoSrc}
                     alt="Logo PRIMO"
                     height={isScrolled ? "30px" : "40px"}
                     transition="height 0.3s ease"
