@@ -9,7 +9,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import { createRoot } from 'react-dom/client';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
 import { RecoilRoot } from 'recoil';
 import theme from './theme';
 import LayoutWrapper from './Components/Layout/LayoutWrapper';
@@ -26,6 +26,7 @@ createInertiaApp({
     createRoot(el).render(
       <RecoilRoot>
         <ChakraProvider theme={theme}>
+          <ColorModeScript initialColorMode={theme.config.initialColorMode} />
           <App {...props} />
         </ChakraProvider>
       </RecoilRoot>

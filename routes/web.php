@@ -167,6 +167,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/favorites', [PageController::class, 'favorites'])->name('favorites.index');
     Route::post('/listings/{listing}/favorite', [ListingController::class, 'toggle'])->name('favorites.toggle');
     Route::get('/account/settings', [PageController::class, 'accountSettings'])->name('account.settings');
+    Route::post('/account/theme', [\App\Http\Controllers\User\ThemeController::class, 'update'])->name('account.theme');
     Route::get('/account/clockings', [PageController::class, 'clockings'])->name('account.clockings');
     Route::get('/account/visits', [PageController::class, 'visits'])->name('account.visits');
     Route::get('/account/listings', [PageController::class, 'myListings'])->name('account.listings');

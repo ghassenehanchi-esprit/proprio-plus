@@ -18,6 +18,7 @@ import {
 import { HamburgerIcon } from "@chakra-ui/icons";
 import NotificationBell from "../UI/NotificationBell";
 import MessagesBell from "../UI/MessagesBell";
+import DarkModeToggle from "../UI/DarkModeToggleButton";
 import { Link, usePage } from "@inertiajs/react";
 import { route } from "ziggy-js";
 
@@ -81,6 +82,7 @@ export default function Navbar() {
                 )}
                 <NotificationBell />
                 <MessagesBell />
+                <DarkModeToggle />
                 <Menu>
                     <MenuButton as={Button} variant="ghost" rightIcon={<HamburgerIcon />}>
                         <Avatar size="sm" name={auth.user.first_name} />

@@ -17,6 +17,13 @@
         @vite(['resources/js/app.jsx', "resources/js/Pages/{$page['component']}.jsx"])
         @inertiaHead
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        @php($colorMode = auth()->user()?->dark_mode ? 'dark' : 'light')
+        <script>
+            (function(){
+                var mode = localStorage.getItem('chakra-ui-color-mode') || '{{ $colorMode }}';
+                localStorage.setItem('chakra-ui-color-mode', mode);
+            })();
+        </script>
     </head>
     <body class="font-sans antialiased">
         @inertia
