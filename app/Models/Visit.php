@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Visit extends Model
 {
-    protected $fillable = ['listing_id', 'user_id', 'visit_datetime', 'status', 'mode', 'buyer_confirmed_at', 'seller_confirmed_at', 'seller_comment'];
+    protected $fillable = ['listing_id', 'user_id', 'visit_datetime', 'status', 'mode', 'buyer_confirmed_at', 'seller_confirmed_at', 'seller_comment', 'rating', 'feedback'];
 
     protected $casts = [
         'visit_datetime' => 'datetime',

@@ -7,6 +7,7 @@ import VisitScheduler from '@/Components/Meeting/VisitScheduler';
 import VisitRequestCard from '@/Components/Meeting/VisitRequestCard';
 import VisitDoneModal from '@/Components/Meeting/VisitDoneModal';
 import VisitSellerConfirmModal from '@/Components/Meeting/VisitSellerConfirmModal';
+import VisitFeedbackModal from '@/Components/Meeting/VisitFeedbackModal';
 import ReportModal from '@/Components/Messages/ReportModal';
 import axios from 'axios';
 import sweetAlert from '@/libs/sweetalert';
@@ -281,7 +282,10 @@ export default function Index({ conversations: initial = {}, current }) {
         )}
       </Box>
       {active && visit && auth.user.id === active.buyer_id && (
-        <VisitDoneModal visit={visit} onConfirmed={() => loadConversation(active)} />
+        <>
+          <VisitDoneModal visit={visit} onConfirmed={() => loadConversation(active)} />
+          <VisitFeedbackModal visit={visit} onSubmitted={() => loadConversation(active)} />
+        </>
       )}
       {active && visit && auth.user.id === active.seller_id && (
         <VisitSellerConfirmModal visit={visit} onConfirmed={() => loadConversation(active)} />

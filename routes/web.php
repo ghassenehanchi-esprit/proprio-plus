@@ -6,6 +6,7 @@ use App\Http\Controllers\ListingController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\VisitController;
+use App\Http\Controllers\OfferController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ReportController;
@@ -126,6 +127,9 @@ Route::middleware(['auth', 'verified', 'terms', 'certified'])->group(function ()
     Route::get('/visits', [VisitController::class, 'index']);
     Route::post('/visits/{visit}/done', [VisitController::class, 'markDone']);
     Route::post('/visits/{visit}/confirm', [VisitController::class, 'sellerConfirm']);
+    Route::post('/visits/{visit}/feedback', [VisitController::class, 'feedback']);
+    Route::post('/listings/{listing}/offers', [OfferController::class, 'store']);
+    Route::patch('/offers/{offer}', [OfferController::class, 'update']);
     Route::post('/messages/{message}/read', [MessageController::class, 'markAsRead']);
 
     Route::get('/notifications', [NotificationController::class, 'index']);
