@@ -7,6 +7,7 @@ import VisitScheduler from '@/Components/Meeting/VisitScheduler';
 import VisitRequestCard from '@/Components/Meeting/VisitRequestCard';
 import VisitDoneModal from '@/Components/Meeting/VisitDoneModal';
 import VisitSellerConfirmModal from '@/Components/Meeting/VisitSellerConfirmModal';
+import ReportModal from '@/Components/Messages/ReportModal';
 import axios from 'axios';
 import sweetAlert from '@/libs/sweetalert';
 
@@ -20,14 +21,6 @@ export default function Index({ conversations: initial = {}, current }) {
   const [nextPage, setNextPage] = useState(initial.next_page_url);
   const [meetings, setMeetings] = useState([]);
   const [visit, setVisit] = useState(null);
-  const reportUser = async () => {
-    if (!partner) return;
-    await axios.post('/reports', {
-      reported_user_id: partner.id,
-      reason: 'inappropriate behavior',
-      conversation_id: active.id,
-    });
-  };
   const messagesEndRef = useRef(null);
 
   const errorShown = useRef(false);
@@ -184,7 +177,7 @@ export default function Index({ conversations: initial = {}, current }) {
                   <Text fontSize="sm" color="gray.600">
                     Dernière connexion : {partner.last_active_at ? new Date(partner.last_active_at).toLocaleString() : 'N/A'}
                   </Text>
-                  <Button size="xs" variant="outline" onClick={reportUser}>Signaler</Button>
+                  <ReportModal reportedUserId={partner.id} conversationId={active.id} />
                   {auth.user.id === active.seller_id && (
                     <VisitScheduler conversationId={active.id} onScheduled={() => loadConversation(active)} />
                   )}
