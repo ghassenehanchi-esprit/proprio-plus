@@ -18,7 +18,8 @@ class PriceEstimationController extends Controller
         try {
             $response = Http::timeout(5)
                 ->withOptions(['verify' => false])
-                ->get('https://www.sogefi-sig.com/geoservices-apis-wms/api-dvf/');
+                ->withHeaders(['X-API-KEY' => config('services.dvf.key')])
+                ->get(config('services.dvf.url'));
 
             if ($response->ok() && is_array($response->json())) {
                 return response()->json($response->json());
