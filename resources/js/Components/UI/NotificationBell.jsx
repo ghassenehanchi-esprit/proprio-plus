@@ -54,6 +54,7 @@ export default function NotificationBell() {
 
   const getInfo = (n) => {
     const name = n.sender ? `${n.sender.first_name} ${n.sender.last_name}` : '';
+    const countText = n.unread_count > 1 ? ` (${n.unread_count} non lus)` : '';
 
     if (n.type.includes('NewMessageNotification')) {
       return {
