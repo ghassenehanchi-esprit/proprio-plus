@@ -15,7 +15,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     protected $fillable = [
         'first_name', 'last_name', 'email', 'phone', 'password',
-        'certification_status', 'identity_document', 'certification_date', 'terms_accepted_at'
+        'certification_status', 'identity_document', 'certification_date', 'terms_accepted_at',
+        'dark_mode'
     ];
 
     protected $hidden = [
@@ -26,6 +27,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'certification_date' => 'datetime',
         'terms_accepted_at' => 'datetime',
+        'dark_mode' => 'boolean',
     ];
 
     protected $appends = ['last_active_at'];

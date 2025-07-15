@@ -15,6 +15,8 @@ import { InfoOutlineIcon, LockIcon, ArrowBackIcon } from '@chakra-ui/icons';
 import { Link, usePage } from '@inertiajs/react';
 import PersonalInfoForm from '@/Components/Account/PersonalInfoForm';
 import PasswordForm from '@/Components/Account/PasswordForm';
+import { MoonIcon } from '@chakra-ui/icons';
+import DarkModeToggle from '@/Components/Account/DarkModeToggle';
 
 export default function Settings({ user }) {
   const pageUser = user || usePage().props.user;
@@ -59,6 +61,9 @@ export default function Settings({ user }) {
           <Tab>
             <Icon as={LockIcon} mr={2} /> Mot de passe
           </Tab>
+          <Tab>
+            <Icon as={MoonIcon} mr={2} /> Apparence
+          </Tab>
         </TabList>
         <TabPanels ref={panelsRef} flex="1" pl={{ md: 6 }} mt={{ base: 4, md: 0 }}>
           <TabPanel px={0}>
@@ -66,6 +71,9 @@ export default function Settings({ user }) {
           </TabPanel>
           <TabPanel px={0}>
             <PasswordForm />
+          </TabPanel>
+          <TabPanel px={0}>
+            <DarkModeToggle initial={pageUser?.dark_mode ? 'dark' : 'light'} />
           </TabPanel>
         </TabPanels>
       </Tabs>
