@@ -13,7 +13,6 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import { EmailIcon, PhoneIcon, CalendarIcon } from '@chakra-ui/icons';
-import { useColorModeValue } from '@chakra-ui/react';
 
 export default function Profile({ user }) {
   const pageUser = user || usePage().props.auth.user;
