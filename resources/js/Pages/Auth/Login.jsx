@@ -11,7 +11,8 @@ import {
     VStack,
     Divider,
     FormControl,
-    FormErrorMessage
+    FormErrorMessage,
+    useColorModeValue
 } from "@chakra-ui/react";
 import { Link } from '@inertiajs/react';
 
@@ -24,6 +25,8 @@ export default function Login() {
 
     useErrorAlert(errors);
 
+    const logoSrc = useColorModeValue('/logo.png', '/logo - blanc.png');
+
     const submit = (e) => {
         e.preventDefault();
         post('/login');
@@ -34,7 +37,7 @@ export default function Login() {
             <Flex flex={1} justify="center" align="center" bg="surface">
                 <Box w="full" maxW="md" p={8}>
                     <Flex justify="center" mb={6}>
-                        <Image src="/logo.png" alt="Logo" height="50px" />
+                        <Image src={logoSrc} alt="Logo" height="50px" />
                     </Flex>
                     <Heading size="lg" mb={6} textAlign="center">Bienvenue</Heading>
 

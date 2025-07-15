@@ -12,7 +12,8 @@ import {
     FormErrorMessage,
     Flex,
     Image,
-    Text
+    Text,
+    useColorModeValue
 } from '@chakra-ui/react';
 
 export default function Register() {
@@ -27,6 +28,8 @@ export default function Register() {
 
     useErrorAlert(errors);
 
+    const logoSrc = useColorModeValue('/logo.png', '/logo - blanc.png');
+
     const submit = (e) => {
         e.preventDefault();
         post('/register');
@@ -36,7 +39,7 @@ export default function Register() {
         <Flex minH="100vh">
             {/* Left side form */}
             <Box flex="1" p={10} bg="surface" display="flex" flexDirection="column" justifyContent="center">
-                <Image src="/logo.png" alt="Logo" mb={6} w="150px" />
+                <Image src={logoSrc} alt="Logo" mb={6} w="150px" />
                 <Heading size="lg" mb={6}>Créer votre compte</Heading>
                 <form onSubmit={submit}>
                     <VStack spacing={4}>
