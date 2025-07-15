@@ -119,6 +119,15 @@ class ConversationController extends Controller
             },
         ]);
 
+        $visit = \App\Models\Visit::where('listing_id', $conversation->listing_id)
+            ->where('user_id', $conversation->buyer_id)
+            ->orderBy('visit_datetime', 'desc')
+            ->first();
+
+        if ($visit) {
+            $conversation->setRelation('visit', $visit);
+        }
+
         return response()->json($conversation);
     }
 }
