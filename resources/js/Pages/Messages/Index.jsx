@@ -79,9 +79,30 @@ export default function Index({ conversations: initial = {}, current }) {
     }
   };
 
+  const refreshDetails = async () => {
+    if (!active) return;
+    try {
+      const res = await axios.get(`/conversations/${active.id}`);
+      setMeetings(res.data.meetings || []);
+      setVisit(res.data.visit || null);
+    } catch (e) {
+      // ignore refresh errors silently
+    }
+  };
+
   const respondMeeting = async (id, status) => {
-    await axios.post(`/meetings/${id}/status`, { status });
-    setMeetings(ms => ms.map(m => m.id === id ? { ...m, status } : m));
+    try {
+      await axios.post(`/meetings/${id}/status`, { status });
+      sweetAlert(
+        status === 'accepted' ? 'Visite acceptée' : 'Visite refusée',
+        'success'
+      );
+      await refreshDetails();
+    } catch (e) {
+      sweetAlert(
+        e.response?.data?.message || "Erreur lors de la mise à jour de la visite"
+      );
+    }
   };
 
 
