@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\ClockingController as AdminClockingController;
 use App\Http\Controllers\Admin\VisitController as AdminVisitController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Middleware\EnsureIsAdmin;
 use App\Http\Controllers\Admin\LoginController as AdminLoginController;
 use Illuminate\Http\Request;
@@ -166,15 +167,18 @@ Route::middleware(['auth', 'terms'])->group(function () {
 });
 Route::middleware(['auth'])->group(function () {
     Route::get('/favorites', [PageController::class, 'favorites'])->name('favorites.index');
-    Route::post('/listings/{listing}/favorite', [ListingController::class, 'toggle'])->name('favorites.toggle');
+    Route::post('/favorites/{listing}', [FavoriteController::class, 'store'])->name('favorites.store');
+    Route::delete('/favorites/{listing}', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
     Route::get('/account/settings', [PageController::class, 'accountSettings'])->name('account.settings');
     Route::post('/account/theme', [\App\Http\Controllers\User\ThemeController::class, 'update'])->name('account.theme');
     Route::get('/account/clockings', [PageController::class, 'clockings'])->name('account.clockings');
     Route::get('/account/visits', [PageController::class, 'visits'])->name('account.visits');
     Route::get('/account/listings', [PageController::class, 'myListings'])->name('account.listings');
+    Route::get('/account/searches', [PageController::class, 'savedSearches'])->name('account.searches');
 
     Route::get('/saved-searches', [SavedSearchController::class, 'index'])->name('searches.index');
     Route::post('/saved-searches', [SavedSearchController::class, 'store'])->name('searches.store');
+    Route::patch('/saved-searches/{search}', [SavedSearchController::class, 'update'])->name('searches.update');
     Route::delete('/saved-searches/{search}', [SavedSearchController::class, 'destroy'])->name('searches.destroy');
 
     Route::get('/recommendations', [ListingController::class, 'recommendations'])->name('listings.recommendations');

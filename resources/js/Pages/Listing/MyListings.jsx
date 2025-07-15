@@ -30,6 +30,7 @@ export default function MyListings({ listings: initial = [] }) {
               <Th>Titre</Th>
               <Th>Status</Th>
               <Th>Demandes</Th>
+              <Th>Fans</Th>
               <Th>Actions</Th>
             </Tr>
           </Thead>
@@ -39,6 +40,7 @@ export default function MyListings({ listings: initial = [] }) {
                 <Td>{l.title}</Td>
                 <Td>{l.status}</Td>
                 <Td>{l.conversations_count}</Td>
+                <Td>{l.favorites_count}</Td>
                 <Td>
                   <Button as={Link} href={`/listings/${l.id}/edit`} size="xs" mr={2}>Modifier</Button>
                   <Button size="xs" colorScheme="red" variant="outline" onClick={() => remove(l.id)}>

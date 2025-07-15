@@ -5,6 +5,7 @@ Ce projet utilise **Laravel 12** avec **React** et Inertia pour construire une p
 > **Note :** L'application est uniquement orientée vers la **vente** de biens immobiliers. Aucune fonctionnalité de prêt ou de financement n'est prévue.
 
 Un système de recommandations propose désormais automatiquement des annonces en fonction des recherches sauvegardées et des favoris des utilisateurs.
+Les filtres de recherche peuvent être enregistrés pour recevoir des alertes par e‑mail et via le site dès qu'une nouvelle annonce correspond.
 
 ## Installation
 

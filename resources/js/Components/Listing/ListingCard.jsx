@@ -25,7 +25,12 @@ function FavoriteButton({ listingId, isFavorited, onToggle }) {
         const optimistic = !favorited;
         setFavorited(optimistic);
         try {
-            const response = await axios.post(`/listings/${listingId}/favorite`);
+            let response;
+            if (favorited) {
+                response = await axios.delete(`/favorites/${listingId}`);
+            } else {
+                response = await axios.post(`/favorites/${listingId}`);
+            }
             const newStatus = response.data.status;
             setFavorited(newStatus === 'added');
             if (onToggle) {

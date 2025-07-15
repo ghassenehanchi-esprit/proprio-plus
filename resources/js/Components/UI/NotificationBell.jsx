@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { BellIcon } from '@chakra-ui/icons';
 import { Link, usePage } from '@inertiajs/react';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import axios from 'axios';
 
 export default function NotificationBell() {
@@ -53,10 +53,11 @@ export default function NotificationBell() {
   };
 
   const getInfo = (n) => {
-    const name = `${n.sender.first_name} ${n.sender.last_name}`;
+    const name = n.sender ? `${n.sender.first_name} ${n.sender.last_name}` : '';
+
     if (n.type.includes('NewMessageNotification')) {
       return {
-        text: `${name} vous a envoyé un message`,
+        text: `${name} vous a envoyé un message${countText}`,
         href: `/messages?conversation=${n.data.conversation_id}`,
       };
     }
@@ -65,18 +66,36 @@ export default function NotificationBell() {
         n.data.type === 'visit'
           ? `${name} vous a demandé une visite`
           : `${name} vous propose un rendez-vous`;
-      return { text: base, href: `/messages?conversation=${n.data.conversation_id}` };
+      return { text: `${base}${countText}`, href: `/messages?conversation=${n.data.conversation_id}` };
     }
     if (n.type.includes('ListingFavoritedNotification')) {
-      return { text: `${name} a ajouté votre annonce à ses favoris`, href: `/listings/${n.data.listing_id}` };
+      return { text: `Votre annonce a été ajoutée aux favoris`, href: `/listings/${n.data.listing_id}`, hideSender: true };
+
     }
-    return { text: n.data.content || 'Notification', href: '#' };
+    return { text: (n.data.content || 'Notification') + countText, href: '#' };
   };
 
   const unreadCount =
     (Array.isArray(notifications)
       ? notifications.filter((n) => !n.read_at).length
       : 0) || unreadNotifications;
+
+  const groupedNotifications = useMemo(() => {
+    const groups = {};
+    notifications.forEach((n) => {
+      const key = n.data.conversation_id ?? n.data.listing_id ?? n.id;
+      const existing = groups[key];
+      if (!existing || new Date(n.created_at) > new Date(existing.created_at)) {
+        groups[key] = { ...n, unread_count: existing ? existing.unread_count : 0 };
+      }
+      if (!n.read_at) {
+        groups[key].unread_count = (groups[key].unread_count || 0) + 1;
+      }
+    });
+    return Object.values(groups).sort(
+      (a, b) => new Date(b.created_at) - new Date(a.created_at)
+    );
+  }, [notifications]);
 
   return (
     <Menu>
@@ -87,12 +106,13 @@ export default function NotificationBell() {
           </Badge>
         )}
       </MenuButton>
-      <MenuList w={{ base: '100%', sm: '300px' }}>
-        {notifications.length === 0 ? (
+      <MenuList w={{ base: '100%', sm: '300px' }} maxH="60vh" overflowY="auto">
+        {groupedNotifications.length === 0 ? (
           <MenuItem>Aucune notification</MenuItem>
         ) : (
           notifications.map((n) => {
-            const { text, href } = getInfo(n);
+            const { text, href, hideSender } = getInfo(n);
+
             return (
               <MenuItem
                 key={n.id}
@@ -102,7 +122,9 @@ export default function NotificationBell() {
                 href={href}
               >
                 <HStack align="start" spacing={3} w="100%">
-                  <Avatar size="sm" name={`${n.sender.first_name} ${n.sender.last_name}`} />
+                  {!hideSender && (
+                    <Avatar size="sm" name={`${n.sender.first_name} ${n.sender.last_name}`} />
+                  )}
                   <Box flex="1">
                     <Text fontSize="sm" mb={1}>{text}</Text>
                     {n.read_at ? (

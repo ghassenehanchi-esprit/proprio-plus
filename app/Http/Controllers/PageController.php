@@ -128,12 +128,21 @@ class PageController extends Controller
     {
         $listings = Listing::where('user_id', auth()->id())
             ->with('category')
-            ->withCount('conversations')
+            ->withCount(['conversations', 'favoritedBy as favorites_count'])
             ->latest()
             ->get();
 
         return Inertia::render('Listing/MyListings', [
             'listings' => $listings,
+        ]);
+    }
+
+    public function savedSearches()
+    {
+        $searches = auth()->user()->savedSearches()->get();
+
+        return Inertia::render('Listing/SavedSearches', [
+            'searches' => $searches,
         ]);
     }
 

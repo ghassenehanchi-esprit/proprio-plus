@@ -10,14 +10,21 @@ class NotificationController extends Controller
     public function index()
     {
         $notifications = Auth::user()->notifications()->latest()->get()->map(function ($notification) {
-            $sender = User::withBasicInfo()->find($notification->data['sender_id']);
+            $data = $notification->data;
+            $sender = null;
+
+            if (!str_contains($notification->type, 'ListingFavoritedNotification')) {
+                $sender = User::withBasicInfo()->find($data['sender_id']);
+            } else {
+                unset($data['sender_id']);
+            }
 
             return [
                 'id' => $notification->id,
                 'type' => $notification->type,
                 'read_at' => $notification->read_at,
                 'created_at' => $notification->created_at,
-                'data' => $notification->data,
+                'data' => $data,
                 'sender' => $sender,
             ];
         });

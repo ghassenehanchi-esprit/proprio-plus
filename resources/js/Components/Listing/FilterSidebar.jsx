@@ -16,6 +16,8 @@ import {
   Select
 } from '@chakra-ui/react';
 import { FaMinus, FaPlus } from 'react-icons/fa';
+import axios from 'axios';
+import sweetAlert from '@/libs/sweetalert';
 
 export default function FilterSidebar({ searchParams, setSearchParams, onSearch }) {
   const [categories, setCategories] = useState([]);
@@ -46,6 +48,17 @@ export default function FilterSidebar({ searchParams, setSearchParams, onSearch 
 
   const decrement = field => {
     setSearchParams(prev => ({ ...prev, [field]: Math.max((prev[field] || 0) - 1, 0) }));
+  };
+
+  const saveSearch = async () => {
+    try {
+      await axios.post('/saved-searches', {
+        params: searchParams,
+      });
+      sweetAlert('Recherche sauvegardée', 'success');
+    } catch (e) {
+      sweetAlert("Erreur lors de l'enregistrement");
+    }
   };
 
   return (
@@ -176,6 +189,7 @@ export default function FilterSidebar({ searchParams, setSearchParams, onSearch 
         </Checkbox>
       </VStack>
 
+      <Button variant="outline" onClick={saveSearch}>Sauvegarder</Button>
       <Button colorScheme="brand" onClick={onSearch}>Rechercher</Button>
     </VStack>
   );
