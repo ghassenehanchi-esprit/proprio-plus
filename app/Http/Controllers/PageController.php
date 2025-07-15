@@ -128,7 +128,7 @@ class PageController extends Controller
     {
         $listings = Listing::where('user_id', auth()->id())
             ->with('category')
-            ->withCount('conversations')
+            ->withCount(['conversations', 'favoritedBy as favorites_count'])
             ->latest()
             ->get();
 

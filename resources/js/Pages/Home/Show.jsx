@@ -147,6 +147,9 @@ export default function Show({ listing, similar = [] }) {
                   <Text fontWeight="bold">{listing.user.first_name} {listing.user.last_name}</Text>
                   <Text fontSize="sm" color="gray.600">Membre depuis {new Date(listing.user.created_at).toLocaleDateString()}</Text>
                   <Text fontSize="sm" color="gray.600">Annonces vendues : {listing.user.sold_count}</Text>
+                  {isOwner && (
+                    <Text fontSize="sm" color="gray.600">Fans : {listing.favorites_count}</Text>
+                  )}
                 </Stack>
               </Flex>
             </>
