@@ -1,4 +1,4 @@
-import { Box, Flex, VStack, HStack, Avatar, Text, Button, IconButton, Input, useBreakpointValue, Image } from '@chakra-ui/react';
+import { Box, Flex, VStack, HStack, Avatar, Text, Button, IconButton, Input, useBreakpointValue, Image, useColorModeValue } from '@chakra-ui/react';
 import { InfoIcon } from '@chakra-ui/icons';
 import { FaPaperPlane } from 'react-icons/fa';
 import { useState } from 'react';
@@ -23,7 +23,7 @@ function MessageBubble({ message, isMe }) {
       mt={2}
     >
       <Text>{message.body}</Text>
-      <Text fontSize="xs" color="gray.500" textAlign="right" mt={1}>
+      <Text fontSize="xs" color={useColorModeValue('gray.500', 'white')} textAlign="right" mt={1}>
         {formatRelative(message.created_at)}
       </Text>
     </Box>
@@ -72,9 +72,9 @@ export default function MessagesLayout({ conversations = [], messages = [], curr
             <Avatar size="sm" src={c.user.avatar} name={c.user.name} />
             <Box flex="1" overflow="hidden">
               <Text fontWeight="bold" noOfLines={1}>{c.user.name}</Text>
-              <Text fontSize="sm" color="gray.600" noOfLines={1}>{c.lastMessage}</Text>
+              <Text fontSize="sm" color={useColorModeValue('gray.600', 'white')} noOfLines={1}>{c.lastMessage}</Text>
             </Box>
-            <Text fontSize="xs" color="gray.500" whiteSpace="nowrap">
+            <Text fontSize="xs" color={useColorModeValue('gray.500', 'white')} whiteSpace="nowrap">
               {formatRelative(c.updated_at)}
             </Text>
           </HStack>

@@ -15,7 +15,8 @@ import {
   RangeSliderFilledTrack,
   RangeSliderThumb,
   Switch,
-  Stack
+  Stack,
+  useColorModeValue
 } from '@chakra-ui/react';
 import { SearchIcon } from '@chakra-ui/icons';
 
@@ -36,7 +37,7 @@ export default function AdvancedSearchBar() {
     <Box bg="surface" p={4} rounded="xl" shadow="md" w="full">
       <Flex gap={4} align="center" flexWrap="wrap">
         <InputGroup maxW="200px">
-          <InputLeftElement pointerEvents="none" children={<SearchIcon color="gray.400" />} />
+          <InputLeftElement pointerEvents="none" children={<SearchIcon color={useColorModeValue('gray.400','white')} />} />
           <Input placeholder="Adresse ou ville" variant="filled" />
         </InputGroup>
 

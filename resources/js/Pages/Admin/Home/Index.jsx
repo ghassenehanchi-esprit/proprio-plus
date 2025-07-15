@@ -111,7 +111,7 @@ export default function Index({ stats: initialStats = {}, listingStatus = {}, ca
         gap={3}
         whileHover={{ scale: 1.05 }}
       >
-        <Icon as={icon} boxSize={5} color="brand.600" />
+        <Icon as={icon} boxSize={5} color={useColorModeValue('brand.600', 'white')} />
         <Stat>
           <StatLabel>{label}</StatLabel>
           <StatNumber>{value}</StatNumber>

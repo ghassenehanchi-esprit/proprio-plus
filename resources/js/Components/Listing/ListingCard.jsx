@@ -8,6 +8,7 @@ import {
     Image,
     IconButton,
     Button,
+    useColorModeValue,
 } from "@chakra-ui/react";
 import Slider from "react-slick";
 import { Link } from "@inertiajs/react";
@@ -104,13 +105,13 @@ export default function ListingCard({ listing, onToggle, size = 'md' }) {
             <Flex direction="column" flex="1">
                 <Stack spacing={isSmall ? 2 : 3} p={isSmall ? 2 : 4} flex="1">
                     <Text fontSize={isSmall ? 'md' : 'xl'} fontWeight="bold">{listing.title}</Text>
-                    <Text fontSize={isSmall ? 'sm' : 'md'} color="gray.600">{listing.city}, {listing.postal_code}</Text>
+                    <Text fontSize={isSmall ? 'sm' : 'md'} color={useColorModeValue('gray.600', 'white')}>{listing.city}, {listing.postal_code}</Text>
                     <Text fontSize={isSmall ? 'md' : 'lg'} fontWeight="bold">{listing.price} €</Text>
-                    <Text fontSize="sm" color="gray.600">Surface : {listing.surface} m²</Text>
-                    <Text fontSize="sm" color="gray.600">Pièces : {listing.rooms}, Chambres : {listing.bedrooms}, Sdb : {listing.bathrooms}</Text>
+                    <Text fontSize="sm" color={useColorModeValue('gray.600', 'white')}>Surface : {listing.surface} m²</Text>
+                    <Text fontSize="sm" color={useColorModeValue('gray.600', 'white')}>Pièces : {listing.rooms}, Chambres : {listing.bedrooms}, Sdb : {listing.bathrooms}</Text>
                     <HStack spacing={3} pt={2}>
-                        {listing.has_terrace && <Text fontSize="sm" color="gray.600">Terrasse</Text>}
-                        {listing.has_parking && <Text fontSize="sm" color="gray.600">Parking</Text>}
+                        {listing.has_terrace && <Text fontSize="sm" color={useColorModeValue('gray.600', 'white')}>Terrasse</Text>}
+                        {listing.has_parking && <Text fontSize="sm" color={useColorModeValue('gray.600', 'white')}>Parking</Text>}
                     </HStack>
                 </Stack>
                 <Flex px={4} pb={4} justify="flex-end">

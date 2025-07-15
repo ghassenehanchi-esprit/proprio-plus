@@ -1,4 +1,4 @@
-import { Box, Heading, Text, Flex, SimpleGrid, Stack, IconButton, Input, Textarea, Button, Popover, PopoverTrigger, PopoverContent, Avatar } from '@chakra-ui/react';
+import { Box, Heading, Text, Flex, SimpleGrid, Stack, IconButton, Input, Textarea, Button, Popover, PopoverTrigger, PopoverContent, Avatar, useColorModeValue } from '@chakra-ui/react';
 import GalleryWithZoom from '@/Components/Listing/GalleryWithZoom';
 import ListingCard from '@/Components/Listing/ListingCard';
 import MapPreview from '@/Components/Map/MapPreview';
@@ -51,12 +51,12 @@ export default function Show({ listing, similar = [] }) {
   };
 
   const Attribute = ({ label, value, icon }) => (
-    <Flex align="center" gap={2} fontFamily="body" color="gray.700" fontSize="sm">
+    <Flex align="center" gap={2} fontFamily="body" color={useColorModeValue('gray.700', 'white')} fontSize="sm">
       {icon && (
         <img src={icon} alt="" width="20" height="20" style={{ display: 'block' }} />
       )}
       <Box>
-        <Text fontWeight="semibold" color="brand.700" lineHeight="1">
+        <Text fontWeight="semibold" color={useColorModeValue('brand.700', 'white')} lineHeight="1">
           {label}
         </Text>
         <Text lineHeight="1.2">{value}</Text>
@@ -136,7 +136,7 @@ export default function Show({ listing, similar = [] }) {
               <Text fontSize="xl" fontWeight="bold" mt={2}>
                 {listing.price} €
               </Text>
-              <Text color="gray.600" mt={1}>
+              <Text color={useColorModeValue('gray.600', 'white')} mt={1}>
                 {listing.address && `${listing.address}, `}
                 {listing.postal_code} {listing.city}
               </Text>
@@ -145,11 +145,13 @@ export default function Show({ listing, similar = [] }) {
                 <Avatar size="md" name={`${listing.user.first_name} ${listing.user.last_name}`} />
                 <Stack spacing={0}>
                   <Text fontWeight="bold">{listing.user.first_name} {listing.user.last_name}</Text>
-                  <Text fontSize="sm" color="gray.600">Membre depuis {new Date(listing.user.created_at).toLocaleDateString()}</Text>
-                  <Text fontSize="sm" color="gray.600">Annonces vendues : {listing.user.sold_count}</Text>
+                  <Text fontSize="sm" color={useColorModeValue('gray.600', 'white')}>Membre depuis {new Date(listing.user.created_at).toLocaleDateString()}</Text>
+                  <Text fontSize="sm" color={useColorModeValue('gray.600', 'white')}>Annonces vendues : {listing.user.sold_count}</Text>
+
                   {isOwner && (
                     <Text fontSize="sm" color="gray.600">Fans : {listing.favorites_count}</Text>
                   )}
+
                 </Stack>
               </Flex>
             </>

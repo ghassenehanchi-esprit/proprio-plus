@@ -1,4 +1,4 @@
-import { Box, Heading, HStack, VStack, Text, Input, Button, Avatar, IconButton, Link } from '@chakra-ui/react';
+import { Box, Heading, HStack, VStack, Text, Input, Button, Avatar, IconButton, Link, useColorModeValue } from '@chakra-ui/react';
 import { FaCheckDouble, FaEnvelope, FaEnvelopeOpen, FaReply } from 'react-icons/fa';
 import ListingCard from '@/Components/Listing/ListingCard';
 import { usePage } from '@inertiajs/react';
@@ -178,7 +178,7 @@ export default function Index({ conversations: initial = {}, current }) {
               <HStack justify="space-between">
                 <VStack align="start" spacing={0} flex="1">
                   <Text fontWeight="bold" noOfLines={1}>{c.listing.title}</Text>
-                  <Text fontSize="xs" color="gray.600" noOfLines={1}>{owner.first_name} {owner.last_name}</Text>
+                  <Text fontSize="xs" color={useColorModeValue('gray.600', 'white')} noOfLines={1}>{owner.first_name} {owner.last_name}</Text>
                   {c.unread_count > 0 && (
                     <Text fontSize="xs" color="brand.600">{c.unread_count} nouveau(x)</Text>
                   )}
@@ -206,7 +206,7 @@ export default function Index({ conversations: initial = {}, current }) {
               {partner && (
                 <HStack>
                   <Avatar size="sm" name={`${partner.first_name} ${partner.last_name}`} />
-                  <Text fontSize="sm" color="gray.600">
+                  <Text fontSize="sm" color={useColorModeValue('gray.600', 'white')}>
                     Dernière connexion : {partner.last_active_at ? new Date(partner.last_active_at).toLocaleString() : 'N/A'}
                   </Text>
                   <ReportModal reportedUserId={partner.id} conversationId={active.id} />
@@ -239,7 +239,7 @@ export default function Index({ conversations: initial = {}, current }) {
                     <Box key={m.id} alignSelf="flex-start" bg="inputBg" borderRadius="md" p={2}>
                       <VStack align="stretch" spacing={2}>
                         <ListingCard listing={active.listing} size="sm" />
-                        <HStack fontSize="sm" color="gray.600">
+                        <HStack fontSize="sm" color={useColorModeValue('gray.600', 'white')}>
                           <FaReply />
                           <Text>En réponse à cette annonce</Text>
                         </HStack>
@@ -248,7 +248,7 @@ export default function Index({ conversations: initial = {}, current }) {
                           {m.file_url && (
                             <Link href={m.file_url} isExternal ml={2}>Fichier</Link>
                           )}
-                          {isMe && <FaCheckDouble color={m.is_read ? 'blue' : 'gray'} />}
+                          {isMe && <FaCheckDouble color={m.is_read ? 'blue' : useColorModeValue('gray', 'white')} />}
                         </HStack>
                       </VStack>
                     </Box>
@@ -263,7 +263,7 @@ export default function Index({ conversations: initial = {}, current }) {
                         <Link href={m.file_url} isExternal ml={2}>Fichier</Link>
                       )}
                       {isMe && (
-                        <FaCheckDouble color={m.is_read ? 'blue' : 'gray'} />
+                        <FaCheckDouble color={m.is_read ? 'blue' : useColorModeValue('gray', 'white')} />
                       )}
                     </HStack>
                   </Box>
