@@ -14,7 +14,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
 
-export default function VisitScheduler({ conversationId, onScheduled }) {
+export default function VisitScheduler({ conversationId, onScheduled, disabled }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [date, setDate] = useState(new Date());
   const [agenda, setAgenda] = useState('');
@@ -38,7 +38,7 @@ export default function VisitScheduler({ conversationId, onScheduled }) {
 
   return (
     <>
-      <Button size="sm" onClick={onOpen} colorScheme="brand">
+      <Button size="sm" onClick={onOpen} colorScheme="brand" isDisabled={disabled}>
         Proposer une visite
       </Button>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
