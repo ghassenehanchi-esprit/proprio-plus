@@ -122,6 +122,8 @@ Route::middleware(['auth', 'verified', 'terms', 'certified'])->group(function ()
     Route::post('/conversations/{conversation}/meetings', [MeetingController::class, 'store'])->middleware(['participant', 'conversation.open']);
     Route::post('/meetings/{meeting}/status', [MeetingController::class, 'update'])->middleware(['participant', 'conversation.open']);
     Route::get('/visits', [VisitController::class, 'index']);
+    Route::post('/visits/{visit}/done', [VisitController::class, 'markDone']);
+    Route::post('/visits/{visit}/confirm', [VisitController::class, 'sellerConfirm']);
     Route::post('/messages/{message}/read', [MessageController::class, 'markAsRead']);
 
     Route::get('/notifications', [NotificationController::class, 'index']);
