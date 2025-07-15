@@ -64,8 +64,9 @@ class Listing extends Model
         return $this->hasMany(DocumentToSign::class);
     }
 
-    public function documents() {
-        return $this->morphMany(File::class, 'fileable')->where('type', 'document');
+    public function documents()
+    {
+        return $this->hasMany(Document::class);
     }
 
     public function gallery() {

@@ -35,6 +35,15 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
 
+  const documentFields = {
+    dossier_diagnostic: 'Dossier technique de diagnostic (obligatoire)',
+    taxe_fonciere: "Copie de l'avis de taxe foncière",
+    titre_propriete: 'Titre de propriété',
+    reglement_copropriete: 'Règlement de copropriété',
+    reglement_servitude: 'Règlement de servitude',
+    autres: 'Autres documents utiles',
+  };
+
 
   const {
     data,
@@ -67,7 +76,7 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
     latitude: listing.latitude || '',
     longitude: listing.longitude || '',
     gallery: [],
-    documents: null,
+    documents: {},
   });
 
   useErrorAlert(errors);
@@ -77,6 +86,7 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
   const [existingDocs, setExistingDocs] = useState(listing.documents || []);
   const [photos, setPhotos] = useState([]);
   const [previews, setPreviews] = useState([]);
+  const [documents, setDocuments] = useState({});
 
   useEffect(() => {
     if (initialCategories.length === 0) {
@@ -114,8 +124,11 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
     setPreviews(newFiles.map(f => URL.createObjectURL(f)));
   };
 
-  const handleDocumentsChange = e => {
-    setData('documents', e.target.files);
+
+  const handleSingleDocumentChange = (key, file) => {
+    const newDocs = { ...documents, [key]: file };
+    setDocuments(newDocs);
+    setData('documents', newDocs);
   };
 
   const deletePhoto = async id => {
@@ -287,17 +300,32 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
           <VStack align="start" spacing={2} mt={4}>
             {existingDocs.map(doc => (
               <Flex key={doc.id} align="center">
-                <Link href={doc.url} isExternal mr={2}>{doc.path.split('/').pop()}</Link>
+                <Link href={doc.url} isExternal mr={2}>{doc.name || doc.path.split('/').pop()}</Link>
                 <Button size="xs" colorScheme="red" onClick={() => deleteDoc(doc.id)}>Supprimer</Button>
               </Flex>
             ))}
           </VStack>
         )}
-        <FormControl isInvalid={errors.documents} mt={4}>
-          <FormLabel>Documents</FormLabel>
-          <Input type="file" multiple onChange={handleDocumentsChange} />
-          <FormErrorMessage>{errors.documents}</FormErrorMessage>
-        </FormControl>
+        <VStack spacing={4} align="stretch" mt={4}>
+          {Object.entries(documentFields).map(([key, label]) => (
+            <Flex key={key} direction={{ base: 'column', md: 'row' }} gap={2} align="center">
+              <FormLabel m={0} w={{ base: '100%', md: '40%' }}>{label}</FormLabel>
+              <Flex gap={2} w={{ base: '100%', md: '60%' }} direction={{ base: 'column', md: 'row' }}>
+                <Button leftIcon={<span>📎</span>} color="white" bg="#f74200" _hover={{ bg: '#d93c00' }} onClick={() => document.getElementById('edit_'+key).click()} flex="1">
+                  Ajouter le document
+                </Button>
+                <Button leftIcon={<span>📷</span>} variant="outline" borderColor="#f74200" color="#f74200" onClick={() => document.getElementById('edit_'+key).click()} flex="1">
+                  Scanner le document
+                </Button>
+                <Input type="file" id={'edit_'+key} accept="application/pdf,image/*" display="none" onChange={(e) => handleSingleDocumentChange(key, e.target.files[0])} />
+                {documents[key] && (
+                  <Text fontSize="sm">{documents[key].name}</Text>
+                )}
+              </Flex>
+            </Flex>
+          ))}
+          {errors.documents && <Text color="red.500">{errors.documents}</Text>}
+        </VStack>
       </VStack>
 
       <Flex justify="space-between" mt={6}>

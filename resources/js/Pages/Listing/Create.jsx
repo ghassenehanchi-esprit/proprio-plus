@@ -36,13 +36,24 @@ export default function Create({ categories: initialCategories = [] }) {
   const [step, setStep] = useState(1);
   const [previews, setPreviews] = useState([]);
   const [photos, setPhotos] = useState([]);
+  const [documents, setDocuments] = useState({});
   const [categories, setCategories] = useState(initialCategories);
   const stepsData = [
     { title: 'Informations', description: 'Titre et description' },
     { title: 'Détails', description: 'Caractéristiques du bien' },
     { title: 'Adresse', description: 'Localisation du bien' },
-    { title: 'Médias', description: 'Photos et documents' },
+    { title: 'Médias', description: 'Photos' },
+    { title: 'Documents', description: 'Pièces obligatoires' },
   ];
+
+  const documentFields = {
+    dossier_diagnostic: 'Dossier technique de diagnostic (obligatoire)',
+    taxe_fonciere: "Copie de l'avis de taxe foncière",
+    titre_propriete: 'Titre de propriété',
+    reglement_copropriete: 'Règlement de copropriété',
+    reglement_servitude: 'Règlement de servitude',
+    autres: 'Autres documents utiles',
+  };
 
   useEffect(() => {
     if (initialCategories.length === 0) {
@@ -72,12 +83,12 @@ export default function Create({ categories: initialCategories = [] }) {
     latitude: '',
     longitude: '',
     gallery: [],
-    documents: null,
+    documents: {},
   });
 
   useErrorAlert(errors);
 
-  const next = () => setStep((s) => Math.min(s + 1, 4));
+  const next = () => setStep((s) => Math.min(s + 1, 5));
   const back = () => setStep((s) => Math.max(s - 1, 1));
 
   const handleAddressSelect = ({ city, postal_code, lat, lng }) => {
@@ -109,8 +120,11 @@ export default function Create({ categories: initialCategories = [] }) {
     setPreviews(newFiles.map((f) => URL.createObjectURL(f)));
   };
 
-  const handleDocumentsChange = (e) => {
-    setData('documents', e.target.files);
+
+  const handleSingleDocumentChange = (key, file) => {
+    const newDocs = { ...documents, [key]: file };
+    setDocuments(newDocs);
+    setData('documents', newDocs);
   };
 
   const submit = (e) => {
@@ -257,7 +271,7 @@ export default function Create({ categories: initialCategories = [] }) {
         <Image src="https://raw.githubusercontent.com/tabler/tabler-icons/master/icons/photo.svg" boxSize="60px" mx="auto" mb={4} alt="media" />
         <Alert status="info" rounded="md" mb={4}>
           <AlertIcon />
-          <Text fontSize="sm">Ajoutez des photos attractives (JPG/PNG, 4 Mo max). Vous pouvez joindre des documents au format PDF ou image.</Text>
+          <Text fontSize="sm">Ajoutez des photos attractives (JPG/PNG, 4 Mo max).</Text>
         </Alert>
         <VStack spacing={4} align="stretch">
           <FormControl isInvalid={errors.gallery}>
@@ -288,19 +302,43 @@ export default function Create({ categories: initialCategories = [] }) {
               ))}
             </SimpleGrid>
           )}
-          <FormControl isInvalid={errors.documents}>
-            <FormLabel>Documents</FormLabel>
-            <Input type="file" multiple onChange={handleDocumentsChange} />
-            <FormErrorMessage>{errors.documents}</FormErrorMessage>
-          </FormControl>
+        </VStack>
+        </>
+      )}
+
+      {step === 5 && (
+        <>
+        <Image src="https://raw.githubusercontent.com/tabler/tabler-icons/master/icons/folder.svg" boxSize="60px" mx="auto" mb={4} alt="documents" />
+        <Alert status="info" rounded="md" mb={4}>
+          <AlertIcon />
+          <Text fontSize="sm">Téléchargez les documents nécessaires à la vente (PDF ou image).</Text>
+        </Alert>
+        <VStack spacing={4} align="stretch">
+          {Object.entries(documentFields).map(([key, label]) => (
+            <Flex key={key} direction={{ base: 'column', md: 'row' }} gap={2} align="center">
+              <FormLabel m={0} w={{ base: '100%', md: '40%' }}>{label}</FormLabel>
+              <Flex gap={2} w={{ base: '100%', md: '60%' }} direction={{ base: 'column', md: 'row' }}>
+                <Button leftIcon={<span>📎</span>} color="white" bg="#f74200" _hover={{ bg: '#d93c00' }} onClick={() => document.getElementById(key).click()} flex="1">
+                  Ajouter le document
+                </Button>
+                <Button leftIcon={<span>📷</span>} variant="outline" borderColor="#f74200" color="#f74200" onClick={() => document.getElementById(key).click()} flex="1">
+                  Scanner le document
+                </Button>
+                <Input type="file" id={key} accept="application/pdf,image/*" display="none" onChange={(e) => handleSingleDocumentChange(key, e.target.files[0])} />
+                {documents[key] && (
+                  <Text fontSize="sm">{documents[key].name}</Text>
+                )}
+              </Flex>
+            </Flex>
+          ))}
         </VStack>
         </>
       )}
 
       <Flex justify="space-between" mt={6}>
         {step > 1 && <Button onClick={back}>Précédent</Button>}
-        {step < 4 && <Button onClick={next}>Suivant</Button>}
-        {step === 4 && <Button type="submit" isLoading={processing}>Publier</Button>}
+        {step < 5 && <Button onClick={next}>Suivant</Button>}
+        {step === 5 && <Button type="submit" isLoading={processing}>Publier</Button>}
       </Flex>
     </Box>
   );

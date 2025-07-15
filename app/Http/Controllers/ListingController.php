@@ -103,9 +103,14 @@ class ListingController extends Controller
         $listing = Listing::create($data);
 
         if ($request->hasFile('documents')) {
-            foreach ($request->file('documents') as $file) {
+            foreach ($request->file('documents') as $type => $file) {
                 $path = $file->store('listing_documents', 'public');
-                $listing->documents()->create(['path' => $path, 'type' => 'document']);
+                $listing->documents()->create([
+                    'type' => $type,
+                    'name' => $file->getClientOriginalName(),
+                    'path' => $path,
+                    'is_required' => $type === 'dossier_diagnostic',
+                ]);
             }
         }
 
@@ -150,9 +155,14 @@ class ListingController extends Controller
         $listing->update($data);
 
         if ($request->hasFile('documents')) {
-            foreach ($request->file('documents') as $file) {
+            foreach ($request->file('documents') as $type => $file) {
                 $path = $file->store('listing_documents', 'public');
-                $listing->documents()->create(['path' => $path, 'type' => 'document']);
+                $listing->documents()->create([
+                    'type' => $type,
+                    'name' => $file->getClientOriginalName(),
+                    'path' => $path,
+                    'is_required' => $type === 'dossier_diagnostic',
+                ]);
             }
         }
 

@@ -80,6 +80,7 @@ Route::middleware(['auth', 'verified', 'terms', EnsureIsAdmin::class])
         Route::get('/listings', [AdminListingController::class, 'index'])->name('listings.index');
         Route::get('/listings/data', [AdminListingController::class, 'data'])->name('listings.data');
         Route::post('/listings/{listing}/status', [AdminListingController::class, 'setStatus'])->name('listings.status');
+        Route::get('/listings/{listing}/documents', [AdminListingController::class, 'documents'])->name('listings.documents');
 
         Route::get('/pages', [AdminPageController::class, 'index'])->name('pages.index');
         Route::get('/pages/{page}/edit', [AdminPageController::class, 'edit'])->name('pages.edit');
