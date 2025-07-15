@@ -17,6 +17,7 @@ import L, { divIcon } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import Slider from "react-slick";
 import axios from "axios";
+import { Link } from "@inertiajs/react";
 
 const PopupMap = ({ opened, toggle, initialPosition, searchParams = {} }) => {
     const modalSize = useBreakpointValue({ base: "xl", md: "4xl", lg: "6xl" });
@@ -41,7 +42,7 @@ const PopupMap = ({ opened, toggle, initialPosition, searchParams = {} }) => {
                 radius: searchParams.radius || 10,
                 per_page: 100,
             };
-            const response = await axios.get('/api/listings', { params });
+            const response = await axios.get('/api/listings/map', { params });
             if (Array.isArray(response.data.data)) {
                 setCoords(response.data.data);
             } else {
@@ -115,15 +116,18 @@ const PopupMap = ({ opened, toggle, initialPosition, searchParams = {} }) => {
                             return (
                                 <Marker
                                     key={index}
-                                    position={[listing.latitude, listing.longitude]}
+                                    position={[parseFloat(listing.latitude), parseFloat(listing.longitude)]}
                                     icon={euroIcon}
+                                    eventHandlers={{
+                                        click: () => {
+                                            window.location.href = `/listings/${listing.id}`;
+                                        },
+                                    }}
                                 >
                                     <Popup>
-                                        <div
-                                            style={{ width: "200px", cursor: "pointer" }}
-                                            onClick={() =>
-                                                window.location.href = `/listings/${listing.id}`
-                                            }
+                                        <Link
+                                            href={`/listings/${listing.id}`}
+                                            style={{ width: "200px", cursor: "pointer", display: "block" }}
                                         >
                                             <Slider {...sliderSettings}>
                                                 {(listing.photos || []).map((photo, i) => (
@@ -141,7 +145,7 @@ const PopupMap = ({ opened, toggle, initialPosition, searchParams = {} }) => {
                                                     <Icon as={MdLocationOn} /> {listing.city}
                                                 </p>
                                             </div>
-                                        </div>
+                                            </Link>
                                     </Popup>
                                 </Marker>
                             );
