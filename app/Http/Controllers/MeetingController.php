@@ -26,6 +26,15 @@ class MeetingController extends Controller
             'agenda' => 'nullable|string',
         ]);
 
+        if ($data['type'] === 'visit' && $conversation->meetings()
+                ->where('type', 'visit')
+                ->where('status', 'pending')
+                ->exists()) {
+            return response()->json([
+                'message' => 'Une demande de visite est déjà en attente de réponse.'
+            ], 422);
+        }
+
         $meeting = $conversation->meetings()->create([
             'scheduled_at' => $data['scheduled_at'],
             'type' => $data['type'],
