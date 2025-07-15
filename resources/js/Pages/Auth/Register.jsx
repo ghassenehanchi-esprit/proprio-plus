@@ -35,7 +35,7 @@ export default function Register() {
     return (
         <Flex minH="100vh">
             {/* Left side form */}
-            <Box flex="1" p={10} bg="white" display="flex" flexDirection="column" justifyContent="center">
+            <Box flex="1" p={10} bg="surface" display="flex" flexDirection="column" justifyContent="center">
                 <Image src="/logo.png" alt="Logo" mb={6} w="150px" />
                 <Heading size="lg" mb={6}>Créer votre compte</Heading>
                 <form onSubmit={submit}>
@@ -44,7 +44,7 @@ export default function Register() {
                             <Input
                                 name="first_name"
                                 placeholder="Prénom"
-                                bg="gray.50"
+                                bg="surfaceSubtle"
                                 value={data.first_name}
                                 onChange={(e) => setData('first_name', e.target.value)}
                             />
@@ -55,7 +55,7 @@ export default function Register() {
                             <Input
                                 name="last_name"
                                 placeholder="Nom"
-                                bg="gray.50"
+                                bg="surfaceSubtle"
                                 value={data.last_name}
                                 onChange={(e) => setData('last_name', e.target.value)}
                             />
@@ -66,7 +66,7 @@ export default function Register() {
                             <Input
                                 name="phone"
                                 placeholder="Téléphone"
-                                bg="gray.50"
+                                bg="surfaceSubtle"
                                 value={data.phone}
                                 onChange={(e) => setData('phone', e.target.value)}
                             />
@@ -78,7 +78,7 @@ export default function Register() {
                                 name="email"
                                 type="email"
                                 placeholder="Adresse email"
-                                bg="gray.50"
+                                bg="surfaceSubtle"
                                 value={data.email}
                                 onChange={(e) => setData('email', e.target.value)}
                             />
@@ -90,7 +90,7 @@ export default function Register() {
                                 name="password"
                                 type="password"
                                 placeholder="Mot de passe"
-                                bg="gray.50"
+                                bg="surfaceSubtle"
                                 value={data.password}
                                 onChange={(e) => setData('password', e.target.value)}
                             />
@@ -102,7 +102,7 @@ export default function Register() {
                                 name="password_confirmation"
                                 type="password"
                                 placeholder="Confirmez le mot de passe"
-                                bg="gray.50"
+                                bg="surfaceSubtle"
                                 value={data.password_confirmation}
                                 onChange={(e) => setData('password_confirmation', e.target.value)}
                             />

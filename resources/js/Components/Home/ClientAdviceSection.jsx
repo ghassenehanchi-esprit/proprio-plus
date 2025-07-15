@@ -15,7 +15,7 @@ export default function ClientAdviceSection() {
         <Heading size="lg" mb={6}>Nos conseils pour réussir</Heading>
         <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6}>
           {advices.map((a, i) => (
-            <Box key={i} p={5} borderRadius="lg" bg="white" boxShadow="sm">
+            <Box key={i} p={5} borderRadius="lg" bg="surface" boxShadow="sm">
               <Icon as={a.icon} boxSize={8} color="brand.500" mb={3} />
               <Text>{a.text}</Text>
             </Box>

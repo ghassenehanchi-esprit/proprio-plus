@@ -15,7 +15,7 @@ function MessageBubble({ message, isMe }) {
   return (
     <Box
       alignSelf={isMe ? 'flex-end' : 'flex-start'}
-      bg={isMe ? 'orange.100' : 'gray.100'}
+      bg={isMe ? 'orange.100' : 'inputBg'}
       px={3}
       py={2}
       borderRadius="lg"
@@ -49,8 +49,8 @@ export default function MessagesLayout({ conversations = [], messages = [], curr
   };
 
   return (
-    <Flex direction={flexDir} h="100vh" bg="gray.50" overflow="hidden">
-      <Flex direction="column" w={{ base: 'full', md: '320px' }} bg="white" h="full" borderRightWidth={{ md: '1px' }} borderColor="gray.200">
+    <Flex direction={flexDir} h="100vh" bg="surfaceSubtle" overflow="hidden">
+      <Flex direction="column" w={{ base: 'full', md: '320px' }} bg="surface" h="full" borderRightWidth={{ md: '1px' }} borderColor="gray.200">
         <Box p={4} borderBottomWidth="1px" borderColor="gray.200">
           <Text fontWeight="bold">Messages</Text>
         </Box>
@@ -61,10 +61,10 @@ export default function MessagesLayout({ conversations = [], messages = [], curr
             py={3}
             px={4}
             spacing={2}
-            bg={c.id === activeId ? 'gray.100' : 'white'}
+            bg={c.id === activeId ? 'inputBg' : 'surface'}
             borderLeftWidth={c.id === activeId ? '4px' : '0'}
             borderLeftColor={c.id === activeId ? 'brand.500' : 'transparent'}
-            _hover={{ bg: 'gray.100' }}
+            _hover={{ bg: 'inputBg' }}
             cursor="pointer"
             onClick={() => setActiveId(c.id)}
             alignItems="center"
@@ -81,7 +81,7 @@ export default function MessagesLayout({ conversations = [], messages = [], curr
         ))}
         </VStack>
       </Flex>
-      <Flex direction="column" flex="1" bg="white">
+      <Flex direction="column" flex="1" bg="surface">
         {activeConv && (
           <>
             <HStack justify="space-between" p={4} borderBottomWidth="1px" borderColor="gray.200">
@@ -103,12 +103,12 @@ export default function MessagesLayout({ conversations = [], messages = [], curr
                 <Button size="sm" colorScheme="green">Acheter</Button>
               </HStack>
             </HStack>
-            <VStack flex="1" spacing={3} px={4} py={2} overflowY="auto" align="stretch" bg="gray.50">
+            <VStack flex="1" spacing={3} px={4} py={2} overflowY="auto" align="stretch" bg="surfaceSubtle">
               {messages.map(m => (
                 <MessageBubble key={m.id} message={m} isMe={m.from_user_id === currentUserId} />
               ))}
             </VStack>
-            <HStack p={4} borderTopWidth="1px" borderColor="gray.200" position="sticky" bottom="0" bg="white">
+            <HStack p={4} borderTopWidth="1px" borderColor="gray.200" position="sticky" bottom="0" bg="surface">
               <Input
                 flex="1"
                 variant="filled"

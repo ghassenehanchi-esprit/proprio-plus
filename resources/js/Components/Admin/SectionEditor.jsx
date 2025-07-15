@@ -8,7 +8,7 @@ export default function SectionEditor({ section, onChange, onRemove, onMoveUp, o
   };
 
   return (
-    <Box border="1px" borderColor="gray.200" borderRadius="md" p={4} mb={4} bg="white">
+    <Box border="1px" borderColor="gray.200" borderRadius="md" p={4} mb={4} bg="surface">
       <Flex justify="space-between" mb={2}>
         <Flex gap={1}>
           {onMoveUp && (

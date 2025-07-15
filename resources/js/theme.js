@@ -1,4 +1,5 @@
 import { extendTheme } from '@chakra-ui/react';
+import { mode } from '@chakra-ui/theme-tools';
 
 const theme = extendTheme({
   config: {
@@ -23,11 +24,18 @@ const theme = extendTheme({
       900: '#041b4d',
     },
   },
+  semanticTokens: {
+    colors: {
+      surface: { default: 'white', _dark: 'gray.700' },
+      surfaceSubtle: { default: 'gray.50', _dark: 'gray.800' },
+      inputBg: { default: 'gray.100', _dark: 'gray.700' },
+    },
+  },
   styles: {
     global: (props) => ({
       body: {
-        bg: props.colorMode === 'dark' ? 'gray.900' : 'gray.100',
-        color: props.colorMode === 'dark' ? 'gray.100' : 'gray.800',
+        bg: mode('gray.100', 'gray.900')(props),
+        color: mode('gray.800', 'gray.100')(props),
       },
     }),
   },

@@ -10,7 +10,7 @@ export default function AcceptTerms() {
     };
 
     return (
-        <Box maxW="2xl" mx="auto" mt={12} bg="white" p={8} rounded="md" shadow="md">
+        <Box maxW="2xl" mx="auto" mt={12} bg="surface" p={8} rounded="md" shadow="md">
             <Heading size="lg" mb={4}>Charte d'utilisation</Heading>
             <Text mb={6} whiteSpace="pre-line">
 {`En utilisant ce service, vous vous engagez à respecter les règles de bonne conduite et à fournir des informations exactes.\nVeuillez lire attentivement l'intégralité de la charte avant de continuer.`}

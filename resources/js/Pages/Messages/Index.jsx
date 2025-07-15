@@ -146,12 +146,12 @@ export default function Index({ conversations: initial = {}, current }) {
             <Box
               key={c.id}
               p={3}
-              bg={active?.id === c.id ? 'brand.100' : c.unread_count > 0 ? 'gray.100' : 'white'}
+              bg={active?.id === c.id ? 'brand.100' : c.unread_count > 0 ? 'inputBg' : 'surface'}
               borderRadius="md"
               borderWidth="1px"
               borderColor={c.unread_count > 0 ? 'brand.200' : 'gray.200'}
               cursor="pointer"
-              _hover={{ bg: c.unread_count > 0 ? 'gray.200' : 'gray.50' }}
+              _hover={{ bg: c.unread_count > 0 ? 'gray.200' : 'surfaceSubtle' }}
               onClick={() => loadConversation(c)}
             >
               <HStack justify="space-between">
@@ -177,7 +177,7 @@ export default function Index({ conversations: initial = {}, current }) {
           <Button variant="ghost" onClick={loadMore}>Charger plus</Button>
         )}
       </VStack>
-      <Box flex="1" bg="white" p={4} borderRadius="md">
+      <Box flex="1" bg="surface" p={4} borderRadius="md">
         {active ? (
           <VStack align="stretch" spacing={4} h={{ base: '400px', md: '500px' }}>
             <HStack justify="space-between" wrap="wrap" gap={2}>
@@ -215,7 +215,7 @@ export default function Index({ conversations: initial = {}, current }) {
                 const isFirstFromBuyer = idx === 0 && m.sender_id === active.buyer_id;
                 if (isFirstFromBuyer) {
                   return (
-                    <Box key={m.id} alignSelf="flex-start" bg="gray.100" borderRadius="md" p={2}>
+                    <Box key={m.id} alignSelf="flex-start" bg="inputBg" borderRadius="md" p={2}>
                       <VStack align="stretch" spacing={2}>
                         <ListingCard listing={active.listing} size="sm" />
                         <HStack fontSize="sm" color="gray.600">
@@ -235,7 +235,7 @@ export default function Index({ conversations: initial = {}, current }) {
                 }
 
                 return (
-                  <Box key={m.id} alignSelf={isMe ? 'flex-end' : 'flex-start'} bg={isMe ? 'brand.200' : 'gray.100'} borderRadius="md" p={2}>
+                  <Box key={m.id} alignSelf={isMe ? 'flex-end' : 'flex-start'} bg={isMe ? 'brand.200' : 'inputBg'} borderRadius="md" p={2}>
                     <HStack>
                       <Text>{m.content}</Text>
                       {m.file_url && (

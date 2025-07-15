@@ -27,8 +27,8 @@ export default function AdminLogin() {
   };
 
   return (
-    <Flex minH="100vh" align="center" justify="center" bg="gray.50">
-      <Box bg="white" p={8} rounded="md" shadow="md" w="full" maxW="md">
+    <Flex minH="100vh" align="center" justify="center" bg="surfaceSubtle">
+      <Box bg="surface" p={8} rounded="md" shadow="md" w="full" maxW="md">
         <Heading size="lg" textAlign="center" mb={6}>
           Connexion administrateur
         </Heading>

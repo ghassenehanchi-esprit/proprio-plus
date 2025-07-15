@@ -13,8 +13,8 @@ export default function VerifyEmail({ status }) {
   };
 
   return (
-    <Flex minH="100vh" bg="gray.50" align="center" justify="center">
-      <Box bg="white" p={8} borderRadius="md" boxShadow="md" maxW="md" w="full">
+    <Flex minH="100vh" bg="surfaceSubtle" align="center" justify="center">
+      <Box bg="surface" p={8} borderRadius="md" boxShadow="md" maxW="md" w="full">
         <Heading size="lg" mb={6} textAlign="center">Vérification email</Heading>
         <Text mb={4}>
           Avant de continuer, veuillez vérifier votre adresse e-mail en cliquant sur le lien que nous venons de vous envoyer.

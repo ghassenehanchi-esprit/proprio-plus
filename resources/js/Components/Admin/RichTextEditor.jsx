@@ -23,7 +23,7 @@ export default function RichTextEditor({ value = '', onChange }) {
 
   return (
     <Box border="1px" borderColor="gray.300" borderRadius="md">
-      <Flex bg="gray.100" p={2} gap={1} wrap="wrap">
+      <Flex bg="inputBg" p={2} gap={1} wrap="wrap">
         <IconButton icon={<FaBold />} size="sm" aria-label="bold" onClick={() => exec('bold')} />
         <IconButton icon={<FaItalic />} size="sm" aria-label="italic" onClick={() => exec('italic')} />
         <IconButton icon={<FaUnderline />} size="sm" aria-label="underline" onClick={() => exec('underline')} />

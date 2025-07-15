@@ -69,7 +69,7 @@ export default function SearchBar() {
 
     return (
         <Flex
-            bg="white"
+            bg="surface"
             boxShadow="xl"
             borderRadius="full"
             p={4}

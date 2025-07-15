@@ -49,8 +49,8 @@ export default function MessagesBell() {
                 key={c.id}
                 as={Link}
                 href={`/messages?conversation=${c.id}`}
-                bg={c.unread_count > 0 ? 'gray.100' : 'white'}
-                _hover={{ bg: c.unread_count > 0 ? 'gray.200' : 'gray.50' }}
+                bg={c.unread_count > 0 ? 'inputBg' : 'surface'}
+                _hover={{ bg: c.unread_count > 0 ? 'gray.200' : 'surfaceSubtle' }}
               >
                 <HStack align="start" spacing={3} w="100%">
                   <Avatar size="sm" name={`${partner.first_name} ${partner.last_name}`} />

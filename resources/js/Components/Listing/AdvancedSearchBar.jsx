@@ -33,7 +33,7 @@ export default function AdvancedSearchBar() {
   };
 
   return (
-    <Box bg="white" p={4} rounded="xl" shadow="md" w="full">
+    <Box bg="surface" p={4} rounded="xl" shadow="md" w="full">
       <Flex gap={4} align="center" flexWrap="wrap">
         <InputGroup maxW="200px">
           <InputLeftElement pointerEvents="none" children={<SearchIcon color="gray.400" />} />
@@ -42,7 +42,7 @@ export default function AdvancedSearchBar() {
 
         <Popover>
           <PopoverTrigger>
-            <Button variant="outline" bg="gray.50">Prix</Button>
+            <Button variant="outline" bg="surfaceSubtle">Prix</Button>
           </PopoverTrigger>
           <PopoverContent p={4}>
             <Text mb={2} fontWeight="bold">{priceRange[0].toLocaleString()} € – {priceRange[1].toLocaleString()} €</Text>
@@ -58,7 +58,7 @@ export default function AdvancedSearchBar() {
 
         <Popover>
           <PopoverTrigger>
-            <Button variant="outline" bg="gray.50">Surface</Button>
+            <Button variant="outline" bg="surfaceSubtle">Surface</Button>
           </PopoverTrigger>
           <PopoverContent p={4}>
             <Text mb={2} fontWeight="bold">{surfaceRange[0]} m² – {surfaceRange[1]} m²</Text>
@@ -74,7 +74,7 @@ export default function AdvancedSearchBar() {
 
         <Popover>
           <PopoverTrigger>
-            <Button variant="outline" bg="gray.50">Filtres</Button>
+            <Button variant="outline" bg="surfaceSubtle">Filtres</Button>
           </PopoverTrigger>
           <PopoverContent p={4}>
             <Stack spacing={3}>
