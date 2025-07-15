@@ -137,6 +137,15 @@ class PageController extends Controller
         ]);
     }
 
+    public function savedSearches()
+    {
+        $searches = auth()->user()->savedSearches()->get();
+
+        return Inertia::render('Listing/SavedSearches', [
+            'searches' => $searches,
+        ]);
+    }
+
     public function messages(Request $request)
     {
         $conversations = Conversation::where('buyer_id', auth()->id())

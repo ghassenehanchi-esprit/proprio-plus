@@ -26,6 +26,21 @@ class SavedSearchController extends Controller
         return $search;
     }
 
+    public function update(Request $request, SavedSearch $search)
+    {
+        if ($search->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $data = $request->validate([
+            'name' => 'nullable|string',
+            'notify' => 'boolean',
+        ]);
+
+        $search->update($data);
+        return $search;
+    }
+
     public function destroy(SavedSearch $search)
     {
         if ($search->user_id !== Auth::id()) {

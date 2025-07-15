@@ -172,9 +172,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/account/clockings', [PageController::class, 'clockings'])->name('account.clockings');
     Route::get('/account/visits', [PageController::class, 'visits'])->name('account.visits');
     Route::get('/account/listings', [PageController::class, 'myListings'])->name('account.listings');
+    Route::get('/account/searches', [PageController::class, 'savedSearches'])->name('account.searches');
 
     Route::get('/saved-searches', [SavedSearchController::class, 'index'])->name('searches.index');
     Route::post('/saved-searches', [SavedSearchController::class, 'store'])->name('searches.store');
+    Route::patch('/saved-searches/{search}', [SavedSearchController::class, 'update'])->name('searches.update');
     Route::delete('/saved-searches/{search}', [SavedSearchController::class, 'destroy'])->name('searches.destroy');
 
     Route::get('/recommendations', [ListingController::class, 'recommendations'])->name('listings.recommendations');
