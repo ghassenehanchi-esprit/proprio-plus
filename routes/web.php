@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\ClockingController as AdminClockingController;
 use App\Http\Controllers\Admin\VisitController as AdminVisitController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Middleware\EnsureIsAdmin;
 use App\Http\Controllers\Admin\LoginController as AdminLoginController;
 use Illuminate\Http\Request;
@@ -166,7 +167,8 @@ Route::middleware(['auth', 'terms'])->group(function () {
 });
 Route::middleware(['auth'])->group(function () {
     Route::get('/favorites', [PageController::class, 'favorites'])->name('favorites.index');
-    Route::post('/listings/{listing}/favorite', [ListingController::class, 'toggle'])->name('favorites.toggle');
+    Route::post('/favorites/{listing}', [FavoriteController::class, 'store'])->name('favorites.store');
+    Route::delete('/favorites/{listing}', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
     Route::get('/account/settings', [PageController::class, 'accountSettings'])->name('account.settings');
     Route::post('/account/theme', [\App\Http\Controllers\User\ThemeController::class, 'update'])->name('account.theme');
     Route::get('/account/clockings', [PageController::class, 'clockings'])->name('account.clockings');
