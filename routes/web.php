@@ -30,6 +30,7 @@ use App\Http\Controllers\FileController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Middleware\EnsureIsAdmin;
 use App\Http\Controllers\Admin\LoginController as AdminLoginController;
+use App\Http\Controllers\RatingController;
 use Illuminate\Http\Request;
 
 use Inertia\Inertia;
@@ -133,6 +134,8 @@ Route::middleware(['auth', 'verified', 'terms', 'certified'])->group(function ()
     Route::post('/visits/{visit}/feedback', [VisitController::class, 'feedback']);
     Route::post('/listings/{listing}/offers', [OfferController::class, 'store']);
     Route::patch('/offers/{offer}', [OfferController::class, 'update']);
+    Route::post('/listings/{listing}/ratings', [RatingController::class, 'store']);
+    Route::get('/listings/{listing}/ratings', [RatingController::class, 'show']);
     Route::post('/messages/{message}/read', [MessageController::class, 'markAsRead']);
 
     Route::get('/notifications', [NotificationController::class, 'index']);
