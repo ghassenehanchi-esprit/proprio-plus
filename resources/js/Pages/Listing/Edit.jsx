@@ -28,6 +28,7 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
   useColorModeValue,
+  useBreakpointValue,
 } from '@chakra-ui/react';
 import AddressSearch from '@/Components/Listing/AddressSearch';
 import CategoryGrid from '@/Components/Listing/CategoryGrid';
@@ -88,6 +89,7 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
   const [photos, setPhotos] = useState([]);
   const [previews, setPreviews] = useState([]);
   const [documents, setDocuments] = useState({});
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   useEffect(() => {
     if (initialCategories.length === 0) {
@@ -315,10 +317,26 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
                 <Button leftIcon={<span>📎</span>} color="white" bg="#f74200" _hover={{ bg: '#d93c00' }} onClick={() => document.getElementById('edit_'+key).click()} flex="1">
                   Ajouter le document
                 </Button>
-                <Button leftIcon={<span>📷</span>} variant="outline" borderColor="#f74200" color="#f74200" onClick={() => document.getElementById('edit_'+key).click()} flex="1">
+                <Button
+                  leftIcon={<span>📷</span>}
+                  variant="outline"
+                  borderColor="#f74200"
+                  color="#f74200"
+                  onClick={() => document.getElementById('scan_edit_'+key).click()}
+                  flex="1"
+                  display={isMobile ? 'flex' : 'none'}
+                >
                   Scanner le document
                 </Button>
                 <Input type="file" id={'edit_'+key} accept="application/pdf,image/*" display="none" onChange={(e) => handleSingleDocumentChange(key, e.target.files[0])} />
+                <Input
+                  type="file"
+                  id={'scan_edit_'+key}
+                  accept="image/*"
+                  capture="environment"
+                  display="none"
+                  onChange={(e) => handleSingleDocumentChange(key, e.target.files[0])}
+                />
                 {documents[key] && (
                   <Text fontSize="sm">{documents[key].name}</Text>
                 )}
