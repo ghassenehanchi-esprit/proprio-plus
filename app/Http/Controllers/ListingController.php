@@ -102,24 +102,8 @@ class ListingController extends Controller
         $data['user_id'] = Auth::id();
         $listing = Listing::create($data);
 
-        if ($request->hasFile('documents')) {
-            foreach ($request->file('documents') as $type => $file) {
-                $path = $file->store('listing_documents', 'public');
-                $listing->documents()->create([
-                    'type' => $type,
-                    'name' => $file->getClientOriginalName(),
-                    'path' => $path,
-                    'is_required' => $type === 'dossier_diagnostic',
-                ]);
-            }
-        }
-
-        if ($request->hasFile('gallery')) {
-            foreach (array_slice($request->file('gallery'), 0, 6) as $file) {
-                $path = $file->store('listing_images', 'public');
-                $listing->gallery()->create(['path' => $path, 'type' => 'image']);
-            }
-        }
+        $this->storeDocuments($request, $listing);
+        $this->storeGallery($request, $listing);
 
         $listing->load('gallery', 'documents');
 
@@ -154,25 +138,8 @@ class ListingController extends Controller
 
         $listing->update($data);
 
-        if ($request->hasFile('documents')) {
-            foreach ($request->file('documents') as $type => $file) {
-                $path = $file->store('listing_documents', 'public');
-                $listing->documents()->create([
-                    'type' => $type,
-                    'name' => $file->getClientOriginalName(),
-                    'path' => $path,
-                    'is_required' => $type === 'dossier_diagnostic',
-                ]);
-            }
-        }
-
-        if ($request->hasFile('gallery')) {
-            $remaining = max(0, 6 - $listing->gallery()->count());
-            foreach (array_slice($request->file('gallery'), 0, $remaining) as $file) {
-                $path = $file->store('listing_images', 'public');
-                $listing->gallery()->create(['path' => $path, 'type' => 'image']);
-            }
-        }
+        $this->storeDocuments($request, $listing);
+        $this->storeGallery($request, $listing);
 
         $listing->load('gallery', 'documents');
 
@@ -213,6 +180,40 @@ class ListingController extends Controller
         $listing->update(['status' => ListingStatus::Archived]);
 
         return response()->json(['message' => 'Annonce archivée']);
+    }
+
+    private function storeDocuments(Request $request, Listing $listing): void
+    {
+        $docs = $request->file('documents', []);
+        foreach ($docs as $type => $file) {
+            if (!$file) {
+                continue;
+            }
+            $path = $file->store('listing_documents', 'public');
+            $listing->documents()->create([
+                'type' => $type,
+                'name' => $file->getClientOriginalName(),
+                'path' => $path,
+                'is_required' => $type === 'dossier_diagnostic',
+            ]);
+        }
+    }
+
+    private function storeGallery(Request $request, Listing $listing): void
+    {
+        $files = $request->file('gallery', []);
+        if (!is_array($files)) {
+            $files = [$files];
+        }
+
+        $remaining = max(0, 6 - $listing->gallery()->count());
+        foreach (array_slice($files, 0, $remaining) as $file) {
+            if (!$file) {
+                continue;
+            }
+            $path = $file->store('listing_images', 'public');
+            $listing->gallery()->create(['path' => $path, 'type' => 'image']);
+        }
     }
 
     public function signMandateForm(Listing $listing)
