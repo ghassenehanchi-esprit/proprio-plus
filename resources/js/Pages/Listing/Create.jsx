@@ -154,7 +154,7 @@ export default function Create({ categories: initialCategories = [] }) {
       </Stepper>
       {step === 1 && (
         <>
-          <Image src="https://raw.githubusercontent.com/tabler/tabler-icons/master/icons/pencil.svg" boxSize="60px" mx="auto" mb={4} alt="informations" />
+          <Image src="https://cdn.jsdelivr.net/npm/lucide-static@0.263.0/icons/pencil.svg" boxSize="60px" mx="auto" mb={4} alt="informations" />
           <Alert status="info" rounded="md" mb={4}>
             <AlertIcon />
             <Text fontSize="sm">Le titre est obligatoire (255 caractères max) et la description doit présenter clairement votre bien.</Text>
@@ -185,7 +185,7 @@ export default function Create({ categories: initialCategories = [] }) {
 
       {step === 2 && (
         <>
-        <Image src="https://raw.githubusercontent.com/tabler/tabler-icons/master/icons/adjustments.svg" boxSize="60px" mx="auto" mb={4} alt="details" />
+        <Image src="https://cdn.jsdelivr.net/npm/lucide-static@0.263.0/icons/sliders.svg" boxSize="60px" mx="auto" mb={4} alt="details" />
         <Alert status="info" rounded="md" mb={4}>
           <AlertIcon />
           <Text fontSize="sm">Les champs prix, surface et pièces sont obligatoires. Utilisez uniquement des valeurs numériques positives.</Text>
@@ -241,7 +241,7 @@ export default function Create({ categories: initialCategories = [] }) {
 
       {step === 3 && (
         <>
-        <Image src="https://raw.githubusercontent.com/tabler/tabler-icons/master/icons/map-pin.svg" boxSize="60px" mx="auto" mb={4} alt="adresse" />
+        <Image src="https://cdn.jsdelivr.net/npm/lucide-static@0.263.0/icons/map-pin.svg" boxSize="60px" mx="auto" mb={4} alt="adresse" />
         <Alert status="info" rounded="md" mb={4}>
           <AlertIcon />
           <Text fontSize="sm">Ville et code postal sont requis pour localiser votre bien.</Text>
@@ -271,7 +271,7 @@ export default function Create({ categories: initialCategories = [] }) {
 
       {step === 4 && (
         <>
-        <Image src="https://raw.githubusercontent.com/tabler/tabler-icons/master/icons/photo.svg" boxSize="60px" mx="auto" mb={4} alt="media" />
+        <Image src="https://cdn.jsdelivr.net/npm/lucide-static@0.263.0/icons/image.svg" boxSize="60px" mx="auto" mb={4} alt="media" />
         <Alert status="info" rounded="md" mb={4}>
           <AlertIcon />
           <Text fontSize="sm">Ajoutez des photos attractives (JPG/PNG, 4 Mo max).</Text>
@@ -311,7 +311,7 @@ export default function Create({ categories: initialCategories = [] }) {
 
       {step === 5 && (
         <>
-        <Image src="https://raw.githubusercontent.com/tabler/tabler-icons/master/icons/folder.svg" boxSize="60px" mx="auto" mb={4} alt="documents" />
+        <Image src="https://cdn.jsdelivr.net/npm/lucide-static@0.263.0/icons/folder.svg" boxSize="60px" mx="auto" mb={4} alt="documents" />
         <Alert status="info" rounded="md" mb={4}>
           <AlertIcon />
           <Text fontSize="sm">Téléchargez les documents nécessaires à la vente (PDF ou image).</Text>
@@ -321,11 +321,30 @@ export default function Create({ categories: initialCategories = [] }) {
             <Flex key={key} direction={{ base: 'column', md: 'row' }} gap={2} align="center">
               <FormLabel m={0} w={{ base: '100%', md: '40%' }}>{label}</FormLabel>
               <Flex gap={2} w={{ base: '100%', md: '60%' }} direction={{ base: 'column', md: 'row' }}>
-                <Button leftIcon={<span>📎</span>} color="white" bg="#f74200" _hover={{ bg: '#d93c00' }} onClick={() => document.getElementById(key).click()} flex="1">
+                <Button
+                  leftIcon={
+                    <Image
+                      src="https://cdn.jsdelivr.net/npm/lucide-static@0.263.0/icons/paperclip.svg"
+                      boxSize="1em"
+                      alt="pièce jointe"
+                    />
+                  }
+                  color="white"
+                  bg="#f74200"
+                  _hover={{ bg: '#d93c00' }}
+                  onClick={() => document.getElementById(key).click()}
+                  flex="1"
+                >
                   Ajouter le document
                 </Button>
                 <Button
-                  leftIcon={<span>📷</span>}
+                  leftIcon={
+                    <Image
+                      src="https://cdn.jsdelivr.net/npm/lucide-static@0.263.0/icons/camera.svg"
+                      boxSize="1em"
+                      alt="scanner"
+                    />
+                  }
                   variant="outline"
                   borderColor="#f74200"
                   color="#f74200"
