@@ -29,6 +29,7 @@ import {
   Alert,
   AlertIcon,
   useColorModeValue,
+  useBreakpointValue,
 } from '@chakra-ui/react';
 import AddressSearch from '@/Components/Listing/AddressSearch';
 import CategoryGrid from '@/Components/Listing/CategoryGrid';
@@ -38,6 +39,7 @@ export default function Create({ categories: initialCategories = [] }) {
   const [previews, setPreviews] = useState([]);
   const [photos, setPhotos] = useState([]);
   const [documents, setDocuments] = useState({});
+  const isMobile = useBreakpointValue({ base: true, md: false });
   const [categories, setCategories] = useState(initialCategories);
   const stepsData = [
     { title: 'Informations', description: 'Titre et description' },
@@ -322,10 +324,26 @@ export default function Create({ categories: initialCategories = [] }) {
                 <Button leftIcon={<span>📎</span>} color="white" bg="#f74200" _hover={{ bg: '#d93c00' }} onClick={() => document.getElementById(key).click()} flex="1">
                   Ajouter le document
                 </Button>
-                <Button leftIcon={<span>📷</span>} variant="outline" borderColor="#f74200" color="#f74200" onClick={() => document.getElementById(key).click()} flex="1">
+                <Button
+                  leftIcon={<span>📷</span>}
+                  variant="outline"
+                  borderColor="#f74200"
+                  color="#f74200"
+                  onClick={() => document.getElementById('scan_'+key).click()}
+                  flex="1"
+                  display={isMobile ? 'flex' : 'none'}
+                >
                   Scanner le document
                 </Button>
                 <Input type="file" id={key} accept="application/pdf,image/*" display="none" onChange={(e) => handleSingleDocumentChange(key, e.target.files[0])} />
+                <Input
+                  type="file"
+                  id={'scan_'+key}
+                  accept="image/*"
+                  capture="environment"
+                  display="none"
+                  onChange={(e) => handleSingleDocumentChange(key, e.target.files[0])}
+                />
                 {documents[key] && (
                   <Text fontSize="sm">{documents[key].name}</Text>
                 )}
