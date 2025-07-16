@@ -50,4 +50,25 @@ class MeetingStatusTest extends TestCase
             'status' => 'accepted',
         ]);
     }
+
+    public function test_buyer_can_decline_meeting_via_post_route(): void
+    {
+        $conversation = $this->makeConversation();
+        $meeting = $conversation->meetings()->create([
+            'scheduled_at' => now()->addDay(),
+            'type' => 'visit',
+            'status' => 'pending',
+        ]);
+        $buyer = User::find($conversation->buyer_id);
+
+        $response = $this->actingAs($buyer)->post("/meetings/{$meeting->id}/status", [
+            'status' => 'declined',
+        ]);
+
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('meetings', [
+            'id' => $meeting->id,
+            'status' => 'declined',
+        ]);
+    }
 }
