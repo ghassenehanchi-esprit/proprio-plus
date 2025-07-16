@@ -97,4 +97,10 @@ class MeetingController extends Controller
 
         return response()->json($meeting);
     }
+
+    public function updateFromLink(Meeting $meeting, string $status)
+    {
+        request()->merge(['status' => $status]);
+        return $this->update(request(), $meeting);
+    }
 }
