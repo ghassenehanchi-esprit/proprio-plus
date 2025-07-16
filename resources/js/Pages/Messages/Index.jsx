@@ -1,6 +1,5 @@
-import { Box, Heading, HStack, VStack, Text, Input, Button, Avatar, IconButton, Link, useColorModeValue } from '@chakra-ui/react';
-import { FaCheckDouble, FaEnvelope, FaEnvelopeOpen, FaReply } from 'react-icons/fa';
-import ListingCard from '@/Components/Listing/ListingCard';
+import { Box, Heading, HStack, VStack, Text, Input, Button, Avatar, IconButton, useColorModeValue } from '@chakra-ui/react';
+import { FaEnvelope, FaEnvelopeOpen } from 'react-icons/fa';
 import { usePage } from '@inertiajs/react';
 import { useState, useEffect, useRef } from 'react';
 import VisitScheduler from '@/Components/Meeting/VisitScheduler';
@@ -9,6 +8,10 @@ import VisitDoneModal from '@/Components/Meeting/VisitDoneModal';
 import VisitSellerConfirmModal from '@/Components/Meeting/VisitSellerConfirmModal';
 import VisitFeedbackModal from '@/Components/Meeting/VisitFeedbackModal';
 import ReportModal from '@/Components/Messages/ReportModal';
+import ChatMessage from '@/Components/Chat/ChatMessage';
+import VisitConfirmedCard from '@/Components/Chat/VisitConfirmedCard';
+import PostVisitPrompt from '@/Components/Chat/PostVisitPrompt';
+import OfferCard from '@/Components/Chat/OfferCard';
 import axios from 'axios';
 import sweetAlert from '@/libs/sweetalert';
 
@@ -22,6 +25,7 @@ export default function Index({ conversations: initial = {}, current }) {
   const [nextPage, setNextPage] = useState(initial.next_page_url);
   const [meetings, setMeetings] = useState([]);
   const [visit, setVisit] = useState(null);
+  const visitPast = visit && new Date(visit.visit_datetime).getTime() <= Date.now();
 
   const hasPendingVisit = meetings.some(m => m.type === 'visit' && m.status === 'pending');
   const reportUser = async () => {
@@ -221,7 +225,7 @@ export default function Index({ conversations: initial = {}, current }) {
                 </HStack>
               )}
             </HStack>
-            <VStack align="stretch" spacing={2} flex="1" overflowY="auto">
+            <VStack align="stretch" spacing={3} flex="1" overflowY="auto">
               {meetings.map(m => (
                 <VisitRequestCard
                   key={`meeting-${m.id}`}
@@ -232,44 +236,23 @@ export default function Index({ conversations: initial = {}, current }) {
                   onRespond={status => respondMeeting(m.id, status)}
                 />
               ))}
-              {messages.map((m, idx) => {
-                const isMe = m.sender_id === auth.user.id;
-                const isFirstFromBuyer = idx === 0 && m.sender_id === active.buyer_id;
-                if (isFirstFromBuyer) {
-                  return (
-                    <Box key={m.id} alignSelf="flex-start" bg="inputBg" borderRadius="md" p={2}>
-                      <VStack align="stretch" spacing={2}>
-                        <ListingCard listing={active.listing} size="sm" />
-                        <HStack fontSize="sm" color={useColorModeValue('gray.600', 'white')}>
-                          <FaReply />
-                          <Text>En réponse à cette annonce</Text>
-                        </HStack>
-                        <HStack>
-                          <Text>{m.content}</Text>
-                          {m.file_url && (
-                            <Link href={m.file_url} isExternal ml={2}>Fichier</Link>
-                          )}
-                          {isMe && <FaCheckDouble color={m.is_read ? 'blue' : useColorModeValue('gray', 'white')} />}
-                        </HStack>
-                      </VStack>
-                    </Box>
-                  );
-                }
-
-                return (
-                  <Box key={m.id} alignSelf={isMe ? 'flex-end' : 'flex-start'} bg={isMe ? 'brand.200' : 'inputBg'} borderRadius="md" p={2}>
-                    <HStack>
-                      <Text>{m.content}</Text>
-                      {m.file_url && (
-                        <Link href={m.file_url} isExternal ml={2}>Fichier</Link>
-                      )}
-                      {isMe && (
-                        <FaCheckDouble color={m.is_read ? 'blue' : useColorModeValue('gray', 'white')} />
-                      )}
-                    </HStack>
-                  </Box>
-                );
-              })}
+              {visit && visit.seller_confirmed_at && visit.buyer_confirmed_at && (
+                <VisitConfirmedCard visit={visit} />
+              )}
+              {messages.map((m) => (
+                m.offer ? (
+                  <OfferCard key={m.id} offer={m.offer} onAction={() => {}} />
+                ) : (
+                  <ChatMessage key={m.id} message={m} isMe={m.sender_id === auth.user.id} />
+                )
+              ))}
+              {visit && visit.seller_confirmed_at && visit.buyer_confirmed_at && visitPast && !visit.rating && (
+                <PostVisitPrompt
+                  visit={visit}
+                  onCompleted={() => loadConversation(active)}
+                  onOffer={() => {}}
+                />
+              )}
               <div ref={messagesEndRef} />
             </VStack>
             <HStack>
