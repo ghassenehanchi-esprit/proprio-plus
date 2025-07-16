@@ -124,6 +124,9 @@ Route::middleware(['auth', 'verified', 'terms', 'certified'])->group(function ()
     Route::post('/conversations/{conversation}/messages', [MessageController::class, 'store'])->middleware(['participant', 'conversation.open']);
     Route::post('/conversations/{conversation}/meetings', [MeetingController::class, 'store'])->middleware(['participant', 'conversation.open']);
     Route::post('/meetings/{meeting}/status', [MeetingController::class, 'update'])->middleware(['participant', 'conversation.open']);
+    Route::get('/meetings/{meeting}/status/{status}', [MeetingController::class, 'updateFromLink'])
+        ->middleware(['participant', 'conversation.open'])
+        ->where('status', 'accepted|declined');
     Route::get('/visits', [VisitController::class, 'index']);
     Route::post('/visits/{visit}/done', [VisitController::class, 'markDone']);
     Route::post('/visits/{visit}/confirm', [VisitController::class, 'sellerConfirm']);
