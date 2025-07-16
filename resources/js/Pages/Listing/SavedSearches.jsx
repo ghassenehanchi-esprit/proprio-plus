@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import sweetAlert from '@/libs/sweetalert';
 import { Link } from '@inertiajs/react';
+import ConfirmDeleteButton from '@/Components/UI/ConfirmDeleteButton';
 
 export default function SavedSearches({ searches: initial = [] }) {
   const [searches, setSearches] = useState(initial);
@@ -23,7 +24,6 @@ export default function SavedSearches({ searches: initial = [] }) {
   };
 
   const remove = async (id) => {
-    if (!confirm('Supprimer cette recherche ?')) return;
     try {
       await axios.delete(`/saved-searches/${id}`);
       setSearches(ss => ss.filter(s => s.id !== id));
@@ -64,7 +64,13 @@ export default function SavedSearches({ searches: initial = [] }) {
                   <Switch isChecked={s.notify} onChange={() => toggleNotify(s)} />
                 </Td>
                 <Td>
-                  <Button size="xs" colorScheme="red" onClick={() => remove(s.id)}>Supprimer</Button>
+                  <ConfirmDeleteButton
+                    size="xs"
+                    onConfirm={() => remove(s.id)}
+                    message="Supprimer cette recherche ?"
+                  >
+                    Supprimer
+                  </ConfirmDeleteButton>
                 </Td>
               </Tr>
             ))}

@@ -32,6 +32,8 @@ import {
 } from '@chakra-ui/react';
 import AddressSearch from '@/Components/Listing/AddressSearch';
 import CategoryGrid from '@/Components/Listing/CategoryGrid';
+import ConfirmDeleteButton from '@/Components/UI/ConfirmDeleteButton';
+import sweetAlert from '@/libs/sweetalert';
 
 export default function Edit({ listing, categories: initialCategories = [] }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -138,6 +140,7 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
     try {
       await axios.delete(`/files/${id}`);
       setExistingPhotos(photos => photos.filter(p => p.id !== id));
+      sweetAlert('Photo supprimée', 'success');
     } catch (err) {
       console.error(err);
     }
@@ -147,6 +150,7 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
     try {
       await axios.delete(`/files/${id}`);
       setExistingDocs(docs => docs.filter(d => d.id !== id));
+      sweetAlert('Document supprimé', 'success');
     } catch (err) {
       console.error(err);
     }
@@ -166,7 +170,10 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
 
   const remove = () => {
     destroy(`/listings/${listing.id}`, {
-      onSuccess: () => onClose(),
+      onSuccess: () => {
+        sweetAlert('Annonce supprimée', 'success');
+        onClose();
+      },
     });
   };
 
@@ -266,7 +273,16 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
             {existingPhotos.map(photo => (
               <Box key={photo.id} position="relative">
                 <Image src={photo.url} alt="photo" objectFit="cover" h="100px" rounded="md" w="100%" />
-                <Button size="xs" colorScheme="red" position="absolute" top="2px" right="2px" onClick={() => deletePhoto(photo.id)}>X</Button>
+                <ConfirmDeleteButton
+                  size="xs"
+                  position="absolute"
+                  top="2px"
+                  right="2px"
+                  onConfirm={() => deletePhoto(photo.id)}
+                  message="Supprimer cette photo ?"
+                >
+                  X
+                </ConfirmDeleteButton>
               </Box>
             ))}
           </SimpleGrid>
@@ -304,7 +320,13 @@ export default function Edit({ listing, categories: initialCategories = [] }) {
             {existingDocs.map(doc => (
               <Flex key={doc.id} align="center">
                 <Link href={doc.url} isExternal mr={2}>{doc.name || doc.path.split('/').pop()}</Link>
-                <Button size="xs" colorScheme="red" onClick={() => deleteDoc(doc.id)}>Supprimer</Button>
+                <ConfirmDeleteButton
+                  size="xs"
+                  onConfirm={() => deleteDoc(doc.id)}
+                  message="Supprimer ce document ?"
+                >
+                  Supprimer
+                </ConfirmDeleteButton>
               </Flex>
             ))}
           </VStack>
