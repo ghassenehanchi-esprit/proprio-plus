@@ -6,6 +6,8 @@ import axios from 'axios';
 import { router, usePage } from '@inertiajs/react';
 import { FaEdit, FaTrash, FaInfoCircle } from 'react-icons/fa';
 import { useState } from 'react';
+import ConfirmDeleteButton from '@/Components/UI/ConfirmDeleteButton';
+import sweetAlert from '@/libs/sweetalert';
 
 export default function Show({ listing, similar = [] }) {
   const { auth } = usePage().props;
@@ -79,8 +81,8 @@ export default function Show({ listing, similar = [] }) {
   };
 
   const destroy = async () => {
-    if (!confirm('Supprimer cette annonce ?')) return;
     await axios.delete(`/listings/${listing.id}`);
+    sweetAlert('Annonce supprimée', 'success');
     router.get('/');
   };
 
@@ -92,7 +94,15 @@ export default function Show({ listing, similar = [] }) {
           {isOwner && !editing && (
             <Flex justify="flex-end" mt={2} gap={2}>
               <IconButton size="sm" icon={<FaEdit />} onClick={() => setEditing(true)} aria-label="Edit" />
-              <IconButton size="sm" icon={<FaTrash />} onClick={destroy} aria-label="Delete" />
+              <ConfirmDeleteButton
+                size="sm"
+                variant="ghost"
+                onConfirm={destroy}
+                message="Supprimer cette annonce ?"
+                aria-label="Delete"
+              >
+                <FaTrash />
+              </ConfirmDeleteButton>
             </Flex>
           )}
 
