@@ -1,4 +1,6 @@
 import axios from 'axios';
+import sweetAlert from '@/libs/sweetalert';
+
 window.axios = axios;
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -18,10 +20,21 @@ axios.get('/sanctum/csrf-cookie').catch(() => {
 // receives a 401 response. This typically means the user's
 // session has expired or they were never authenticated.
 axios.interceptors.response.use(
-  response => response,
+  response => {
+    const type = response.headers['content-type'] || '';
+    if (type.includes('application/json') && response.data?.message) {
+      sweetAlert(response.data.message, 'success');
+    }
+    return response;
+  },
   error => {
     if (error.response && error.response.status === 401) {
       window.location.href = '/login';
+    }
+    const type = error.response?.headers['content-type'] || '';
+    if (type.includes('application/json')) {
+      const message = error.response?.data?.message || 'Erreur';
+      sweetAlert(message, 'error');
     }
     return Promise.reject(error);
   }
