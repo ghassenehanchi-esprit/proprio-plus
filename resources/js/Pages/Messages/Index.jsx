@@ -14,6 +14,7 @@ import PostVisitPrompt from '@/Components/Chat/PostVisitPrompt';
 import OfferCard from '@/Components/Chat/OfferCard';
 import axios from 'axios';
 import sweetAlert from '@/libs/sweetalert';
+import { updateMeetingStatus } from '@/libs/meetings';
 
 export default function Index({ conversations: initial = {}, current }) {
   const { auth } = usePage().props;
@@ -97,7 +98,7 @@ export default function Index({ conversations: initial = {}, current }) {
 
   const respondMeeting = async (id, status) => {
     try {
-      await axios.post(`/meetings/${id}/status`, { status });
+      await updateMeetingStatus(id, status);
       sweetAlert(
         status === 'accepted' ? 'Visite acceptée' : 'Visite refusée',
         'success'
