@@ -5,10 +5,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class NotificationController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $notifications = Auth::user()->notifications()->latest()->get()->map(function ($notification) {
             $user = User::withBasicInfo()->find($notification->data['user_id'] ?? null);
@@ -23,7 +25,13 @@ class NotificationController extends Controller
             ];
         });
 
-        return response()->json($notifications);
+        if ($request->wantsJson()) {
+            return response()->json($notifications);
+        }
+
+        return Inertia::render('Admin/Notifications/Index', [
+            'notifications' => $notifications,
+        ]);
     }
 
     public function markAsRead(DatabaseNotification $notification)
