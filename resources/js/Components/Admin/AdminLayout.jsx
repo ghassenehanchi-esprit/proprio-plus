@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react';
 import { Link, usePage } from '@inertiajs/react';
 import AdminNotificationBell from './AdminNotificationBell';
-import { FaUsers, FaFileAlt, FaHome, FaFlag, FaClock, FaChartPie, FaBars, FaCalendarAlt } from 'react-icons/fa';
+import { FaUsers, FaFileAlt, FaHome, FaFlag, FaClock, FaChartPie, FaBars, FaCalendarAlt, FaBell } from 'react-icons/fa';
 
 export default function AdminLayout({ children }) {
   const { auth } = usePage().props;
@@ -63,6 +63,11 @@ export default function AdminLayout({ children }) {
             >
             <Icon as={FaFileAlt} />
             <Text>Documents</Text>
+          </ChakraLink>
+          <ChakraLink as={Link} href="/admin/notifications" display="flex" alignItems="center" gap={2}
+            >
+            <Icon as={FaBell} />
+            <Text>Notifications</Text>
           </ChakraLink>
         </Flex>
       </Box>
