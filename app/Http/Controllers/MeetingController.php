@@ -95,6 +95,20 @@ class MeetingController extends Controller
             }
         }
 
+        $msgContent = ($meeting->type === 'visit' ? 'Visite ' : 'Rendez-vous ') .
+            ($data['status'] === 'accepted' ? 'acceptée' : 'refusée');
+
+        $msg = Message::create([
+            'conversation_id' => $conversation->id,
+            'sender_id' => Auth::id(),
+            'content' => $msgContent,
+            'is_read' => false,
+        ]);
+
+        if ($recipient = User::find($conversation->seller_id)) {
+            $recipient->notify(new NewMessageNotification($msg));
+        }
+
         return response()->json($meeting);
     }
 

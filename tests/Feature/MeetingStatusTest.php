@@ -49,6 +49,11 @@ class MeetingStatusTest extends TestCase
             'id' => $meeting->id,
             'status' => 'accepted',
         ]);
+        $this->assertDatabaseHas('messages', [
+            'conversation_id' => $conversation->id,
+            'sender_id' => $buyer->id,
+            'content' => 'Visite acceptée',
+        ]);
     }
 
     public function test_buyer_can_decline_meeting_via_post_route(): void
@@ -69,6 +74,11 @@ class MeetingStatusTest extends TestCase
         $this->assertDatabaseHas('meetings', [
             'id' => $meeting->id,
             'status' => 'declined',
+        ]);
+        $this->assertDatabaseHas('messages', [
+            'conversation_id' => $conversation->id,
+            'sender_id' => $buyer->id,
+            'content' => 'Visite refusée',
         ]);
     }
 }
